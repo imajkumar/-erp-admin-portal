@@ -51,114 +51,114 @@ export default function Header({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 text-white px-4 py-2" style={{ backgroundColor: '#0078d4', height: '64px' }}>
-      <div className="flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 text-white px-3 py-1" style={{ backgroundColor: '#0078d4', height: '45px' }}>
+      <div className="flex items-center justify-between h-full">
         {/* Left Side - App Branding */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           {/* Hamburger Menu Toggle */}
           <Button
             variant="ghost"
             size="sm"
             onClick={onSidebarToggle}
-            className="text-white hover:bg-white hover:bg-opacity-20 p-2"
+            className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-7 w-7"
             title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
-            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {sidebarOpen ? <X className="h-3 w-3" /> : <Menu className="h-3 w-3" />}
           </Button>
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             {/* 12 Dots Grid */}
             <button
               onClick={onDrawerToggle}
-              className="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors"
+              className="p-0.5 hover:bg-white hover:bg-opacity-20 rounded transition-colors"
               title="Open apps drawer"
             >
-              <div className="grid grid-cols-3 gap-0.5 w-5 h-5">
+              <div className="grid grid-cols-3 gap-0.5 w-4 h-4">
                 {Array.from({ length: 9 }, (_, i) => (
                   <div
                     key={i}
-                    className="w-1 h-1 bg-white rounded-full"
+                    className="w-0.5 h-0.5 bg-white rounded-full"
                   />
                 ))}
               </div>
             </button>
             
-            <h1 className="text-sm font-semibold text-white">ERP Admin</h1>
+            <h1 className="text-xs font-semibold text-white">ERP Admin</h1>
             <p className="text-xs text-blue-100">Next.js + ShadcnUI</p>
           </div>
         </div>
         
         {/* Center - Search Bar */}
-        <div className="flex-1 max-w-xl mx-6">
+        <div className="flex-1 max-w-md mx-3">
           <div className="relative">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-gray-400" />
             <input
               type="text"
               placeholder="Search"
               onClick={onSearchClick}
-              className="w-full pl-7 pr-3 py-1.5 bg-white rounded text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-transparent cursor-pointer"
+              className="w-full pl-6 pr-2 py-1 bg-white rounded text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-transparent cursor-pointer h-6"
               readOnly
             />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-              <kbd className="px-1.5 py-0.5 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">⌘K</kbd>
+            <div className="absolute right-1 top-1/2 transform -translate-y-1/2">
+              <kbd className="px-1 py-0.5 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">⌘K</kbd>
             </div>
           </div>
         </div>
         
         {/* Right Side Actions */}
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-0.5">
           {/* Lock Screen */}
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={onLockScreen}
-            className="text-white hover:bg-white hover:bg-opacity-20 p-1"
+            className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7"
             title="Lock screen (Ctrl+L)"
           >
-            <Lock className="h-4 w-4" />
+            <Lock className="h-3 w-3" />
           </Button>
           
           {/* Meet Now */}
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 px-2 py-1">
-            <Video className="h-3 w-3 mr-1" />
+          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 px-1 py-0.5 h-7">
+            <Video className="h-3 w-3 mr-0.5" />
             <span className="text-xs font-medium">Meet</span>
           </Button>
           
           {/* Teams */}
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-1">
-            <div className="w-5 h-5 bg-white bg-opacity-20 rounded flex items-center justify-center">
+          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7">
+            <div className="w-4 h-4 bg-white bg-opacity-20 rounded flex items-center justify-center">
               <span className="text-xs font-bold">T</span>
             </div>
           </Button>
           
           {/* OneNote */}
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-1">
-            <div className="w-5 h-5 bg-white bg-opacity-20 rounded flex items-center justify-center">
+          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7">
+            <div className="w-4 h-4 bg-white bg-opacity-20 rounded flex items-center justify-center">
               <span className="text-xs font-bold">N</span>
             </div>
           </Button>
           
           {/* Calendar/Tasks */}
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-1">
-            <Calendar className="h-4 w-4" />
+          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7">
+            <Calendar className="h-3 w-3" />
           </Button>
           
           {/* Notifications */}
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-1 relative">
-            <Bell className="h-4 w-4" />
-            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">3</span>
+          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7 relative">
+            <Bell className="h-3 w-3" />
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">3</span>
           </Button>
           
           {/* Settings */}
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-1">
-            <Settings className="h-4 w-4" />
+          <Button variant="ghost" size="sm" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7">
+            <Settings className="h-3 w-3" />
           </Button>
           
           {/* User Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5">
-                <Avatar className="h-6 w-6">
+              <Button variant="ghost" className="text-white hover:bg-white hover:bg-opacity-20 p-0.5 h-7 w-7">
+                <Avatar className="h-5 w-5">
                   <AvatarFallback className="bg-white text-xs font-semibold" style={{ color: '#0078d4' }}>
                     {user?.name?.charAt(0) || 'A'}
                   </AvatarFallback>

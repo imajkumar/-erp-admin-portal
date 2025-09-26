@@ -36,7 +36,8 @@ import {
   Building2,
   FolderOpen,
   Layers,
-  Zap
+  Zap,
+  Menu
 } from "lucide-react";
 
 interface LeftSidebarProps {
@@ -174,12 +175,11 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
         <Button
           variant="ghost"
           className={`w-full justify-start text-left h-9 px-3 ${
-            level > 0 ? `ml-${level * 4}` : ''
-          } ${
             isActive 
               ? 'bg-blue-600 text-white hover:bg-blue-700' 
               : 'text-gray-300 hover:bg-gray-700 hover:text-white'
           }`}
+          style={{ marginLeft: level > 0 ? `${level * 16}px` : '0' }}
           onClick={() => {
             if (hasChildren) {
               toggleExpanded(item.id);
@@ -218,7 +218,7 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
   if (!isOpen) return null;
 
   return (
-    <aside className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] z-40 bg-gray-900 border-r border-gray-700" style={{ top: '64px' }}>
+        <aside className="fixed left-0 w-64 h-[calc(100vh-45px)] z-40 bg-gray-900 border-r border-gray-700" style={{ top: '45px' }}>
       <div className="flex flex-col h-full">
 
         {/* Quick Search */}
@@ -247,9 +247,14 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
                   </h3>
                 </div>
                 {item.id === 'dashboards' && (
-                  <Button variant="ghost" size="sm" className="h-6 px-2 text-blue-400 hover:text-blue-300 hover:bg-gray-800">
-                    <Plus className="h-3 w-3 mr-1" />
-                    
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-6 px-2 text-blue-400 hover:text-blue-300 hover:bg-gray-800"
+                    onClick={onClose}
+                    title="Toggle sidebar"
+                  >
+                    <Menu className="h-3 w-3" />
                   </Button>
                 )}
               </div>

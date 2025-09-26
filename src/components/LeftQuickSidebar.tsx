@@ -44,7 +44,7 @@ export default function LeftQuickSidebar({ isOpen, onToggle, activeItem, onItemC
   return (
     <TooltipProvider>
       {/* Left Quick Sidebar - Always Visible */}
-      <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] z-40 bg-gray-50 border-r border-emerald-500 flex flex-col items-center py-4 space-y-2 overflow-y-auto w-12">
+      <div className="fixed left-0 h-[calc(100vh-45px)] z-40 bg-gray-50 border-r border-emerald-500 flex flex-col items-center py-4 space-y-2 overflow-y-auto w-12" style={{ top: '45px' }}>
         {/* Dummy Icon - Settings */}
         <Tooltip>
           <TooltipTrigger asChild>

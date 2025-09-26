@@ -63,8 +63,8 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         sidebarOpen={sidebarOpen}
       />
 
-      {/* Main Content Area */}
-      <div className="flex pt-16">
+          {/* Main Content Area */}
+          <div className="flex">
         {/* Left Quick Sidebar */}
         <LeftQuickSidebar
           isOpen={leftQuickSidebar}
@@ -88,10 +88,9 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
           } ${leftQuickSidebar ? 'ml-12' : 'ml-0'} ${
             rightQuickSidebar ? 'mr-12' : 'mr-0'
           }`}
+          style={{ paddingTop: '45px' }}
         >
-          <div className="h-[calc(100vh-8rem)] overflow-y-auto">
-            {children}
-          </div>
+          {children}
         </div>
 
         {/* Right Quick Sidebar */}

@@ -1,6 +1,7 @@
 "use client";
 
 import AdminLayout from "@/components/Layout";
+import MainContent from "@/components/MainContent";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +40,7 @@ export default function ProfilePage() {
 
   return (
     <AdminLayout activeItem="profile" onItemClick={handleItemClick}>
-      <div className="p-4 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-sm h-[calc(100vh-6rem)]">
+      <MainContent>
           {/* Main Profile Content */}
           <div className="space-y-6">
           {/* User Profile Card */}
@@ -338,7 +339,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </MainContent>
     </AdminLayout>
   );
 }
