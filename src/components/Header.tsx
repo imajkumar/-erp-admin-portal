@@ -51,7 +51,7 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-0 z-40 text-white px-4 py-2" style={{ backgroundColor: '#0078d4' }}>
+    <header className="fixed top-0 left-0 right-0 z-50 text-white px-4 py-2" style={{ backgroundColor: '#0078d4', height: '64px' }}>
       <div className="flex items-center justify-between">
         {/* Left Side - App Branding */}
         <div className="flex items-center space-x-4">

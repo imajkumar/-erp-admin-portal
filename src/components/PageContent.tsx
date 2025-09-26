@@ -410,25 +410,27 @@ export default function PageContent({ activeItem }: PageContentProps) {
             </Space>
           </div>
         </CardHeader>
-        <CardContent>
-          <Table
-            columns={columns}
-            dataSource={tableData}
-            pagination={{
-              current: 1,
-              pageSize: 10,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
-              pageSizeOptions: ['10', '20', '50', '100'],
-            }}
-            scroll={{ x: 800 }}
-            size="middle"
-            bordered
-            rowSelection={{
-              type: 'checkbox',
-            }}
-          />
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table
+              columns={columns}
+              dataSource={tableData}
+              pagination={{
+                current: 1,
+                pageSize: 10,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                pageSizeOptions: ['10', '20', '50', '100'],
+              }}
+              scroll={{ x: 1200 }}
+              size="middle"
+              bordered
+              rowSelection={{
+                type: 'checkbox',
+              }}
+            />
+          </div>
         </CardContent>
       </Card>
     </main>

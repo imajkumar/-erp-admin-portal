@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   BarChart3,
   CheckSquare,
@@ -27,7 +28,15 @@ import {
   TrendingUp,
   Activity,
   ShoppingCart,
-  DollarSign
+  DollarSign,
+  Search,
+  Plus,
+  Grid3X3,
+  User,
+  Building2,
+  FolderOpen,
+  Layers,
+  Zap
 } from "lucide-react";
 
 interface LeftSidebarProps {
@@ -47,44 +56,28 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    id: 'general',
-    label: 'General',
-    icon: Home,
+    id: 'dashboards',
+    label: 'Dashboards',
+    icon: Grid3X3,
     children: [
-      { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-      { id: 'tasks', label: 'Tasks', icon: CheckSquare },
-      { id: 'apps', label: 'Apps', icon: Package },
-      { id: 'chats', label: 'Chats', icon: MessageSquare, badge: '3' },
-      { id: 'users', label: 'Users', icon: Users },
-      { id: 'calendar', label: 'Calendar', icon: Calendar },
-      { id: 'security', label: 'Secured by Clerk', icon: Shield, children: [
-        { id: 'auth', label: 'Authentication', icon: Shield },
-        { id: 'permissions', label: 'Permissions', icon: Shield },
-        { id: 'sessions', label: 'Sessions', icon: Shield }
-      ]}
-    ]
-  },
-  {
-    id: 'analytics',
-    label: 'Analytics',
-    icon: PieChart,
-    children: [
-      { id: 'overview', label: 'Overview', icon: BarChart3 },
-      { id: 'reports', label: 'Reports', icon: FileText },
-      { id: 'insights', label: 'Insights', icon: TrendingUp },
-      { id: 'metrics', label: 'Metrics', icon: Activity }
-    ]
-  },
-  {
-    id: 'business',
-    label: 'Business',
-    icon: DollarSign,
-    children: [
-      { id: 'sales', label: 'Sales', icon: ShoppingCart },
-      { id: 'orders', label: 'Orders', icon: Package },
-      { id: 'customers', label: 'Customers', icon: Users },
-      { id: 'products', label: 'Products', icon: Package },
-      { id: 'inventory', label: 'Inventory', icon: Database }
+      { id: 'dashboard', label: 'Default', icon: BarChart3 },
+      { id: 'ecommerce', label: 'eCommerce', icon: ShoppingCart },
+      { id: 'projects', label: 'Projects', icon: FolderOpen },
+      { id: 'online-courses', label: 'Online Courses', icon: FileText },
+      { id: 'marketing', label: 'Marketing', icon: TrendingUp },
+      { id: 'bidding', label: 'Bidding', icon: DollarSign },
+      { id: 'pos-system', label: 'POS System', icon: CreditCard },
+      { id: 'call-center', label: 'Call Center', icon: MessageSquare },
+      { id: 'logistics', label: 'Logistics', icon: Package },
+      { id: 'website-analytics', label: 'Website Analytics', icon: Activity },
+      { id: 'finance-performance', label: 'Finance Performance', icon: PieChart },
+      { id: 'store-analytics', label: 'Store Analytics', icon: BarChart3 },
+      { id: 'social', label: 'Social', icon: Users },
+      { id: 'delivery', label: 'Delivery', icon: Package },
+      { id: 'crypto', label: 'Crypto', icon: Zap },
+      { id: 'school', label: 'School', icon: FileText },
+      { id: 'podcast', label: 'Podcast', icon: MessageSquare },
+      { id: 'landing', label: 'Landing', icon: Home }
     ]
   },
   {
@@ -92,40 +85,76 @@ const menuItems: MenuItem[] = [
     label: 'Pages',
     icon: FileText,
     children: [
-      { id: 'auth-pages', label: 'Auth', icon: Shield, children: [
-        { id: 'login', label: 'Login', icon: Shield },
-        { id: 'register', label: 'Register', icon: Shield },
-        { id: 'forgot-password', label: 'Forgot Password', icon: Shield }
+          { id: 'user-profile', label: 'User Profile', icon: User, children: [
+            { id: 'profile', label: 'Overview', icon: User },
+            { id: 'user-projects', label: 'Projects', icon: FolderOpen },
+            { id: 'user-campaigns', label: 'Campaigns', icon: TrendingUp },
+            { id: 'user-documents', label: 'Documents', icon: FileText },
+            { id: 'user-followers', label: 'Followers', icon: Users },
+            { id: 'user-activity', label: 'Activity', icon: Activity }
+          ]},
+      { id: 'account', label: 'Account', icon: Building2, children: [
+        { id: 'account-overview', label: 'Overview', icon: User },
+        { id: 'account-settings', label: 'Settings', icon: Settings },
+        { id: 'account-security', label: 'Security', icon: Shield },
+        { id: 'account-billing', label: 'Billing', icon: CreditCard },
+        { id: 'account-referrals', label: 'Referrals', icon: Users },
+        { id: 'account-logs', label: 'Logs', icon: FileText },
+        { id: 'account-api-keys', label: 'API Keys', icon: Shield },
+        { id: 'account-statements', label: 'Statements', icon: FileText }
       ]},
-      { id: 'error-pages', label: 'Errors', icon: Bug, children: [
-        { id: '404', label: '404 Page', icon: Bug },
-        { id: '500', label: '500 Page', icon: Bug },
-        { id: 'maintenance', label: 'Maintenance', icon: Bug }
+      { id: 'authentication', label: 'Authentication', icon: Shield, children: [
+        { id: 'sign-in', label: 'Sign In', icon: Shield },
+        { id: 'sign-up', label: 'Sign Up', icon: Shield },
+        { id: 'two-factor', label: 'Two Factor', icon: Shield },
+        { id: 'reset-password', label: 'Reset Password', icon: Shield },
+        { id: 'new-password', label: 'New Password', icon: Shield }
+      ]},
+      { id: 'corporate', label: 'Corporate', icon: Building2, children: [
+        { id: 'about-us', label: 'About Us', icon: Building2 },
+        { id: 'contact-us', label: 'Contact Us', icon: MessageSquare },
+        { id: 'our-team', label: 'Our Team', icon: Users },
+        { id: 'license', label: 'License', icon: FileText },
+        { id: 'sitemap', label: 'Sitemap', icon: Layers }
+      ]},
+      { id: 'social', label: 'Social', icon: Users, children: [
+        { id: 'feeds', label: 'Feeds', icon: Activity },
+        { id: 'activity', label: 'Activity', icon: Activity },
+        { id: 'followers', label: 'Followers', icon: Users },
+        { id: 'settings', label: 'Settings', icon: Settings }
+      ]},
+      { id: 'others', label: 'Others', icon: FileText, children: [
+        { id: 'faq-classic', label: 'FAQ Classic', icon: HelpCircle },
+        { id: 'faq-extended', label: 'FAQ Extended', icon: HelpCircle },
+        { id: 'blog-home', label: 'Blog Home', icon: FileText },
+        { id: 'blog-post', label: 'Blog Post', icon: FileText }
       ]}
     ]
   },
   {
-    id: 'other',
-    label: 'Other',
-    icon: Settings,
+    id: 'apps',
+    label: 'Apps',
+    icon: Package,
     children: [
-      { id: 'settings', label: 'Settings', icon: Settings, children: [
-        { id: 'general-settings', label: 'General', icon: Settings },
-        { id: 'appearance', label: 'Appearance', icon: Settings },
-        { id: 'notifications', label: 'Notifications', icon: Bell },
-        { id: 'privacy', label: 'Privacy', icon: Shield }
-      ]},
-      { id: 'help', label: 'Help Center', icon: HelpCircle, children: [
-        { id: 'documentation', label: 'Documentation', icon: FileText },
-        { id: 'support', label: 'Support', icon: HelpCircle },
-        { id: 'faq', label: 'FAQ', icon: HelpCircle }
-      ]}
+      { id: 'projects', label: 'Projects', icon: FolderOpen },
+      { id: 'ecommerce', label: 'eCommerce', icon: ShoppingCart },
+      { id: 'customers', label: 'Customers', icon: Users },
+      { id: 'subscriptions', label: 'Subscriptions', icon: CreditCard },
+      { id: 'user-management', label: 'User Management', icon: Users },
+      { id: 'invoices', label: 'Invoices', icon: FileText },
+      { id: 'support-center', label: 'Support Center', icon: HelpCircle },
+      { id: 'chat', label: 'Chat', icon: MessageSquare },
+      { id: 'calendar', label: 'Calendar', icon: Calendar },
+      { id: 'file-manager', label: 'File Manager', icon: FolderOpen },
+      { id: 'inbox', label: 'Inbox', icon: MessageSquare },
+      { id: 'contacts', label: 'Contacts', icon: Users }
     ]
   }
 ];
 
 export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }: LeftSidebarProps) {
-  const [expandedItems, setExpandedItems] = useState<string[]>(['general']);
+  const [expandedItems, setExpandedItems] = useState<string[]>(['dashboards']);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleExpanded = (itemId: string) => {
     setExpandedItems(prev => 
@@ -143,10 +172,14 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
     return (
       <div key={item.id}>
         <Button
-          variant={isActive ? "default" : "ghost"}
-          className={`w-full justify-start text-left h-8 px-3 ${
+          variant="ghost"
+          className={`w-full justify-start text-left h-9 px-3 ${
             level > 0 ? `ml-${level * 4}` : ''
-          } ${isActive ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : ''}`}
+          } ${
+            isActive 
+              ? 'bg-blue-600 text-white hover:bg-blue-700' 
+              : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+          }`}
           onClick={() => {
             if (hasChildren) {
               toggleExpanded(item.id);
@@ -155,18 +188,20 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
             }
           }}
         >
-          <item.icon className={`mr-3 h-4 w-4 ${isActive ? 'text-blue-600' : 'text-gray-600'}`} />
-          <span className="flex-1 text-sm">{item.label}</span>
+          <item.icon className={`mr-3 h-4 w-4 ${
+            isActive ? 'text-white' : 'text-gray-400'
+          }`} />
+          <span className="flex-1 text-sm font-medium">{item.label}</span>
           {item.badge && (
-            <Badge className="ml-auto bg-gray-900 text-white text-xs">
+            <Badge className="ml-auto bg-blue-500 text-white text-xs">
               {item.badge}
             </Badge>
           )}
           {hasChildren && (
             isExpanded ? (
-              <ChevronDown className="ml-2 h-3 w-3 text-gray-500" />
+              <ChevronDown className="ml-2 h-3 w-3 text-gray-400" />
             ) : (
-              <ChevronRight className="ml-2 h-3 w-3 text-gray-500" />
+              <ChevronRight className="ml-2 h-3 w-3 text-gray-400" />
             )
           )}
         </Button>
@@ -183,46 +218,55 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
   if (!isOpen) return null;
 
   return (
-    <aside className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] z-40 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out">
+    <aside className="fixed left-0 top-16 w-64 h-[calc(100vh-4rem)] z-40 bg-gray-900 border-r border-gray-700" style={{ top: '64px' }}>
       <div className="flex flex-col h-full">
-        {/* Header */}
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">ERP Admin</h2>
-                <p className="text-xs text-gray-500">Next.js + ShadcnUI</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm" className="lg:hidden" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
+
+        {/* Quick Search */}
+        <div className="p-4 border-b border-gray-700">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Quick Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+            />
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {menuItems.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} className="mb-6">
+              {/* Section Header */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <item.icon className="h-4 w-4 text-gray-400" />
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    {item.label}
+                  </h3>
+                </div>
+                {item.id === 'dashboards' && (
+                  <Button variant="ghost" size="sm" className="h-6 px-2 text-blue-400 hover:text-blue-300 hover:bg-gray-800">
+                    <Plus className="h-3 w-3 mr-1" />
+                    
+                  </Button>
+                )}
+              </div>
+              
+              {/* Menu Items */}
               <div className="space-y-1">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                  {item.label}
-                </h3>
                 {renderMenuItem(item)}
               </div>
-              <Separator className="my-4" />
             </div>
           ))}
         </nav>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
-          <div className="text-xs text-gray-500 text-center">
+        <div className="p-4 border-t border-gray-700">
+          <div className="text-xs text-gray-400 text-center">
             <p>ERP Admin v1.0.0</p>
-            <p className="mt-1">© 2024 All rights reserved</p>
+            <p className="mt-1">© 2025 All rights reserved</p>
           </div>
         </div>
       </div>

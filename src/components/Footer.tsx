@@ -56,7 +56,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="sticky bottom-0 z-40 bg-gray-50 text-gray-600 border-t border-gray-200 shadow-lg">
+    <footer className="fixed bottom-0 left-0 right-0 z-40 bg-gray-50 text-gray-600 border-t border-gray-200 shadow-lg">
       <div className="px-3 py-1.5">
         <div className="flex items-center justify-between">
           {/* Left Side - Quick Actions and Copyright */}

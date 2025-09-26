@@ -34,7 +34,7 @@ import {
 
 // Import components
 import PageContent from "@/components/PageContent";
-import Layout from "@/components/Layout";
+import AdminLayout from "@/components/Layout";
 
 // Dummy data
 const stats = [
@@ -240,8 +240,8 @@ export default function Dashboard() {
   };
 
   return (
-    <Layout activeItem={activeMenuItem} onItemClick={handleItemClick}>
-      <PageContent activeItem={activeMenuItem} />
-    </Layout>
+      <AdminLayout activeItem={activeMenuItem} onItemClick={handleItemClick}>
+        <PageContent activeItem={activeMenuItem} />
+      </AdminLayout>
   );
 }

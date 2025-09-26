@@ -141,6 +141,25 @@
   background: #106ebe;
 }
 
+/* Thin scrollbar for table horizontal scroll */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #0078d4;
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #106ebe;
+}
+
 ::-webkit-scrollbar-corner {
   background: #f1f5f9;
 }

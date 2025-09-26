@@ -16,7 +16,7 @@ interface LayoutProps {
   onItemClick?: (item: string) => void;
 }
 
-export default function Layout({ children, activeItem = "dashboard", onItemClick }: LayoutProps) {
+export default function AdminLayout({ children, activeItem = "dashboard", onItemClick }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [leftQuickSidebar, setLeftQuickSidebar] = useState(true);
   const [rightQuickSidebar, setRightQuickSidebar] = useState(true);
@@ -52,7 +52,7 @@ export default function Layout({ children, activeItem = "dashboard", onItemClick
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <Header
         user={user}
@@ -64,7 +64,7 @@ export default function Layout({ children, activeItem = "dashboard", onItemClick
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex">
+      <div className="flex pt-16">
         {/* Left Quick Sidebar */}
         <LeftQuickSidebar
           isOpen={leftQuickSidebar}
@@ -89,7 +89,7 @@ export default function Layout({ children, activeItem = "dashboard", onItemClick
             rightQuickSidebar ? 'mr-12' : 'mr-0'
           }`}
         >
-          <div className="h-full overflow-y-auto">
+          <div className="h-[calc(100vh-8rem)] overflow-y-auto">
             {children}
           </div>
         </div>
