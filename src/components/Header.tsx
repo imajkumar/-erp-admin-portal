@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import {
   Dialog,
   DialogContent,
@@ -107,11 +108,7 @@ export default function Header({
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
             {/* 12 Dots Grid */}
-            <button
-              onClick={onDrawerToggle}
-              className="p-0.5 hover:bg-gray-100 rounded transition-colors"
-              title="Open apps drawer"
-            >
+            <JiraButton onClick={onDrawerToggle} title="Open apps drawer">
               <div className="grid grid-cols-3 gap-0.5 w-4 h-4">
                 {Array.from({ length: 9 }, (_, i) => (
                   <div
@@ -120,7 +117,7 @@ export default function Header({
                   />
                 ))}
               </div>
-            </button>
+            </JiraButton>
 
             {/* Separator */}
             <div className="w-px h-6 bg-gray-300"></div>
@@ -151,14 +148,11 @@ export default function Header({
           {/* Create Button - Jira Style */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                className="bg-blue-600 hover:bg-blue-700 text-white h-7 px-3 text-xs font-medium rounded"
-                size="sm"
-              >
+              <JiraButton variant="create">
                 <Plus className="h-3 w-3 mr-1" />
                 Create
                 <ChevronDown className="h-3 w-3 ml-1" />
-              </Button>
+              </JiraButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuLabel className="text-xs font-semibold">
@@ -192,39 +186,26 @@ export default function Header({
           <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Dashboard */}
-          <Button
-            variant="ghost"
-            size="sm"
+          <JiraButton
             onClick={() => (window.location.href = "/dashboard")}
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
             title="Dashboard"
           >
-            <LayoutDashboard className="h-3 w-3" />
-          </Button>
+            <LayoutDashboard className="h-3.5 w-3.5" />
+          </JiraButton>
 
           {/* Lock Screen */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onLockScreen}
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-            title="Lock screen (Ctrl+L)"
-          >
-            <Lock className="h-3 w-3" />
-          </Button>
+          <JiraButton onClick={onLockScreen} title="Lock screen (Ctrl+L)">
+            <Lock className="h-3.5 w-3.5" />
+          </JiraButton>
 
           {/* Session Selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs text-gray-700 hover:bg-gray-100"
-              >
-                <Calendar className="h-3 w-3 mr-1" />
+              <JiraButton variant="text">
+                <Calendar className="h-3.5 w-3.5 mr-1.5" />
                 {currentSession}
-                <ChevronDown className="h-3 w-3 ml-1" />
-              </Button>
+                <ChevronDown className="h-3.5 w-3.5 ml-1.5" />
+              </JiraButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-32">
               <DropdownMenuLabel className="text-xs">
@@ -247,24 +228,16 @@ export default function Header({
           </DropdownMenu>
 
           {/* Inbox */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-            title="Inbox"
-            onClick={onInboxClick}
-          >
-            <Mail className="h-3 w-3" />
-          </Button>
+          <JiraButton title="Inbox" onClick={onInboxClick}>
+            <Mail className="h-3.5 w-3.5" />
+          </JiraButton>
 
           {/* Separator */}
           <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Chat */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 px-1 py-0.5 h-7"
+          <JiraButton
+            variant="text"
             onClick={() =>
               window.open(
                 "/dashboard/messenger",
@@ -273,15 +246,13 @@ export default function Header({
               )
             }
           >
-            <MessageSquare className="h-3 w-3 mr-0.5" />
+            <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
             <span className="text-xs font-medium">Chat</span>
-          </Button>
+          </JiraButton>
 
           {/* AI Assistant */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 px-1 py-0.5 h-7"
+          <JiraButton
+            variant="text"
             onClick={() =>
               window.open(
                 "/dashboard/ai-messenger",
@@ -290,93 +261,63 @@ export default function Header({
               )
             }
           >
-            <Bot className="h-3 w-3 mr-0.5" />
+            <Bot className="h-3.5 w-3.5 mr-1.5" />
             <span className="text-xs font-medium">AI</span>
-          </Button>
+          </JiraButton>
 
           {/* Separator */}
           <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Teams */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-          >
-            <div className="w-4 h-4 bg-gray-200 rounded flex items-center justify-center">
-              <span className="text-xs font-bold text-gray-700">T</span>
+          <JiraButton>
+            <div className="w-4 h-4 bg-blue-100 rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-blue-600">T</span>
             </div>
-          </Button>
+          </JiraButton>
 
           {/* OneNote */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-          >
-            <div className="w-4 h-4 bg-gray-200 rounded flex items-center justify-center">
-              <span className="text-xs font-bold text-gray-700">N</span>
+          <JiraButton>
+            <div className="w-4 h-4 bg-blue-100 rounded flex items-center justify-center">
+              <span className="text-xs font-bold text-blue-600">N</span>
             </div>
-          </Button>
+          </JiraButton>
 
           {/* Calendar/Tasks */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-          >
-            <Calendar className="h-3 w-3" />
-          </Button>
+          <JiraButton>
+            <Calendar className="h-3.5 w-3.5" />
+          </JiraButton>
 
           {/* Separator */}
           <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7 relative"
-            onClick={onNotificationClick}
-          >
-            <Bell className="h-3 w-3" />
+          <JiraButton onClick={onNotificationClick} className="relative">
+            <Bell className="h-3.5 w-3.5" />
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
               3
             </span>
-          </Button>
+          </JiraButton>
 
           {/* Settings */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-          >
-            <Settings className="h-3 w-3" />
-          </Button>
+          <JiraButton>
+            <Settings className="h-3.5 w-3.5" />
+          </JiraButton>
 
           {/* Logout Icon */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleLogout}
-            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-            title="Logout"
-          >
-            <LogOut className="h-3 w-3" />
-          </Button>
+          <JiraButton onClick={handleLogout} title="Logout">
+            <LogOut className="h-3.5 w-3.5" />
+          </JiraButton>
 
           {/* User Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-              >
+              <JiraButton>
                 <Avatar className="h-5 w-5">
-                  <AvatarFallback className="bg-gray-200 text-xs font-semibold text-gray-700">
+                  <AvatarFallback className="bg-blue-100 text-xs font-semibold text-blue-600">
                     {user?.name?.charAt(0) || "A"}
                   </AvatarFallback>
                 </Avatar>
-              </Button>
+              </JiraButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
