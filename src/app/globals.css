@@ -448,6 +448,31 @@
   color: #374151;
 }
 
+/* Custom Tabs Styling */
+.custom-tabs .ant-tabs-tab {
+  padding: 0 !important;
+  margin: 0 8px 0 0 !important;
+}
+
+.custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-tabs .ant-tabs-tab-btn {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.custom-tabs .ant-tabs-ink-bar {
+  display: none !important;
+}
+
+.custom-tabs .ant-tabs-nav {
+  margin-bottom: 0 !important;
+}
+
 /* Checkbox Blue Styling */
 .permissions-drawer [data-state="checked"] {
   background-color: #3b82f6;

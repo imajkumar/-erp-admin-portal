@@ -215,9 +215,7 @@ export default function InboxPage() {
   const [folderFilter, setFolderFilter] = useState<string>("inbox");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(
-    null,
-  );
+  const [dateRange, setDateRange] = useState<any>(null);
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [emailDrawerVisible, setEmailDrawerVisible] = useState(false);
   const [composeModalVisible, setComposeModalVisible] = useState(false);
@@ -576,51 +574,7 @@ export default function InboxPage() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           <MainContent>
-            <div className="p-4">
-              {/* Header with Tabs */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h1 className="text-xl font-bold text-gray-900 flex items-center">
-                    <Mail className="h-6 w-6 mr-2 text-blue-600" />
-                    {folderFilter.charAt(0).toUpperCase() +
-                      folderFilter.slice(1)}
-                  </h1>
-                </div>
-                <Tabs
-                  activeKey={activeTab}
-                  onChange={setActiveTab}
-                  items={[
-                    {
-                      key: "all",
-                      label: (
-                        <span className="flex items-center space-x-2">
-                          <Inbox className="h-4 w-4" />
-                          <span>All</span>
-                        </span>
-                      ),
-                    },
-                    {
-                      key: "order",
-                      label: (
-                        <span className="flex items-center space-x-2">
-                          <ShoppingCart className="h-4 w-4" />
-                          <span>Order</span>
-                        </span>
-                      ),
-                    },
-                    {
-                      key: "sample",
-                      label: (
-                        <span className="flex items-center space-x-2">
-                          <FileText className="h-4 w-4" />
-                          <span>Sample</span>
-                        </span>
-                      ),
-                    },
-                  ]}
-                />
-              </div>
-
+            <div className="p-1">
               {/* Filters */}
               <Card className="mb-6">
                 <div className="space-y-4">
@@ -713,6 +667,52 @@ export default function InboxPage() {
                   )}
                 </div>
               </Card>
+              {/* Header with Tabs */}
+              <div className="mb-4">
+                <Tabs
+                  activeKey={activeTab}
+                  onChange={setActiveTab}
+                  className="custom-tabs"
+                  items={[
+                    {
+                      key: "all",
+                      label: (
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
+                          <Inbox className="h-4 w-4" />
+                          <span>All</span>
+                        </span>
+                      ),
+                    },
+                    {
+                      key: "order",
+                      label: (
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-green-50 text-green-700 border border-green-200">
+                          <ShoppingCart className="h-4 w-4" />
+                          <span>Order</span>
+                        </span>
+                      ),
+                    },
+                    {
+                      key: "sample",
+                      label: (
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-purple-50 text-purple-700 border border-purple-200">
+                          <FileText className="h-4 w-4" />
+                          <span>Sample</span>
+                        </span>
+                      ),
+                    },
+                    {
+                      key: "inventory",
+                      label: (
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-orange-50 text-orange-700 border border-orange-200">
+                          <FileText className="h-4 w-4" />
+                          <span>Inventory</span>
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+              </div>
 
               {/* Emails Table */}
               <Card>
