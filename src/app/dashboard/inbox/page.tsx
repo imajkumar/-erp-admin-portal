@@ -56,8 +56,18 @@ import {
   Tabs,
   Tooltip,
 } from "antd";
-import ReactQuill from "react-quill";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[200px] border border-gray-200 rounded-md flex items-center justify-center text-gray-500">
+      Loading editor...
+    </div>
+  ),
+});
 import type { ColumnsType } from "antd/es/table";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
@@ -276,6 +286,7 @@ export default function InboxPage() {
   const [showMentionDropdown, setShowMentionDropdown] = useState(false);
   const [showMarkdownHelp, setShowMarkdownHelp] = useState(false);
   const [editorContent, setEditorContent] = useState("");
+  const [isEditorMounted, setIsEditorMounted] = useState(false);
   const [comments, setComments] = useState<
     Array<{
       id: string;
@@ -347,6 +358,11 @@ export default function InboxPage() {
       setFilteredEmails(mockEmails.filter((email) => email.folder === "inbox"));
       setLoading(false);
     }, 1000);
+  }, []);
+
+  useEffect(() => {
+    // Set editor as mounted on client side
+    setIsEditorMounted(true);
   }, []);
 
   useEffect(() => {
@@ -1174,20 +1190,26 @@ export default function InboxPage() {
                       <div className="mb-4">
                         <div className="relative">
                           <div className="border border-gray-200 rounded-md">
-                            <ReactQuill
-                              theme="snow"
-                              value={editorContent}
-                              onChange={handleEditorChange}
-                              modules={quillModules}
-                              formats={quillFormats}
-                              placeholder="Add a comment... Use @username to mention someone"
-                              style={{
-                                height: "200px",
-                                fontFamily:
-                                  "-apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif",
-                                fontSize: "14px",
-                              }}
-                            />
+                            {isEditorMounted ? (
+                              <ReactQuill
+                                theme="snow"
+                                value={editorContent}
+                                onChange={handleEditorChange}
+                                modules={quillModules}
+                                formats={quillFormats}
+                                placeholder="Add a comment... Use @username to mention someone"
+                                style={{
+                                  height: "200px",
+                                  fontFamily:
+                                    "-apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif",
+                                  fontSize: "14px",
+                                }}
+                              />
+                            ) : (
+                              <div className="h-[200px] flex items-center justify-center text-gray-500 bg-gray-50">
+                                Loading editor...
+                              </div>
+                            )}
                           </div>
 
                           {showMentionDropdown && (
