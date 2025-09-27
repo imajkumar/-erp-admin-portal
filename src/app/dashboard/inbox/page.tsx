@@ -43,9 +43,6 @@ import {
   message,
   Badge,
   Card,
-  Row,
-  Col,
-  Statistic,
   Empty,
   Spin,
   Drawer,
@@ -553,15 +550,6 @@ export default function InboxPage() {
     setSelectedRowKeys([]);
   };
 
-  const stats = {
-    total: emails.filter((e) => e.folder === folderFilter).length,
-    unread: emails.filter((e) => e.folder === folderFilter && !e.isRead).length,
-    starred: emails.filter((e) => e.folder === folderFilter && e.isStarred)
-      .length,
-    important: emails.filter((e) => e.folder === folderFilter && e.isImportant)
-      .length,
-  };
-
   return (
     <AdminLayout forceSidebarClosed={true}>
       <div className="flex h-screen">
@@ -596,49 +584,6 @@ export default function InboxPage() {
                   <p className="text-gray-600 mt-1">Manage your emails</p>
                 </div>
               </div>
-
-              {/* Stats Cards */}
-              <Row gutter={16} className="mb-6">
-                <Col span={6}>
-                  <Card>
-                    <Statistic
-                      title="Total Emails"
-                      value={stats.total}
-                      prefix={<Inbox className="h-4 w-4" />}
-                    />
-                  </Card>
-                </Col>
-                <Col span={6}>
-                  <Card>
-                    <Statistic
-                      title="Unread"
-                      value={stats.unread}
-                      prefix={<Badge status="processing" />}
-                      valueStyle={{ color: "#faad14" }}
-                    />
-                  </Card>
-                </Col>
-                <Col span={6}>
-                  <Card>
-                    <Statistic
-                      title="Starred"
-                      value={stats.starred}
-                      prefix={<Star className="h-4 w-4" />}
-                      valueStyle={{ color: "#fadb14" }}
-                    />
-                  </Card>
-                </Col>
-                <Col span={6}>
-                  <Card>
-                    <Statistic
-                      title="Important"
-                      value={stats.important}
-                      prefix={<Badge status="error" />}
-                      valueStyle={{ color: "#ff4d4f" }}
-                    />
-                  </Card>
-                </Col>
-              </Row>
 
               {/* Filters */}
               <Card className="mb-6">
