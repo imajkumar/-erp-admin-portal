@@ -677,7 +677,7 @@ export default function InboxPage() {
                     {
                       key: "all",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200">
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-100">
                           <Inbox className="h-4 w-4" />
                           <span>All</span>
                         </span>
@@ -686,7 +686,7 @@ export default function InboxPage() {
                     {
                       key: "order",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-green-50 text-green-700 border border-green-200">
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-green-100">
                           <ShoppingCart className="h-4 w-4" />
                           <span>Order</span>
                         </span>
@@ -695,7 +695,7 @@ export default function InboxPage() {
                     {
                       key: "sample",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-purple-50 text-purple-700 border border-purple-200">
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-purple-100">
                           <FileText className="h-4 w-4" />
                           <span>Sample</span>
                         </span>
@@ -704,7 +704,7 @@ export default function InboxPage() {
                     {
                       key: "inventory",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-orange-50 text-orange-700 border border-orange-200">
+                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-orange-100">
                           <FileText className="h-4 w-4" />
                           <span>Inventory</span>
                         </span>
