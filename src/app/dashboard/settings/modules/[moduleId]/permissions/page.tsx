@@ -1,14 +1,31 @@
 "use client";
 
+import { Button as AntButton, Popconfirm, Space, Switch, Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import {
+  ArrowLeft,
+  Check,
+  Copy,
+  Edit,
+  Home,
+  Lock,
+  Plus,
+  Save,
+  Search,
+  Trash2,
+} from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -17,29 +34,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Table, Button as AntButton, Space, Tag, Switch, Popconfirm } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  ArrowLeft, 
-  Home, 
-  Plus, 
-  Search, 
-  Lock, 
-  Edit, 
-  Trash2, 
-  Save, 
-  X,
-  Shield,
-  User,
-  Settings,
-  Eye,
-  EyeOff,
-  CheckCircle,
-  AlertCircle,
-  Copy,
-  Check
-} from "lucide-react";
 
 // Mock data for permissions
 const mockPermissions = [
@@ -50,25 +47,25 @@ const mockPermissions = [
     description: "Allow users to view the main dashboard",
     permissionCode: "DASH_VIEW",
     isActive: true,
-    moduleId: "1"
+    moduleId: "1",
   },
   {
-    id: "2", 
+    id: "2",
     name: "Edit Dashboard",
     alias: "dashboard.edit",
     description: "Allow users to edit dashboard widgets",
     permissionCode: "DASH_EDIT",
     isActive: true,
-    moduleId: "1"
+    moduleId: "1",
   },
   {
     id: "3",
     name: "Delete Dashboard",
-    alias: "dashboard.delete", 
+    alias: "dashboard.delete",
     description: "Allow users to delete dashboard items",
     permissionCode: "DASH_DELETE",
     isActive: false,
-    moduleId: "1"
+    moduleId: "1",
   },
   {
     id: "4",
@@ -77,7 +74,7 @@ const mockPermissions = [
     description: "Allow users to view user list",
     permissionCode: "USR_VIEW",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "5",
@@ -86,7 +83,7 @@ const mockPermissions = [
     description: "Allow users to create new users",
     permissionCode: "USR_CREATE",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "6",
@@ -95,7 +92,7 @@ const mockPermissions = [
     description: "Allow users to edit existing users",
     permissionCode: "USR_EDIT",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "7",
@@ -104,7 +101,7 @@ const mockPermissions = [
     description: "Allow users to delete users",
     permissionCode: "USR_DELETE",
     isActive: false,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "8",
@@ -113,7 +110,7 @@ const mockPermissions = [
     description: "Allow users to view user profiles",
     permissionCode: "USR_PROF_VIEW",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "9",
@@ -122,7 +119,7 @@ const mockPermissions = [
     description: "Allow users to edit user profiles",
     permissionCode: "USR_PROF_EDIT",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "10",
@@ -131,7 +128,7 @@ const mockPermissions = [
     description: "Allow users to change passwords",
     permissionCode: "USR_PWD_CHANGE",
     isActive: false,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "11",
@@ -140,7 +137,7 @@ const mockPermissions = [
     description: "Allow users to reset passwords",
     permissionCode: "USR_PWD_RESET",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "12",
@@ -149,7 +146,7 @@ const mockPermissions = [
     description: "Allow users to assign roles to users",
     permissionCode: "USR_ROLE_ASSIGN",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "13",
@@ -158,7 +155,7 @@ const mockPermissions = [
     description: "Allow users to view user roles",
     permissionCode: "USR_ROLE_VIEW",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "14",
@@ -167,7 +164,7 @@ const mockPermissions = [
     description: "Allow users to manage user permissions",
     permissionCode: "USR_PERM_MANAGE",
     isActive: false,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "15",
@@ -176,7 +173,7 @@ const mockPermissions = [
     description: "Allow users to export user data",
     permissionCode: "USR_EXPORT",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "16",
@@ -185,7 +182,7 @@ const mockPermissions = [
     description: "Allow users to import user data",
     permissionCode: "USR_IMPORT",
     isActive: false,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "17",
@@ -194,7 +191,7 @@ const mockPermissions = [
     description: "Allow users to perform bulk operations",
     permissionCode: "USR_BULK",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "18",
@@ -203,7 +200,7 @@ const mockPermissions = [
     description: "Allow users to view user activity logs",
     permissionCode: "USR_ACT_VIEW",
     isActive: true,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "19",
@@ -212,7 +209,7 @@ const mockPermissions = [
     description: "Allow users to manage user sessions",
     permissionCode: "USR_SESS_MANAGE",
     isActive: false,
-    moduleId: "2"
+    moduleId: "2",
   },
   {
     id: "20",
@@ -221,8 +218,8 @@ const mockPermissions = [
     description: "Allow users to view user statistics",
     permissionCode: "USR_STATS_VIEW",
     isActive: true,
-    moduleId: "2"
-  }
+    moduleId: "2",
+  },
 ];
 
 // Mock module data
@@ -230,7 +227,7 @@ const mockModules = [
   { id: "1", name: "Dashboard", description: "Main dashboard module" },
   { id: "2", name: "User Management", description: "User management module" },
   { id: "3", name: "Sales", description: "Sales management module" },
-  { id: "4", name: "Analytics", description: "Analytics and reporting module" }
+  { id: "4", name: "Analytics", description: "Analytics and reporting module" },
 ];
 
 export default function ModulePermissionsPage() {
@@ -238,37 +235,54 @@ export default function ModulePermissionsPage() {
   const params = useParams();
   const moduleId = params.moduleId as string;
   const { toast } = useToast();
-  
-  const [permissions, setPermissions] = useState(mockPermissions.filter(p => p.moduleId === moduleId));
-  const [searchTerm, setSearchTerm] = useState('');
+
+  const [permissions, setPermissions] = useState(
+    mockPermissions.filter((p) => p.moduleId === moduleId),
+  );
+  const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [editingPermission, setEditingPermission] = useState<any>(null);
+  const [editingPermission, setEditingPermission] = useState<Permission | null>(
+    null,
+  );
   const [newPermission, setNewPermission] = useState({
-    name: '',
-    alias: '',
-    description: '',
-    permissionCode: '',
-    isActive: true
+    name: "",
+    alias: "",
+    description: "",
+    permissionCode: "",
+    isActive: true,
   });
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
-  const currentModule = mockModules.find(m => m.id === moduleId);
+  const currentModule = mockModules.find((m) => m.id === moduleId);
 
-  const filteredPermissions = permissions.filter(permission =>
-    permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    permission.alias.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    permission.permissionCode.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPermissions = permissions.filter(
+    (permission) =>
+      permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      permission.alias.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      permission.permissionCode
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
   );
 
   const handleAddPermission = () => {
-    if (newPermission.name && newPermission.alias && newPermission.permissionCode) {
+    if (
+      newPermission.name &&
+      newPermission.alias &&
+      newPermission.permissionCode
+    ) {
       const permission = {
         id: Date.now().toString(),
         ...newPermission,
-        moduleId: moduleId
+        moduleId: moduleId,
       };
       setPermissions([...permissions, permission]);
-      setNewPermission({ name: '', alias: '', description: '', permissionCode: '', isActive: true });
+      setNewPermission({
+        name: "",
+        alias: "",
+        description: "",
+        permissionCode: "",
+        isActive: true,
+      });
       setIsAddDialogOpen(false);
       toast({
         title: "Success",
@@ -284,15 +298,17 @@ export default function ModulePermissionsPage() {
     }
   };
 
-  const handleEditPermission = (permission: any) => {
+  const handleEditPermission = (permission: Permission) => {
     setEditingPermission(permission);
   };
 
   const handleUpdatePermission = () => {
     if (editingPermission) {
-      setPermissions(permissions.map(p => 
-        p.id === editingPermission.id ? editingPermission : p
-      ));
+      setPermissions(
+        permissions.map((p) =>
+          p.id === editingPermission.id ? editingPermission : p,
+        ),
+      );
       setEditingPermission(null);
       toast({
         title: "Success",
@@ -303,13 +319,15 @@ export default function ModulePermissionsPage() {
   };
 
   const handleToggleActive = (permissionId: string) => {
-    const permission = permissions.find(p => p.id === permissionId);
+    const permission = permissions.find((p) => p.id === permissionId);
     const newStatus = !permission?.isActive;
-    
-    setPermissions(permissions.map(p => 
-      p.id === permissionId ? { ...p, isActive: newStatus } : p
-    ));
-    
+
+    setPermissions(
+      permissions.map((p) =>
+        p.id === permissionId ? { ...p, isActive: newStatus } : p,
+      ),
+    );
+
     // Show different toaster messages based on the new status
     if (newStatus) {
       toast({
@@ -327,8 +345,8 @@ export default function ModulePermissionsPage() {
   };
 
   const handleDeletePermission = (permissionId: string) => {
-    const permission = permissions.find(p => p.id === permissionId);
-    setPermissions(permissions.filter(p => p.id !== permissionId));
+    const permission = permissions.find((p) => p.id === permissionId);
+    setPermissions(permissions.filter((p) => p.id !== permissionId));
     toast({
       title: "Success",
       description: `Permission "${permission?.name}" has been deleted`,
@@ -345,12 +363,12 @@ export default function ModulePermissionsPage() {
         description: `Permission code "${code}" copied to clipboard`,
         variant: "default",
       });
-      
+
       // Reset the copied state after 2 seconds
       setTimeout(() => {
         setCopiedCode(null);
       }, 2000);
-    } catch (err) {
+    } catch (_err) {
       toast({
         title: "Error",
         description: "Failed to copy to clipboard",
@@ -359,18 +377,18 @@ export default function ModulePermissionsPage() {
     }
   };
 
-  const getStatusColor = (isActive: boolean) => {
-    return isActive 
-      ? 'bg-green-100 text-green-800 border-green-200' 
-      : 'bg-red-100 text-red-800 border-red-200';
+  const _getStatusColor = (isActive: boolean) => {
+    return isActive
+      ? "bg-green-100 text-green-800 border-green-200"
+      : "bg-red-100 text-red-800 border-red-200";
   };
 
   // Table columns configuration
-  const columns: ColumnsType<any> = [
+  const columns: ColumnsType<Permission> = [
     {
-      title: 'Permission Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Permission Name",
+      dataIndex: "name",
+      key: "name",
       width: 200,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, record) => (
@@ -381,20 +399,20 @@ export default function ModulePermissionsPage() {
       ),
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
       width: 300,
       ellipsis: true,
     },
     {
-      title: 'Permission Code',
-      dataIndex: 'permissionCode',
-      key: 'permissionCode',
+      title: "Permission Code",
+      dataIndex: "permissionCode",
+      key: "permissionCode",
       width: 180,
       render: (text) => (
         <div className="flex items-center space-x-2">
-          <code 
+          <code
             className="bg-gray-100 px-2 py-1 rounded text-xs font-mono flex-1 cursor-pointer hover:bg-gray-200 transition-colors select-none"
             onDoubleClick={() => handleCopyToClipboard(text)}
             title="Double-click to copy"
@@ -404,10 +422,16 @@ export default function ModulePermissionsPage() {
           <AntButton
             type="text"
             size="small"
-            icon={copiedCode === text ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+            icon={
+              copiedCode === text ? (
+                <Check className="h-3 w-3" />
+              ) : (
+                <Copy className="h-3 w-3" />
+              )
+            }
             onClick={() => handleCopyToClipboard(text)}
             className={`text-gray-500 hover:text-blue-600 ${
-              copiedCode === text ? 'text-green-600' : ''
+              copiedCode === text ? "text-green-600" : ""
             }`}
             title="Click to copy"
           />
@@ -415,11 +439,11 @@ export default function ModulePermissionsPage() {
       ),
     },
     {
-      title: 'Status',
-      dataIndex: 'isActive',
-      key: 'isActive',
+      title: "Status",
+      dataIndex: "isActive",
+      key: "isActive",
       width: 80,
-      align: 'center',
+      align: "center",
       render: (isActive, record) => (
         <Switch
           checked={isActive}
@@ -429,8 +453,8 @@ export default function ModulePermissionsPage() {
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       width: 120,
       render: (_, record) => (
         <Space size="small">
@@ -476,7 +500,7 @@ export default function ModulePermissionsPage() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => router.push('/dashboard')}
+          onClick={() => router.push("/dashboard")}
           className="flex items-center space-x-2"
         >
           <Home className="h-4 w-4" />
@@ -487,9 +511,15 @@ export default function ModulePermissionsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Module Permissions</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Module Permissions
+          </h1>
           <p className="text-gray-600 mt-2">
-            Manage permissions for <span className="font-semibold text-blue-600">{currentModule?.name}</span> module
+            Manage permissions for{" "}
+            <span className="font-semibold text-blue-600">
+              {currentModule?.name}
+            </span>{" "}
+            module
           </p>
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -508,37 +538,78 @@ export default function ModulePermissionsPage() {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">Permission Name</label>
+                <label
+                  htmlFor="permission-name"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Permission Name
+                </label>
                 <Input
+                  id="permission-name"
                   value={newPermission.name}
-                  onChange={(e) => setNewPermission({...newPermission, name: e.target.value})}
+                  onChange={(e) =>
+                    setNewPermission({ ...newPermission, name: e.target.value })
+                  }
                   placeholder="e.g., View Dashboard"
                   className="mt-1"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Alias</label>
+                <label
+                  htmlFor="permission-alias"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Alias
+                </label>
                 <Input
+                  id="permission-alias"
                   value={newPermission.alias}
-                  onChange={(e) => setNewPermission({...newPermission, alias: e.target.value})}
+                  onChange={(e) =>
+                    setNewPermission({
+                      ...newPermission,
+                      alias: e.target.value,
+                    })
+                  }
                   placeholder="e.g., dashboard.view"
                   className="mt-1"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Permission Code</label>
+                <label
+                  htmlFor="permission-code"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Permission Code
+                </label>
                 <Input
+                  id="permission-code"
                   value={newPermission.permissionCode}
-                  onChange={(e) => setNewPermission({...newPermission, permissionCode: e.target.value})}
+                  onChange={(e) =>
+                    setNewPermission({
+                      ...newPermission,
+                      permissionCode: e.target.value,
+                    })
+                  }
                   placeholder="e.g., DASH_VIEW"
                   className="mt-1"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Description</label>
+                <label
+                  htmlFor="permission-description"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Description
+                </label>
                 <Textarea
+                  id="permission-description"
                   value={newPermission.description}
-                  onChange={(e) => setNewPermission({...newPermission, description: e.target.value})}
+                  onChange={(e) =>
+                    setNewPermission({
+                      ...newPermission,
+                      description: e.target.value,
+                    })
+                  }
                   placeholder="Describe what this permission allows..."
                   className="mt-1"
                   rows={3}
@@ -548,15 +619,26 @@ export default function ModulePermissionsPage() {
                 <Checkbox
                   id="active"
                   checked={newPermission.isActive}
-                  onCheckedChange={(checked) => setNewPermission({...newPermission, isActive: checked as boolean})}
+                  onCheckedChange={(checked) =>
+                    setNewPermission({
+                      ...newPermission,
+                      isActive: checked as boolean,
+                    })
+                  }
                 />
-                <label htmlFor="active" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="active"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Active
                 </label>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsAddDialogOpen(false)}
+              >
                 Cancel
               </Button>
               <Button onClick={handleAddPermission}>
@@ -584,7 +666,9 @@ export default function ModulePermissionsPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg font-semibold">Permissions List</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                Permissions List
+              </CardTitle>
               <CardDescription>
                 Manage permissions for the {currentModule?.name} module
               </CardDescription>
@@ -603,9 +687,9 @@ export default function ModulePermissionsPage() {
               pageSize: 10,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total, range) => 
+              showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} permissions`,
-              pageSizeOptions: ['10', '20', '50', '100'],
+              pageSizeOptions: ["10", "20", "50", "100"],
             }}
             scroll={{ x: 800 }}
             size="small"
@@ -618,9 +702,13 @@ export default function ModulePermissionsPage() {
       {filteredPermissions.length === 0 && (
         <div className="text-center py-12">
           <Lock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No permissions found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No permissions found
+          </h3>
           <p className="text-gray-500 mb-4">
-            {searchTerm ? 'Try adjusting your search terms.' : 'Get started by adding a new permission.'}
+            {searchTerm
+              ? "Try adjusting your search terms."
+              : "Get started by adding a new permission."}
           </p>
           {!searchTerm && (
             <Button onClick={() => setIsAddDialogOpen(true)}>
@@ -632,7 +720,10 @@ export default function ModulePermissionsPage() {
       )}
 
       {/* Edit Permission Dialog */}
-      <Dialog open={!!editingPermission} onOpenChange={() => setEditingPermission(null)}>
+      <Dialog
+        open={!!editingPermission}
+        onOpenChange={() => setEditingPermission(null)}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Edit Permission</DialogTitle>
@@ -643,34 +734,62 @@ export default function ModulePermissionsPage() {
           {editingPermission && (
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">Permission Name</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Permission Name
+                </label>
                 <Input
                   value={editingPermission.name}
-                  onChange={(e) => setEditingPermission({...editingPermission, name: e.target.value})}
+                  onChange={(e) =>
+                    setEditingPermission({
+                      ...editingPermission,
+                      name: e.target.value,
+                    })
+                  }
                   className="mt-1"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Alias</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Alias
+                </label>
                 <Input
                   value={editingPermission.alias}
-                  onChange={(e) => setEditingPermission({...editingPermission, alias: e.target.value})}
+                  onChange={(e) =>
+                    setEditingPermission({
+                      ...editingPermission,
+                      alias: e.target.value,
+                    })
+                  }
                   className="mt-1"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Permission Code</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Permission Code
+                </label>
                 <Input
                   value={editingPermission.permissionCode}
-                  onChange={(e) => setEditingPermission({...editingPermission, permissionCode: e.target.value})}
+                  onChange={(e) =>
+                    setEditingPermission({
+                      ...editingPermission,
+                      permissionCode: e.target.value,
+                    })
+                  }
                   className="mt-1"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Description</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Description
+                </label>
                 <Textarea
                   value={editingPermission.description}
-                  onChange={(e) => setEditingPermission({...editingPermission, description: e.target.value})}
+                  onChange={(e) =>
+                    setEditingPermission({
+                      ...editingPermission,
+                      description: e.target.value,
+                    })
+                  }
                   className="mt-1"
                   rows={3}
                 />
@@ -679,16 +798,27 @@ export default function ModulePermissionsPage() {
                 <Checkbox
                   id="edit-active"
                   checked={editingPermission.isActive}
-                  onCheckedChange={(checked) => setEditingPermission({...editingPermission, isActive: checked as boolean})}
+                  onCheckedChange={(checked) =>
+                    setEditingPermission({
+                      ...editingPermission,
+                      isActive: checked as boolean,
+                    })
+                  }
                 />
-                <label htmlFor="edit-active" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="edit-active"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Active
                 </label>
               </div>
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingPermission(null)}>
+            <Button
+              variant="outline"
+              onClick={() => setEditingPermission(null)}
+            >
               Cancel
             </Button>
             <Button onClick={handleUpdatePermission}>

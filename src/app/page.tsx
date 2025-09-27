@@ -1,14 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import axios from "axios";
+import {
+  Building2,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  QrCode,
+  User,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import QRCodeLogin from "@/components/QRCodeLogin";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, QrCode, Mail, Lock, User, Building2, Loader2 } from "lucide-react";
-import QRCodeLogin from "@/components/QRCodeLogin";
-import axios from "axios";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,22 +36,22 @@ export default function AuthPage() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   // Check if user is already logged in
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem("authToken");
     if (token) {
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
     }
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [id]: value
+      [id]: value,
     }));
     setError(""); // Clear error when user types
   };
@@ -49,90 +64,101 @@ export default function AuthPage() {
     try {
       // For demo purposes, let's simulate a successful login
       // since the API might have CORS issues
-      if (formData.email === "partner@admin.com" && formData.password === "Admin@123") {
+      if (
+        formData.email === "partner@admin.com" &&
+        formData.password === "Admin@123"
+      ) {
         // Simulate API response
         const mockResponse = {
-          token: "mock-jwt-token-" + Date.now(),
+          token: `mock-jwt-token-${Date.now()}`,
           user: {
             id: 1,
             name: "Admin User",
             email: formData.email,
-            role: "admin"
-          }
+            role: "admin",
+          },
         };
 
-        console.log('Login successful:', mockResponse);
-        
+        console.log("Login successful:", mockResponse);
+
         // Store token and user data
-        localStorage.setItem('authToken', mockResponse.token);
-        localStorage.setItem('userData', JSON.stringify(mockResponse.user));
-        
+        localStorage.setItem("authToken", mockResponse.token);
+        localStorage.setItem("userData", JSON.stringify(mockResponse.user));
+
         // Redirect to dashboard
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
         return;
       }
 
       // Try actual API call through our proxy
-      const response = await axios.post('/api/auth/login', {
-        email: formData.email,
-        password: formData.password
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await axios.post(
+        "/api/auth/login",
+        {
+          email: formData.email,
+          password: formData.password,
         },
-        timeout: 15000 // 15 second timeout
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 15000, // 15 second timeout
+        },
+      );
 
       // Login successful
-      console.log('Login successful:', response.data);
-      
+      console.log("Login successful:", response.data);
+
       // Store token if provided
       if (response.data.token) {
-        localStorage.setItem('authToken', response.data.token);
+        localStorage.setItem("authToken", response.data.token);
       }
-      
+
       // Store user data if provided
       if (response.data.user) {
-        localStorage.setItem('userData', JSON.stringify(response.data.user));
+        localStorage.setItem("userData", JSON.stringify(response.data.user));
       }
-      
+
       // Redirect to dashboard
-      window.location.href = '/dashboard';
-      
+      window.location.href = "/dashboard";
     } catch (error: any) {
-      console.error('Login error:', error);
-      
-      if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error') {
-        setError('Network error. The API server might be down or unreachable. Using demo mode for testing.');
-        
+      console.error("Login error:", error);
+
+      if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
+        setError(
+          "Network error. The API server might be down or unreachable. Using demo mode for testing.",
+        );
+
         // Fallback to demo mode
         if (formData.email && formData.password) {
           const mockResponse = {
-            token: "demo-token-" + Date.now(),
+            token: `demo-token-${Date.now()}`,
             user: {
               id: 1,
               name: formData.name || "Demo User",
               email: formData.email,
-              role: "admin"
-            }
+              role: "admin",
+            },
           };
 
-          localStorage.setItem('authToken', mockResponse.token);
-          localStorage.setItem('userData', JSON.stringify(mockResponse.user));
-          
+          localStorage.setItem("authToken", mockResponse.token);
+          localStorage.setItem("userData", JSON.stringify(mockResponse.user));
+
           setTimeout(() => {
-            window.location.href = '/dashboard';
+            window.location.href = "/dashboard";
           }, 2000);
         }
       } else if (error.response) {
         // Server responded with error status
-        setError(error.response.data?.message || 'Login failed. Please check your credentials.');
+        setError(
+          error.response.data?.message ||
+            "Login failed. Please check your credentials.",
+        );
       } else if (error.request) {
         // Request was made but no response received
-        setError('Network error. Please check your connection and try again.');
+        setError("Network error. Please check your connection and try again.");
       } else {
         // Something else happened
-        setError('An unexpected error occurred. Please try again.');
+        setError("An unexpected error occurred. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -153,13 +179,13 @@ export default function AuthPage() {
 
     try {
       // For now, just show success message since we don't have a register API
-      console.log('Registration data:', formData);
-      alert('Registration successful! Please login with your credentials.');
+      console.log("Registration data:", formData);
+      alert("Registration successful! Please login with your credentials.");
       setIsLogin(true);
       setFormData({ name: "", email: "", password: "", confirmPassword: "" });
     } catch (error) {
-      console.error('Registration error:', error);
-      setError('Registration failed. Please try again.');
+      console.error("Registration error:", error);
+      setError("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -172,9 +198,13 @@ export default function AuthPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Building2 className="h-12 w-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold text-gray-900">ERP Admin Portal</h1>
+            <h1 className="text-4xl font-bold text-gray-900">
+              ERP Admin Portal
+            </h1>
           </div>
-          <p className="text-gray-600 text-lg">Secure access to your business management system</p>
+          <p className="text-gray-600 text-lg">
+            Secure access to your business management system
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -184,145 +214,161 @@ export default function AuthPage() {
               <CardTitle className="text-2xl font-bold text-center">
                 {isLogin ? "Welcome Back" : "Create Account"}
               </CardTitle>
-               <CardDescription className="text-center text-gray-600">
-                 {isLogin 
-                   ? "Sign in to your account to continue" 
-                   : "Enter your details to create a new account"
-                 }
-                 {isLogin && (
-                   <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                     <p className="text-sm text-blue-800 font-medium">Demo Credentials:</p>
-                     <p className="text-xs text-blue-600">Email: partner@admin.com</p>
-                     <p className="text-xs text-blue-600">Password: Admin@123</p>
-                   </div>
-                 )}
-               </CardDescription>
+              <CardDescription className="text-center text-gray-600">
+                {isLogin
+                  ? "Sign in to your account to continue"
+                  : "Enter your details to create a new account"}
+                {isLogin && (
+                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800 font-medium">
+                      Demo Credentials:
+                    </p>
+                    <p className="text-xs text-blue-600">
+                      Email: partner@admin.com
+                    </p>
+                    <p className="text-xs text-blue-600">Password: Admin@123</p>
+                  </div>
+                )}
+              </CardDescription>
             </CardHeader>
-             <CardContent className="space-y-6">
-               {!showQRLogin ? (
-                 <form onSubmit={isLogin ? handleLogin : handleRegister} className="space-y-4">
-                   {/* Error Message */}
-                   {error && (
-                     <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                       <p className="text-red-600 text-sm">{error}</p>
-                     </div>
-                   )}
+            <CardContent className="space-y-6">
+              {!showQRLogin ? (
+                <form
+                  onSubmit={isLogin ? handleLogin : handleRegister}
+                  className="space-y-4"
+                >
+                  {/* Error Message */}
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p className="text-red-600 text-sm">{error}</p>
+                    </div>
+                  )}
 
-                   {!isLogin && (
-                     <div className="space-y-2">
-                       <Label htmlFor="name">Full Name</Label>
-                       <div className="relative">
-                         <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                         <Input
-                           id="name"
-                           type="text"
-                           placeholder="Enter your full name"
-                           value={formData.name}
-                           onChange={handleInputChange}
-                           className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
-                           required
-                         />
-                       </div>
-                     </div>
-                   )}
-                   
-                   <div className="space-y-2">
-                     <Label htmlFor="email">Email Address</Label>
-                     <div className="relative">
-                       <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                       <Input
-                         id="email"
-                         type="email"
-                         placeholder="Enter your email"
-                         value={formData.email}
-                         onChange={handleInputChange}
-                         className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
-                         required
-                       />
-                     </div>
-                   </div>
+                  {!isLogin && (
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="Enter your full name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
 
-                   <div className="space-y-2">
-                     <Label htmlFor="password">Password</Label>
-                     <div className="relative">
-                       <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                       <Input
-                         id="password"
-                         type={showPassword ? "text" : "password"}
-                         placeholder="Enter your password"
-                         value={formData.password}
-                         onChange={handleInputChange}
-                         className="pl-10 pr-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
-                         required
-                       />
-                       <button
-                         type="button"
-                         onClick={() => setShowPassword(!showPassword)}
-                         className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600"
-                       >
-                         {showPassword ? <EyeOff /> : <Eye />}
-                       </button>
-                     </div>
-                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+                  </div>
 
-                   {!isLogin && (
-                     <div className="space-y-2">
-                       <Label htmlFor="confirmPassword">Confirm Password</Label>
-                       <div className="relative">
-                         <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                         <Input
-                           id="confirmPassword"
-                           type={showPassword ? "text" : "password"}
-                           placeholder="Confirm your password"
-                           value={formData.confirmPassword}
-                           onChange={handleInputChange}
-                           className="pl-10 pr-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
-                           required
-                         />
-                         <button
-                           type="button"
-                           onClick={() => setShowPassword(!showPassword)}
-                           className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600"
-                         >
-                           {showPassword ? <EyeOff /> : <Eye />}
-                         </button>
-                       </div>
-                     </div>
-                   )}
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        className="pl-10 pr-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600"
+                      >
+                        {showPassword ? <EyeOff /> : <Eye />}
+                      </button>
+                    </div>
+                  </div>
 
-                   {isLogin && (
-                     <div className="flex items-center justify-between">
-                       <div className="flex items-center space-x-2">
-                         <Checkbox 
-                           id="remember" 
-                           checked={rememberMe}
-                           onCheckedChange={(checked) => setRememberMe(checked === true)}
-                         />
-                         <Label htmlFor="remember" className="text-sm text-gray-600">
-                           Remember me
-                         </Label>
-                       </div>
-                       <Button variant="link" className="p-0 h-auto text-blue-600 hover:text-blue-800">
-                         Forgot password?
-                       </Button>
-                     </div>
-                   )}
+                  {!isLogin && (
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword">Confirm Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          id="confirmPassword"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Confirm your password"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          className="pl-10 pr-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <EyeOff /> : <Eye />}
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
-                   <Button 
-                     type="submit" 
-                     disabled={isLoading}
-                     className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50"
-                   >
-                     {isLoading ? (
-                       <>
-                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                         {isLogin ? "Signing In..." : "Creating Account..."}
-                       </>
-                     ) : (
-                       isLogin ? "Sign In" : "Create Account"
-                     )}
-                   </Button>
-                 </form>
+                  {isLogin && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="remember"
+                          checked={rememberMe}
+                          onCheckedChange={(checked) =>
+                            setRememberMe(checked === true)
+                          }
+                        />
+                        <Label
+                          htmlFor="remember"
+                          className="text-sm text-gray-600"
+                        >
+                          Remember me
+                        </Label>
+                      </div>
+                      <Button
+                        variant="link"
+                        className="p-0 h-auto text-blue-600 hover:text-blue-800"
+                      >
+                        Forgot password?
+                      </Button>
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {isLogin ? "Signing In..." : "Creating Account..."}
+                      </>
+                    ) : isLogin ? (
+                      "Sign In"
+                    ) : (
+                      "Create Account"
+                    )}
+                  </Button>
+                </form>
               ) : (
                 <QRCodeLogin onBack={() => setShowQRLogin(false)} />
               )}
@@ -334,15 +380,17 @@ export default function AuthPage() {
                       <span className="w-full border-t border-gray-200" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-white px-2 text-gray-500">Or continue with</span>
+                      <span className="bg-white px-2 text-gray-500">
+                        Or continue with
+                      </span>
                     </div>
                   </div>
 
-                   <Button 
-                     variant="outline" 
-                     onClick={() => setShowQRLogin(true)}
-                     className="w-full h-10 border-gray-200 hover:bg-gray-50"
-                   >
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowQRLogin(true)}
+                    className="w-full h-10 border-gray-200 hover:bg-gray-50"
+                  >
                     <QrCode className="mr-2 h-4 w-4" />
                     QR Code Login
                   </Button>
@@ -355,7 +403,9 @@ export default function AuthPage() {
           <div className="space-y-6">
             <Card className="shadow-xl border-0 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
               <CardHeader>
-                <CardTitle className="text-2xl">Why Choose Our Platform?</CardTitle>
+                <CardTitle className="text-2xl">
+                  Why Choose Our Platform?
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start space-x-3">
@@ -364,7 +414,9 @@ export default function AuthPage() {
                   </div>
                   <div>
                     <h4 className="font-semibold">Enterprise Security</h4>
-                    <p className="text-blue-100 text-sm">Bank-level encryption and security protocols</p>
+                    <p className="text-blue-100 text-sm">
+                      Bank-level encryption and security protocols
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -373,7 +425,9 @@ export default function AuthPage() {
                   </div>
                   <div>
                     <h4 className="font-semibold">QR Code Authentication</h4>
-                    <p className="text-blue-100 text-sm">Quick and secure login with mobile scanning</p>
+                    <p className="text-blue-100 text-sm">
+                      Quick and secure login with mobile scanning
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -382,7 +436,9 @@ export default function AuthPage() {
                   </div>
                   <div>
                     <h4 className="font-semibold">Complete ERP Solution</h4>
-                    <p className="text-blue-100 text-sm">Manage all aspects of your business in one place</p>
+                    <p className="text-blue-100 text-sm">
+                      Manage all aspects of your business in one place
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -392,13 +448,15 @@ export default function AuthPage() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <p className="text-gray-600 mb-4">
-                    {isLogin ? "Don't have an account?" : "Already have an account?"}
+                    {isLogin
+                      ? "Don't have an account?"
+                      : "Already have an account?"}
                   </p>
-                   <Button 
-                     variant="outline" 
-                     onClick={() => setIsLogin(!isLogin)}
-                     className="w-full h-10 border-gray-200 hover:bg-gray-50"
-                   >
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="w-full h-10 border-gray-200 hover:bg-gray-50"
+                  >
                     {isLogin ? "Create New Account" : "Sign In Instead"}
                   </Button>
                 </div>
@@ -410,27 +468,35 @@ export default function AuthPage() {
         {/* Footer */}
         <footer className="mt-12 text-center space-y-4">
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-            <a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Cookie Policy</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Support</a>
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Terms of Service
+            </a>
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Cookie Policy
+            </a>
+            <a href="#" className="hover:text-blue-600 transition-colors">
+              Support
+            </a>
           </div>
           <div className="text-sm text-gray-500">
             <p>© 2024 ERP Admin Portal. All rights reserved.</p>
             <p className="mt-1">
               Powered by{" "}
-              <a 
-                href="https://ui.shadcn.com/" 
-                target="_blank" 
+              <a
+                href="https://ui.shadcn.com/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
                 shadcn/ui
               </a>{" "}
               and{" "}
-              <a 
-                href="https://tailwindcss.com/" 
-                target="_blank" 
+              <a
+                href="https://tailwindcss.com/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >

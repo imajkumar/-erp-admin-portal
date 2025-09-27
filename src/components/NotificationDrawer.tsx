@@ -1,24 +1,22 @@
 "use client";
 
 import { Drawer } from "antd";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  Bell, 
-  Check, 
-  X, 
-  MoreVertical,
-  User,
-  Settings,
-  MessageSquare,
-  Calendar,
-  FileText,
+import {
   AlertTriangle,
-  Info,
+  Bell,
+  Calendar,
+  Check,
   CheckCircle,
-  Clock
+  FileText,
+  Info,
+  MessageSquare,
+  MoreVertical,
+  Settings,
+  X,
 } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface NotificationDrawerProps {
   isOpen: boolean;
@@ -30,7 +28,14 @@ interface Notification {
   title: string;
   message: string;
   timestamp: string;
-  type: 'info' | 'success' | 'warning' | 'error' | 'message' | 'calendar' | 'file';
+  type:
+    | "info"
+    | "success"
+    | "warning"
+    | "error"
+    | "message"
+    | "calendar"
+    | "file";
   isRead: boolean;
   avatar?: string;
   sender?: string;
@@ -38,133 +43,134 @@ interface Notification {
 
 const mockNotifications: Notification[] = [
   {
-    id: '1',
-    title: 'New Message',
-    message: 'Sarah Johnson sent you a message in Development Team',
-    timestamp: '2 minutes ago',
-    type: 'message',
+    id: "1",
+    title: "New Message",
+    message: "Sarah Johnson sent you a message in Development Team",
+    timestamp: "2 minutes ago",
+    type: "message",
     isRead: false,
-    avatar: 'SJ',
-    sender: 'Sarah Johnson'
+    avatar: "SJ",
+    sender: "Sarah Johnson",
   },
   {
-    id: '2',
-    title: 'Meeting Reminder',
-    message: 'Team standup meeting starts in 15 minutes',
-    timestamp: '5 minutes ago',
-    type: 'calendar',
-    isRead: false
+    id: "2",
+    title: "Meeting Reminder",
+    message: "Team standup meeting starts in 15 minutes",
+    timestamp: "5 minutes ago",
+    type: "calendar",
+    isRead: false,
   },
   {
-    id: '3',
-    title: 'File Uploaded',
-    message: 'New project documentation has been uploaded',
-    timestamp: '1 hour ago',
-    type: 'file',
-    isRead: true
-  },
-  {
-    id: '4',
-    title: 'System Update',
-    message: 'ERP system will be updated tonight at 2:00 AM',
-    timestamp: '2 hours ago',
-    type: 'info',
-    isRead: true
-  },
-  {
-    id: '5',
-    title: 'Task Completed',
-    message: 'Your task "Update user interface" has been completed',
-    timestamp: '3 hours ago',
-    type: 'success',
-    isRead: true
-  },
-  {
-    id: '6',
-    title: 'Warning',
-    message: 'Low disk space on server. Please check storage.',
-    timestamp: '4 hours ago',
-    type: 'warning',
-    isRead: true
-  },
-  {
-    id: '7',
-    title: 'New User',
-    message: 'Mike Chen has joined the Development Team',
-    timestamp: '1 day ago',
-    type: 'info',
+    id: "3",
+    title: "File Uploaded",
+    message: "New project documentation has been uploaded",
+    timestamp: "1 hour ago",
+    type: "file",
     isRead: true,
-    avatar: 'MC',
-    sender: 'Mike Chen'
   },
   {
-    id: '8',
-    title: 'Error Report',
-    message: 'Critical error detected in payment module',
-    timestamp: '1 day ago',
-    type: 'error',
-    isRead: true
+    id: "4",
+    title: "System Update",
+    message: "ERP system will be updated tonight at 2:00 AM",
+    timestamp: "2 hours ago",
+    type: "info",
+    isRead: true,
   },
   {
-    id: '9',
-    title: 'Schedule Change',
-    message: 'Weekly team meeting moved to Friday 3:00 PM',
-    timestamp: '2 days ago',
-    type: 'calendar',
-    isRead: true
+    id: "5",
+    title: "Task Completed",
+    message: 'Your task "Update user interface" has been completed',
+    timestamp: "3 hours ago",
+    type: "success",
+    isRead: true,
   },
   {
-    id: '10',
-    title: 'Document Review',
-    message: 'Please review the updated API documentation',
-    timestamp: '3 days ago',
-    type: 'file',
-    isRead: true
-  }
+    id: "6",
+    title: "Warning",
+    message: "Low disk space on server. Please check storage.",
+    timestamp: "4 hours ago",
+    type: "warning",
+    isRead: true,
+  },
+  {
+    id: "7",
+    title: "New User",
+    message: "Mike Chen has joined the Development Team",
+    timestamp: "1 day ago",
+    type: "info",
+    isRead: true,
+    avatar: "MC",
+    sender: "Mike Chen",
+  },
+  {
+    id: "8",
+    title: "Error Report",
+    message: "Critical error detected in payment module",
+    timestamp: "1 day ago",
+    type: "error",
+    isRead: true,
+  },
+  {
+    id: "9",
+    title: "Schedule Change",
+    message: "Weekly team meeting moved to Friday 3:00 PM",
+    timestamp: "2 days ago",
+    type: "calendar",
+    isRead: true,
+  },
+  {
+    id: "10",
+    title: "Document Review",
+    message: "Please review the updated API documentation",
+    timestamp: "3 days ago",
+    type: "file",
+    isRead: true,
+  },
 ];
 
-export default function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps) {
+export default function NotificationDrawer({
+  isOpen,
+  onClose,
+}: NotificationDrawerProps) {
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'message':
+      case "message":
         return <MessageSquare className="h-4 w-4 text-blue-500" />;
-      case 'calendar':
+      case "calendar":
         return <Calendar className="h-4 w-4 text-green-500" />;
-      case 'file':
+      case "file":
         return <FileText className="h-4 w-4 text-purple-500" />;
-      case 'success':
+      case "success":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case 'error':
+      case "error":
         return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case 'info':
       default:
         return <Info className="h-4 w-4 text-blue-500" />;
     }
   };
 
-  const getNotificationColor = (type: string) => {
+  const _getNotificationColor = (type: string) => {
     switch (type) {
-      case 'message':
-        return 'border-l-blue-500 bg-blue-50';
-      case 'calendar':
-        return 'border-l-green-500 bg-green-50';
-      case 'file':
-        return 'border-l-purple-500 bg-purple-50';
-      case 'success':
-        return 'border-l-green-500 bg-green-50';
-      case 'warning':
-        return 'border-l-yellow-500 bg-yellow-50';
-      case 'error':
-        return 'border-l-red-500 bg-red-50';
-      case 'info':
+      case "message":
+        return "border-l-blue-500 bg-blue-50";
+      case "calendar":
+        return "border-l-green-500 bg-green-50";
+      case "file":
+        return "border-l-purple-500 bg-purple-50";
+      case "success":
+        return "border-l-green-500 bg-green-50";
+      case "warning":
+        return "border-l-yellow-500 bg-yellow-50";
+      case "error":
+        return "border-l-red-500 bg-red-50";
       default:
-        return 'border-l-blue-500 bg-blue-50';
+        return "border-l-blue-500 bg-blue-50";
     }
   };
 
-  const unreadCount = mockNotifications.filter(n => !n.isRead).length;
+  const unreadCount = mockNotifications.filter((n) => !n.isRead).length;
 
   return (
     <Drawer
@@ -196,11 +202,11 @@ export default function NotificationDrawer({ isOpen, onClose }: NotificationDraw
       className="notification-drawer-custom"
       styles={{
         body: { padding: 0 },
-        header: { 
-          padding: '16px 24px',
-          borderBottom: '1px solid #f0f0f0',
-          backgroundColor: '#fafafa'
-        }
+        header: {
+          padding: "16px 24px",
+          borderBottom: "1px solid #f0f0f0",
+          backgroundColor: "#fafafa",
+        },
       }}
     >
       {/* Actions */}
@@ -230,7 +236,7 @@ export default function NotificationDrawer({ isOpen, onClose }: NotificationDraw
               <div
                 key={notification.id}
                 className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  !notification.isRead ? 'bg-blue-50/50' : ''
+                  !notification.isRead ? "bg-blue-50/50" : ""
                 }`}
               >
                 <div className="flex items-start space-x-3">

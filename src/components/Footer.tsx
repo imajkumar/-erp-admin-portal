@@ -1,28 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { 
-  Wifi,
-  WifiOff,
+import {
   Battery,
   BatteryLow,
+  Settings,
   Volume2,
   VolumeX,
-  Settings
+  Wifi,
+  WifiOff,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import Logo from "./Logo";
 
 export default function Footer() {
   const [time, setTime] = useState<Date | null>(null);
-  const [batteryLevel, setBatteryLevel] = useState(85);
-  const [isWifiConnected, setIsWifiConnected] = useState(true);
+  const [batteryLevel, _setBatteryLevel] = useState(85);
+  const [isWifiConnected, _setIsWifiConnected] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     // Initialize time on client side only
     setTime(new Date());
-    
+
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -31,28 +31,30 @@ export default function Footer() {
   }, []);
 
   const formatTime = (date: Date | null) => {
-    if (!date) return '--:--:--';
-    return date.toLocaleTimeString('en-US', {
+    if (!date) return "--:--:--";
+    return date.toLocaleTimeString("en-US", {
       hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
     });
   };
 
   const formatDate = (date: Date | null) => {
-    if (!date) return '--, --- --, ----';
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    if (!date) return "--, --- --, ----";
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
   const getBatteryIcon = () => {
-    if (batteryLevel > 75) return <Battery className="h-3 w-3 text-green-500" />;
-    if (batteryLevel > 25) return <Battery className="h-3 w-3 text-yellow-500" />;
+    if (batteryLevel > 75)
+      return <Battery className="h-3 w-3 text-green-500" />;
+    if (batteryLevel > 25)
+      return <Battery className="h-3 w-3 text-yellow-500" />;
     return <BatteryLow className="h-3 w-3 text-red-500" />;
   };
 
@@ -64,12 +66,20 @@ export default function Footer() {
           <div className="flex items-center space-x-4">
             {/* Logo */}
             <Logo className="h-5 w-auto" alt="Coca-Cola" />
-            
+
             {/* Separator */}
             <div className="w-px h-4 bg-gray-300"></div>
-            
+
             <div className="text-xs text-gray-500">
-              Powered by <a href="https://bellpatra.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline">Bellpatra Digital</a>
+              Powered by{" "}
+              <a
+                href="https://bellpatra.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                Bellpatra Digital
+              </a>
             </div>
             <Button
               variant="ghost"
@@ -81,7 +91,7 @@ export default function Footer() {
                 <span className="text-xs font-bold text-white">W</span>
               </div>
             </Button>
-            
+
             <Button
               variant="ghost"
               size="sm"
@@ -101,61 +111,59 @@ export default function Footer() {
               <div className="text-sm font-mono font-medium text-gray-800">
                 {formatTime(time)}
               </div>
-              <div className="text-xs text-gray-500">
-                {formatDate(time)}
-              </div>
+              <div className="text-xs text-gray-500">{formatDate(time)}</div>
             </div>
-            
+
             {/* System Status Icons */}
             <div className="flex items-center space-x-1">
               {/* WiFi */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:bg-gray-100 p-1 h-6"
-              title={isWifiConnected ? "WiFi Connected" : "WiFi Disconnected"}
-            >
-              {isWifiConnected ? (
-                <Wifi className="h-3 w-3 text-green-500" />
-              ) : (
-                <WifiOff className="h-3 w-3 text-red-500" />
-              )}
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:bg-gray-100 p-1 h-6"
+                title={isWifiConnected ? "WiFi Connected" : "WiFi Disconnected"}
+              >
+                {isWifiConnected ? (
+                  <Wifi className="h-3 w-3 text-green-500" />
+                ) : (
+                  <WifiOff className="h-3 w-3 text-red-500" />
+                )}
+              </Button>
 
-            {/* Volume */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMuted(!isMuted)}
-              className="text-gray-600 hover:bg-gray-100 p-1 h-6"
-              title={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? (
-                <VolumeX className="h-3 w-3 text-red-500" />
-              ) : (
-                <Volume2 className="h-3 w-3 text-green-500" />
-              )}
-            </Button>
+              {/* Volume */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsMuted(!isMuted)}
+                className="text-gray-600 hover:bg-gray-100 p-1 h-6"
+                title={isMuted ? "Unmute" : "Mute"}
+              >
+                {isMuted ? (
+                  <VolumeX className="h-3 w-3 text-red-500" />
+                ) : (
+                  <Volume2 className="h-3 w-3 text-green-500" />
+                )}
+              </Button>
 
-            {/* Battery */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:bg-gray-100 p-1 h-6"
-              title={`Battery ${batteryLevel}%`}
-            >
-              {getBatteryIcon()}
-            </Button>
+              {/* Battery */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:bg-gray-100 p-1 h-6"
+                title={`Battery ${batteryLevel}%`}
+              >
+                {getBatteryIcon()}
+              </Button>
 
-            {/* Settings */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-600 hover:bg-gray-100 p-1 h-6"
-              title="Settings"
-            >
-              <Settings className="h-3 w-3" />
-            </Button>
+              {/* Settings */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-600 hover:bg-gray-100 p-1 h-6"
+                title="Settings"
+              >
+                <Settings className="h-3 w-3" />
+              </Button>
             </div>
           </div>
         </div>

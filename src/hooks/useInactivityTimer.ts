@@ -1,11 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 interface UseInactivityTimerProps {
   timeout: number; // in milliseconds
   onTimeout: () => void;
 }
 
-export function useInactivityTimer({ timeout, onTimeout }: UseInactivityTimerProps) {
+export function useInactivityTimer({
+  timeout,
+  onTimeout,
+}: UseInactivityTimerProps) {
   const [isActive, setIsActive] = useState(true);
   const [timeLeft, setTimeLeft] = useState(timeout);
 
@@ -48,12 +51,12 @@ export function useInactivityTimer({ timeout, onTimeout }: UseInactivityTimerPro
   // Reset timer on user activity
   useEffect(() => {
     const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click',
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+      "click",
     ];
 
     const handleActivity = () => {

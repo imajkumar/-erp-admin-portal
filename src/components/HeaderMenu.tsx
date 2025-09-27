@@ -28,10 +28,7 @@ export default function HeaderMenu({ onDrawerToggle }: HeaderMenuProps) {
         >
           <div className="grid grid-cols-3 gap-0.5 w-4 h-4">
             {Array.from({ length: 9 }, (_, i) => (
-              <div
-                key={i}
-                className="w-0.5 h-0.5 bg-blue-600 rounded-full"
-              />
+              <div key={i} className="w-0.5 h-0.5 bg-blue-600 rounded-full" />
             ))}
           </div>
         </button>

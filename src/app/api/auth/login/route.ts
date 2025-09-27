@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
+import axios from "axios";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,46 +9,52 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!email || !password) {
       return NextResponse.json(
-        { message: 'Email and password are required' },
-        { status: 400 }
+        { message: "Email and password are required" },
+        { status: 400 },
       );
     }
 
     // Make request to external API
-    const response = await axios.post('http://165.22.212.8/auth/login', {
-      email,
-      password
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await axios.post(
+      "http://165.22.212.8/auth/login",
+      {
+        email,
+        password,
       },
-      timeout: 10000
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 10000,
+      },
+    );
 
     // Return the response from external API
     return NextResponse.json(response.data);
-
-  } catch (error: any) {
-    console.error('API Error:', error);
+  } catch (error: unknown) {
+    console.error("API Error:", error);
 
     // Handle different types of errors
-    if (error.response) {
+    if (error && typeof error === "object" && "response" in error) {
+      const axiosError = error as {
+        response: { data?: { message?: string }; status: number };
+      };
       // External API returned an error
       return NextResponse.json(
-        { message: error.response.data?.message || 'Login failed' },
-        { status: error.response.status }
+        { message: axiosError.response.data?.message || "Login failed" },
+        { status: axiosError.response.status },
       );
-    } else if (error.request) {
+    } else if (error && typeof error === "object" && "request" in error) {
       // Network error - external API is unreachable
       return NextResponse.json(
-        { message: 'External API is unreachable. Please try again later.' },
-        { status: 503 }
+        { message: "External API is unreachable. Please try again later." },
+        { status: 503 },
       );
     } else {
       // Other error
       return NextResponse.json(
-        { message: 'Internal server error' },
-        { status: 500 }
+        { message: "Internal server error" },
+        { status: 500 },
       );
     }
   }

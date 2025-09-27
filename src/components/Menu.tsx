@@ -1,9 +1,26 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import {
+  Globe,
+  HelpCircle,
+  Home,
+  Info,
+  Mail,
+  MapPin,
+  MoreHorizontal,
+  Package,
+  Phone,
+  Settings,
+  Users,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Home, Package, Info, Settings, Users, FileText, MoreHorizontal, Phone, Mail, MapPin, HelpCircle, Globe } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface MenuProps {
   className?: string;
@@ -26,11 +43,11 @@ export default function Menu({ className = "" }: MenuProps) {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => handleNavigation('/dashboard')}
+        onClick={() => handleNavigation("/dashboard")}
         className={`px-3 py-1 h-7 text-sm ${
-          isActive('/dashboard') 
-            ? 'bg-blue-100 text-blue-800 hover:bg-blue-150' 
-            : 'text-gray-700 hover:bg-gray-100'
+          isActive("/dashboard")
+            ? "bg-blue-100 text-blue-800 hover:bg-blue-150"
+            : "text-gray-700 hover:bg-gray-100"
         }`}
       >
         <Home className="h-3 w-3 mr-1" />
@@ -39,11 +56,11 @@ export default function Menu({ className = "" }: MenuProps) {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => handleNavigation('/dashboard/products')}
+        onClick={() => handleNavigation("/dashboard/products")}
         className={`px-3 py-1 h-7 text-sm ${
-          isActive('/dashboard/products') 
-            ? 'bg-blue-100 text-blue-800 hover:bg-blue-150' 
-            : 'text-gray-700 hover:bg-gray-100'
+          isActive("/dashboard/products")
+            ? "bg-blue-100 text-blue-800 hover:bg-blue-150"
+            : "text-gray-700 hover:bg-gray-100"
         }`}
       >
         <Package className="h-3 w-3 mr-1" />
@@ -52,11 +69,11 @@ export default function Menu({ className = "" }: MenuProps) {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => handleNavigation('/dashboard/about')}
+        onClick={() => handleNavigation("/dashboard/about")}
         className={`px-3 py-1 h-7 text-sm ${
-          isActive('/dashboard/about') 
-            ? 'bg-blue-100 text-blue-800 hover:bg-blue-150' 
-            : 'text-gray-700 hover:bg-gray-100'
+          isActive("/dashboard/about")
+            ? "bg-blue-100 text-blue-800 hover:bg-blue-150"
+            : "text-gray-700 hover:bg-gray-100"
         }`}
       >
         <Info className="h-3 w-3 mr-1" />

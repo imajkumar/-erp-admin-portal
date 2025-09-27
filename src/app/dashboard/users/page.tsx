@@ -1,74 +1,74 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Table, Button as AntButton, Space, Tag, Switch, Popconfirm, Select, DatePicker, Input as AntInput, Drawer, Form, Upload, Tabs, Timeline, Avatar as AntAvatar, Checkbox } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
-import type { UploadProps } from 'antd';
-import { useToast } from "@/hooks/use-toast";
-import { 
-  ArrowLeft, 
-  Home, 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Save, 
-  X,
-  Users,
-  User,
-  Phone,
-  Mail,
-  Calendar,
-  Filter,
-  Download,
-  RefreshCw,
-  Eye,
-  MoreHorizontal,
-  UserCheck,
-  UserX,
+import {
+  Avatar as AntAvatar,
+  Button as AntButton,
+  Input as AntInput,
+  Checkbox,
+  DatePicker,
+  Drawer,
+  Form,
+  Popconfirm,
+  Select,
+  Space,
+  Switch,
+  Table,
+  Tabs,
+  Tag,
+  Timeline,
+  Upload,
+} from "antd";
+import type { ColumnsType, TableProps } from "antd/es/table";
+import dayjs from "dayjs";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CheckCircle,
   Clock,
+  Crown,
+  Download,
+  Edit,
+  Eye,
+  Filter,
   Globe,
-  Upload as UploadIcon,
-  MapPin,
-  GraduationCap,
-  Briefcase,
-  Link,
-  UserPlus,
+  HelpCircle,
+  Home,
   Key,
   LogIn,
-  Shield,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Calendar as CalendarIcon,
-  Building,
-  Phone as PhoneIcon,
+  Mail,
   Mail as MailIcon,
-  Globe as GlobeIcon,
-  Facebook,
-  Twitter,
-  Linkedin,
-  Instagram,
-  Github,
-  Youtube,
+  MapPin,
   MessageSquare as MessageSquareIcon,
-  FileText as FileTextIcon,
-  Activity as ActivityIcon,
-  TrendingUp as TrendingUpIcon,
-  BarChart3 as BarChart3Icon,
-  HelpCircle,
+  MoreHorizontal,
+  Phone,
+  Plus,
+  RefreshCw,
+  Save,
+  Search,
+  Star,
+  Trash2,
+  Upload as UploadIcon,
+  User,
+  UserCheck,
   UserCog,
-  Settings,
-  Crown,
-  Star
+  UserPlus,
+  Users,
+  UserX,
+  X,
+  XCircle,
 } from "lucide-react";
-import dayjs from 'dayjs';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
 
 const { Search: AntSearch } = AntInput;
 const { Option } = Select;
@@ -76,118 +76,463 @@ const { RangePicker } = DatePicker;
 
 // Mock data for roles and permissions
 const mockRoles = [
-  { 
-    id: '1', 
-    name: 'Super Admin', 
-    description: 'Full system access', 
-    color: 'red',
-    permissions: ['dashboard.view', 'dashboard.edit', 'users.view', 'users.create', 'users.edit', 'users.delete', 'roles.view', 'roles.create', 'roles.edit', 'roles.delete', 'permissions.view', 'permissions.assign', 'settings.view', 'settings.edit', 'reports.view', 'reports.generate', 'analytics.view', 'backup.create', 'logs.view', 'notifications.send']
+  {
+    id: "1",
+    name: "Super Admin",
+    description: "Full system access",
+    color: "red",
+    permissions: [
+      "dashboard.view",
+      "dashboard.edit",
+      "users.view",
+      "users.create",
+      "users.edit",
+      "users.delete",
+      "roles.view",
+      "roles.create",
+      "roles.edit",
+      "roles.delete",
+      "permissions.view",
+      "permissions.assign",
+      "settings.view",
+      "settings.edit",
+      "reports.view",
+      "reports.generate",
+      "analytics.view",
+      "backup.create",
+      "logs.view",
+      "notifications.send",
+    ],
   },
-  { 
-    id: '2', 
-    name: 'Admin', 
-    description: 'Administrative access', 
-    color: 'orange',
-    permissions: ['dashboard.view', 'dashboard.edit', 'users.view', 'users.create', 'users.edit', 'roles.view', 'permissions.view', 'settings.view', 'reports.view', 'reports.generate', 'analytics.view', 'logs.view']
+  {
+    id: "2",
+    name: "Admin",
+    description: "Administrative access",
+    color: "orange",
+    permissions: [
+      "dashboard.view",
+      "dashboard.edit",
+      "users.view",
+      "users.create",
+      "users.edit",
+      "roles.view",
+      "permissions.view",
+      "settings.view",
+      "reports.view",
+      "reports.generate",
+      "analytics.view",
+      "logs.view",
+    ],
   },
-  { 
-    id: '3', 
-    name: 'Manager', 
-    description: 'Management level access', 
-    color: 'blue',
-    permissions: ['dashboard.view', 'users.view', 'reports.view', 'reports.generate', 'analytics.view']
+  {
+    id: "3",
+    name: "Manager",
+    description: "Management level access",
+    color: "blue",
+    permissions: [
+      "dashboard.view",
+      "users.view",
+      "reports.view",
+      "reports.generate",
+      "analytics.view",
+    ],
   },
-  { 
-    id: '4', 
-    name: 'Employee', 
-    description: 'Standard employee access', 
-    color: 'green',
-    permissions: ['dashboard.view', 'users.view']
+  {
+    id: "4",
+    name: "Employee",
+    description: "Standard employee access",
+    color: "green",
+    permissions: ["dashboard.view", "users.view"],
   },
-  { 
-    id: '5', 
-    name: 'Viewer', 
-    description: 'Read-only access', 
-    color: 'gray',
-    permissions: ['dashboard.view', 'users.view', 'reports.view']
+  {
+    id: "5",
+    name: "Viewer",
+    description: "Read-only access",
+    color: "gray",
+    permissions: ["dashboard.view", "users.view", "reports.view"],
   },
-  { 
-    id: '6', 
-    name: 'HR Manager', 
-    description: 'Human resources management', 
-    color: 'purple',
-    permissions: ['dashboard.view', 'users.view', 'users.create', 'users.edit', 'reports.view', 'reports.generate']
+  {
+    id: "6",
+    name: "HR Manager",
+    description: "Human resources management",
+    color: "purple",
+    permissions: [
+      "dashboard.view",
+      "users.view",
+      "users.create",
+      "users.edit",
+      "reports.view",
+      "reports.generate",
+    ],
   },
-  { 
-    id: '7', 
-    name: 'Finance Manager', 
-    description: 'Financial management access', 
-    color: 'cyan',
-    permissions: ['dashboard.view', 'reports.view', 'reports.generate', 'analytics.view']
+  {
+    id: "7",
+    name: "Finance Manager",
+    description: "Financial management access",
+    color: "cyan",
+    permissions: [
+      "dashboard.view",
+      "reports.view",
+      "reports.generate",
+      "analytics.view",
+    ],
   },
-  { 
-    id: '8', 
-    name: 'Sales Manager', 
-    description: 'Sales management access', 
-    color: 'magenta',
-    permissions: ['dashboard.view', 'users.view', 'reports.view', 'reports.generate', 'analytics.view']
-  }
+  {
+    id: "8",
+    name: "Sales Manager",
+    description: "Sales management access",
+    color: "magenta",
+    permissions: [
+      "dashboard.view",
+      "users.view",
+      "reports.view",
+      "reports.generate",
+      "analytics.view",
+    ],
+  },
 ];
 
 const mockPermissions = [
-  { id: 'dashboard.view', name: 'Dashboard View', description: 'View dashboard content', module: 'Dashboard' },
-  { id: 'dashboard.edit', name: 'Dashboard Edit', description: 'Edit dashboard layout', module: 'Dashboard' },
-  { id: 'users.view', name: 'Users View', description: 'View user list', module: 'User Management' },
-  { id: 'users.create', name: 'Users Create', description: 'Create new users', module: 'User Management' },
-  { id: 'users.edit', name: 'Users Edit', description: 'Edit user information', module: 'User Management' },
-  { id: 'users.delete', name: 'Users Delete', description: 'Delete users', module: 'User Management' },
-  { id: 'roles.view', name: 'Roles View', description: 'View roles', module: 'Role Management' },
-  { id: 'roles.create', name: 'Roles Create', description: 'Create new roles', module: 'Role Management' },
-  { id: 'roles.edit', name: 'Roles Edit', description: 'Edit roles', module: 'Role Management' },
-  { id: 'roles.delete', name: 'Roles Delete', description: 'Delete roles', module: 'Role Management' },
-  { id: 'permissions.view', name: 'Permissions View', description: 'View permissions', module: 'Permission Management' },
-  { id: 'permissions.assign', name: 'Permissions Assign', description: 'Assign permissions', module: 'Permission Management' },
-  { id: 'settings.view', name: 'Settings View', description: 'View system settings', module: 'System Settings' },
-  { id: 'settings.edit', name: 'Settings Edit', description: 'Edit system settings', module: 'System Settings' },
-  { id: 'reports.view', name: 'Reports View', description: 'View reports', module: 'Reports' },
-  { id: 'reports.generate', name: 'Reports Generate', description: 'Generate reports', module: 'Reports' },
-  { id: 'analytics.view', name: 'Analytics View', description: 'View analytics', module: 'Analytics' },
-  { id: 'backup.create', name: 'Backup Create', description: 'Create system backups', module: 'System Maintenance' },
-  { id: 'logs.view', name: 'Logs View', description: 'View system logs', module: 'System Logs' },
-  { id: 'notifications.send', name: 'Notifications Send', description: 'Send notifications', module: 'Notifications' }
+  {
+    id: "dashboard.view",
+    name: "Dashboard View",
+    description: "View dashboard content",
+    module: "Dashboard",
+  },
+  {
+    id: "dashboard.edit",
+    name: "Dashboard Edit",
+    description: "Edit dashboard layout",
+    module: "Dashboard",
+  },
+  {
+    id: "users.view",
+    name: "Users View",
+    description: "View user list",
+    module: "User Management",
+  },
+  {
+    id: "users.create",
+    name: "Users Create",
+    description: "Create new users",
+    module: "User Management",
+  },
+  {
+    id: "users.edit",
+    name: "Users Edit",
+    description: "Edit user information",
+    module: "User Management",
+  },
+  {
+    id: "users.delete",
+    name: "Users Delete",
+    description: "Delete users",
+    module: "User Management",
+  },
+  {
+    id: "roles.view",
+    name: "Roles View",
+    description: "View roles",
+    module: "Role Management",
+  },
+  {
+    id: "roles.create",
+    name: "Roles Create",
+    description: "Create new roles",
+    module: "Role Management",
+  },
+  {
+    id: "roles.edit",
+    name: "Roles Edit",
+    description: "Edit roles",
+    module: "Role Management",
+  },
+  {
+    id: "roles.delete",
+    name: "Roles Delete",
+    description: "Delete roles",
+    module: "Role Management",
+  },
+  {
+    id: "permissions.view",
+    name: "Permissions View",
+    description: "View permissions",
+    module: "Permission Management",
+  },
+  {
+    id: "permissions.assign",
+    name: "Permissions Assign",
+    description: "Assign permissions",
+    module: "Permission Management",
+  },
+  {
+    id: "settings.view",
+    name: "Settings View",
+    description: "View system settings",
+    module: "System Settings",
+  },
+  {
+    id: "settings.edit",
+    name: "Settings Edit",
+    description: "Edit system settings",
+    module: "System Settings",
+  },
+  {
+    id: "reports.view",
+    name: "Reports View",
+    description: "View reports",
+    module: "Reports",
+  },
+  {
+    id: "reports.generate",
+    name: "Reports Generate",
+    description: "Generate reports",
+    module: "Reports",
+  },
+  {
+    id: "analytics.view",
+    name: "Analytics View",
+    description: "View analytics",
+    module: "Analytics",
+  },
+  {
+    id: "backup.create",
+    name: "Backup Create",
+    description: "Create system backups",
+    module: "System Maintenance",
+  },
+  {
+    id: "logs.view",
+    name: "Logs View",
+    description: "View system logs",
+    module: "System Logs",
+  },
+  {
+    id: "notifications.send",
+    name: "Notifications Send",
+    description: "Send notifications",
+    module: "Notifications",
+  },
 ];
 
 // Generate dummy data for 100 users
 const generateDummyUsers = () => {
   const firstNames = [
-    'John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'James', 'Jessica', 'Robert', 'Ashley',
-    'William', 'Amanda', 'Richard', 'Jennifer', 'Charles', 'Lisa', 'Joseph', 'Nancy', 'Thomas', 'Karen',
-    'Christopher', 'Betty', 'Daniel', 'Helen', 'Matthew', 'Sandra', 'Anthony', 'Donna', 'Mark', 'Carol',
-    'Donald', 'Ruth', 'Steven', 'Sharon', 'Paul', 'Michelle', 'Andrew', 'Laura', 'Joshua', 'Sarah',
-    'Kenneth', 'Kimberly', 'Kevin', 'Deborah', 'Brian', 'Dorothy', 'George', 'Lisa', 'Timothy', 'Nancy',
-    'Ronald', 'Karen', 'Jason', 'Betty', 'Edward', 'Helen', 'Jeffrey', 'Sandra', 'Ryan', 'Donna',
-    'Jacob', 'Carol', 'Gary', 'Ruth', 'Nicholas', 'Sharon', 'Eric', 'Michelle', 'Jonathan', 'Laura',
-    'Stephen', 'Sarah', 'Larry', 'Kimberly', 'Justin', 'Deborah', 'Scott', 'Dorothy', 'Brandon', 'Lisa',
-    'Benjamin', 'Nancy', 'Samuel', 'Karen', 'Gregory', 'Betty', 'Alexander', 'Helen', 'Patrick', 'Sandra',
-    'Jack', 'Donna', 'Dennis', 'Carol', 'Jerry', 'Ruth', 'Tyler', 'Sharon', 'Aaron', 'Michelle'
+    "John",
+    "Jane",
+    "Michael",
+    "Sarah",
+    "David",
+    "Emily",
+    "James",
+    "Jessica",
+    "Robert",
+    "Ashley",
+    "William",
+    "Amanda",
+    "Richard",
+    "Jennifer",
+    "Charles",
+    "Lisa",
+    "Joseph",
+    "Nancy",
+    "Thomas",
+    "Karen",
+    "Christopher",
+    "Betty",
+    "Daniel",
+    "Helen",
+    "Matthew",
+    "Sandra",
+    "Anthony",
+    "Donna",
+    "Mark",
+    "Carol",
+    "Donald",
+    "Ruth",
+    "Steven",
+    "Sharon",
+    "Paul",
+    "Michelle",
+    "Andrew",
+    "Laura",
+    "Joshua",
+    "Sarah",
+    "Kenneth",
+    "Kimberly",
+    "Kevin",
+    "Deborah",
+    "Brian",
+    "Dorothy",
+    "George",
+    "Lisa",
+    "Timothy",
+    "Nancy",
+    "Ronald",
+    "Karen",
+    "Jason",
+    "Betty",
+    "Edward",
+    "Helen",
+    "Jeffrey",
+    "Sandra",
+    "Ryan",
+    "Donna",
+    "Jacob",
+    "Carol",
+    "Gary",
+    "Ruth",
+    "Nicholas",
+    "Sharon",
+    "Eric",
+    "Michelle",
+    "Jonathan",
+    "Laura",
+    "Stephen",
+    "Sarah",
+    "Larry",
+    "Kimberly",
+    "Justin",
+    "Deborah",
+    "Scott",
+    "Dorothy",
+    "Brandon",
+    "Lisa",
+    "Benjamin",
+    "Nancy",
+    "Samuel",
+    "Karen",
+    "Gregory",
+    "Betty",
+    "Alexander",
+    "Helen",
+    "Patrick",
+    "Sandra",
+    "Jack",
+    "Donna",
+    "Dennis",
+    "Carol",
+    "Jerry",
+    "Ruth",
+    "Tyler",
+    "Sharon",
+    "Aaron",
+    "Michelle",
   ];
 
   const lastNames = [
-    'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
-    'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
-    'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson',
-    'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
-    'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts',
-    'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Reyes',
-    'Stewart', 'Morris', 'Morales', 'Murphy', 'Cook', 'Rogers', 'Gutierrez', 'Ortiz', 'Morgan', 'Cooper',
-    'Peterson', 'Bailey', 'Reed', 'Kelly', 'Howard', 'Ramos', 'Kim', 'Cox', 'Ward', 'Richardson',
-    'Watson', 'Brooks', 'Chavez', 'Wood', 'James', 'Bennett', 'Gray', 'Mendoza', 'Ruiz', 'Hughes',
-    'Price', 'Alvarez', 'Castillo', 'Sanders', 'Patel', 'Myers', 'Long', 'Ross', 'Foster', 'Jimenez'
+    "Smith",
+    "Johnson",
+    "Williams",
+    "Brown",
+    "Jones",
+    "Garcia",
+    "Miller",
+    "Davis",
+    "Rodriguez",
+    "Martinez",
+    "Hernandez",
+    "Lopez",
+    "Gonzalez",
+    "Wilson",
+    "Anderson",
+    "Thomas",
+    "Taylor",
+    "Moore",
+    "Jackson",
+    "Martin",
+    "Lee",
+    "Perez",
+    "Thompson",
+    "White",
+    "Harris",
+    "Sanchez",
+    "Clark",
+    "Ramirez",
+    "Lewis",
+    "Robinson",
+    "Walker",
+    "Young",
+    "Allen",
+    "King",
+    "Wright",
+    "Scott",
+    "Torres",
+    "Nguyen",
+    "Hill",
+    "Flores",
+    "Green",
+    "Adams",
+    "Nelson",
+    "Baker",
+    "Hall",
+    "Rivera",
+    "Campbell",
+    "Mitchell",
+    "Carter",
+    "Roberts",
+    "Gomez",
+    "Phillips",
+    "Evans",
+    "Turner",
+    "Diaz",
+    "Parker",
+    "Cruz",
+    "Edwards",
+    "Collins",
+    "Reyes",
+    "Stewart",
+    "Morris",
+    "Morales",
+    "Murphy",
+    "Cook",
+    "Rogers",
+    "Gutierrez",
+    "Ortiz",
+    "Morgan",
+    "Cooper",
+    "Peterson",
+    "Bailey",
+    "Reed",
+    "Kelly",
+    "Howard",
+    "Ramos",
+    "Kim",
+    "Cox",
+    "Ward",
+    "Richardson",
+    "Watson",
+    "Brooks",
+    "Chavez",
+    "Wood",
+    "James",
+    "Bennett",
+    "Gray",
+    "Mendoza",
+    "Ruiz",
+    "Hughes",
+    "Price",
+    "Alvarez",
+    "Castillo",
+    "Sanders",
+    "Patel",
+    "Myers",
+    "Long",
+    "Ross",
+    "Foster",
+    "Jimenez",
   ];
 
-  const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'company.com', 'business.org'];
-  const genders = ['Male', 'Female', 'Other'];
-  const statuses = ['online', 'offline'];
+  const domains = [
+    "gmail.com",
+    "yahoo.com",
+    "hotmail.com",
+    "outlook.com",
+    "company.com",
+    "business.org",
+  ];
+  const genders = ["Male", "Female", "Other"];
+  const statuses = ["online", "offline"];
 
   return Array.from({ length: 100 }, (_, index) => {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -195,13 +540,15 @@ const generateDummyUsers = () => {
     const domain = domains[Math.floor(Math.random() * domains.length)];
     const gender = genders[Math.floor(Math.random() * genders.length)];
     const status = statuses[Math.floor(Math.random() * statuses.length)];
-    
+
     // Generate phone number
     const phone = `+1-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
-    
+
     // Generate last login (random date within last 30 days)
-    const lastLogin = dayjs().subtract(Math.floor(Math.random() * 30), 'day').subtract(Math.floor(Math.random() * 24), 'hour');
-    
+    const lastLogin = dayjs()
+      .subtract(Math.floor(Math.random() * 30), "day")
+      .subtract(Math.floor(Math.random() * 24), "hour");
+
     // Generate random roles for user (1-3 roles)
     const userRoles = [];
     const numRoles = Math.floor(Math.random() * 3) + 1;
@@ -213,11 +560,13 @@ const generateDummyUsers = () => {
     // Generate random permissions for user
     const userPermissions = [];
     const numPermissions = Math.floor(Math.random() * 10) + 5;
-    const shuffledPermissions = [...mockPermissions].sort(() => 0.5 - Math.random());
+    const shuffledPermissions = [...mockPermissions].sort(
+      () => 0.5 - Math.random(),
+    );
     for (let i = 0; i < numPermissions; i++) {
       userPermissions.push(shuffledPermissions[i]);
     }
-    
+
     return {
       id: (index + 1).toString(),
       name: `${firstName} ${lastName}`,
@@ -229,12 +578,30 @@ const generateDummyUsers = () => {
       status,
       lastLogin: lastLogin.toDate(),
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${firstName}${lastName}`,
-      joinDate: dayjs().subtract(Math.floor(Math.random() * 365), 'day').toDate(),
-      department: ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'][Math.floor(Math.random() * 6)],
-      role: ['Admin', 'Manager', 'Employee', 'Intern'][Math.floor(Math.random() * 4)],
-      location: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia'][Math.floor(Math.random() * 6)],
+      joinDate: dayjs()
+        .subtract(Math.floor(Math.random() * 365), "day")
+        .toDate(),
+      department: [
+        "Engineering",
+        "Marketing",
+        "Sales",
+        "HR",
+        "Finance",
+        "Operations",
+      ][Math.floor(Math.random() * 6)],
+      role: ["Admin", "Manager", "Employee", "Intern"][
+        Math.floor(Math.random() * 4)
+      ],
+      location: [
+        "New York",
+        "Los Angeles",
+        "Chicago",
+        "Houston",
+        "Phoenix",
+        "Philadelphia",
+      ][Math.floor(Math.random() * 6)],
       roles: userRoles,
-      permissions: userPermissions
+      permissions: userPermissions,
     };
   });
 };
@@ -242,26 +609,31 @@ const generateDummyUsers = () => {
 export default function UserManagementPage() {
   const router = useRouter();
   const { toast } = useToast();
-  
+
   const [users, setUsers] = useState<any[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [genderFilter, setGenderFilter] = useState<string>('all');
-  const [departmentFilter, setDepartmentFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [genderFilter, setGenderFilter] = useState<string>("all");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("all");
   const [dateRange, setDateRange] = useState<any[]>([]);
   const [addDrawerOpen, setAddDrawerOpen] = useState(false);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [viewDrawerOpen, setViewDrawerOpen] = useState(false);
-  const [rolePermissionDrawerOpen, setRolePermissionDrawerOpen] = useState(false);
+  const [rolePermissionDrawerOpen, setRolePermissionDrawerOpen] =
+    useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [form] = Form.useForm();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
-  const [showRolePermissions, setShowRolePermissions] = useState<string | null>(null);
-  const [permissionStatus, setPermissionStatus] = useState<{ [key: string]: boolean }>({});
+  const [showRolePermissions, setShowRolePermissions] = useState<string | null>(
+    null,
+  );
+  const [permissionStatus, setPermissionStatus] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     setLoading(true);
@@ -279,51 +651,63 @@ export default function UserManagementPage() {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(user =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.phone.includes(searchTerm)
+      filtered = filtered.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.phone.includes(searchTerm),
       );
     }
 
     // Status filter
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(user => user.status === statusFilter);
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((user) => user.status === statusFilter);
     }
 
     // Gender filter
-    if (genderFilter !== 'all') {
-      filtered = filtered.filter(user => user.gender === genderFilter);
+    if (genderFilter !== "all") {
+      filtered = filtered.filter((user) => user.gender === genderFilter);
     }
 
     // Department filter
-    if (departmentFilter !== 'all') {
-      filtered = filtered.filter(user => user.department === departmentFilter);
+    if (departmentFilter !== "all") {
+      filtered = filtered.filter(
+        (user) => user.department === departmentFilter,
+      );
     }
 
     // Date range filter
     if (dateRange && dateRange.length === 2) {
-      filtered = filtered.filter(user => {
+      filtered = filtered.filter((user) => {
         const userDate = dayjs(user.joinDate);
-        return userDate.isAfter(dateRange[0]) && userDate.isBefore(dateRange[1]);
+        return (
+          userDate.isAfter(dateRange[0]) && userDate.isBefore(dateRange[1])
+        );
       });
     }
 
     setFilteredUsers(filtered);
-  }, [users, searchTerm, statusFilter, genderFilter, departmentFilter, dateRange]);
+  }, [
+    users,
+    searchTerm,
+    statusFilter,
+    genderFilter,
+    departmentFilter,
+    dateRange,
+  ]);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleHome = () => {
-    router.push('/dashboard');
+    router.push("/dashboard");
   };
 
-  const handleStatusChange = (userId: string, status: string) => {
-    setUsers(users.map(user => 
-      user.id === userId ? { ...user, status } : user
-    ));
+  const _handleStatusChange = (userId: string, status: string) => {
+    setUsers(
+      users.map((user) => (user.id === userId ? { ...user, status } : user)),
+    );
     toast({
       title: "Status Updated",
       description: `User status changed to ${status}`,
@@ -332,7 +716,7 @@ export default function UserManagementPage() {
   };
 
   const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter(user => user.id !== userId));
+    setUsers(users.filter((user) => user.id !== userId));
     toast({
       title: "User Deleted",
       description: "User has been successfully deleted",
@@ -341,20 +725,20 @@ export default function UserManagementPage() {
   };
 
   const handleEditUser = (userId: string) => {
-    const user = users.find(u => u.id === userId);
+    const user = users.find((u) => u.id === userId);
     if (user) {
       setSelectedUser(user);
       form.setFieldsValue({
         ...user,
         joinDate: dayjs(user.joinDate),
-        lastLogin: dayjs(user.lastLogin)
+        lastLogin: dayjs(user.lastLogin),
       });
       setEditDrawerOpen(true);
     }
   };
 
   const handleViewUser = (userId: string) => {
-    const user = users.find(u => u.id === userId);
+    const user = users.find((u) => u.id === userId);
     if (user) {
       setSelectedUser(user);
       setViewDrawerOpen(true);
@@ -372,19 +756,21 @@ export default function UserManagementPage() {
       const newUser = {
         id: selectedUser ? selectedUser.id : (users.length + 1).toString(),
         ...values,
-        avatar: values.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.firstName}${values.lastName}`,
-        status: values.status || 'offline',
+        avatar:
+          values.avatar ||
+          `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.firstName}${values.lastName}`,
+        status: values.status || "offline",
         lastLogin: values.lastLogin ? values.lastLogin.toDate() : new Date(),
-        joinDate: values.joinDate ? values.joinDate.toDate() : new Date()
+        joinDate: values.joinDate ? values.joinDate.toDate() : new Date(),
       };
 
       if (selectedUser) {
-        setUsers(users.map(u => u.id === selectedUser.id ? newUser : u));
-    toast({
+        setUsers(users.map((u) => (u.id === selectedUser.id ? newUser : u)));
+        toast({
           title: "User Updated",
           description: "User has been successfully updated",
-      variant: "default",
-    });
+          variant: "default",
+        });
         setEditDrawerOpen(false);
       } else {
         setUsers([...users, newUser]);
@@ -395,7 +781,7 @@ export default function UserManagementPage() {
         });
         setAddDrawerOpen(false);
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: "Error",
         description: "Failed to save user",
@@ -405,9 +791,11 @@ export default function UserManagementPage() {
   };
 
   const handleBlockUser = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId ? { ...user, status: 'blocked' } : user
-    ));
+    setUsers(
+      users.map((user) =>
+        user.id === userId ? { ...user, status: "blocked" } : user,
+      ),
+    );
     toast({
       title: "User Blocked",
       description: "User has been blocked",
@@ -416,9 +804,11 @@ export default function UserManagementPage() {
   };
 
   const handleUnblockUser = (userId: string) => {
-    setUsers(users.map(user => 
-      user.id === userId ? { ...user, status: 'offline' } : user
-    ));
+    setUsers(
+      users.map((user) =>
+        user.id === userId ? { ...user, status: "offline" } : user,
+      ),
+    );
     toast({
       title: "User Unblocked",
       description: "User has been unblocked",
@@ -426,7 +816,7 @@ export default function UserManagementPage() {
     });
   };
 
-  const handleSendResetPassword = (userId: string) => {
+  const handleSendResetPassword = (_userId: string) => {
     toast({
       title: "Reset Password Sent",
       description: "Password reset link has been sent to user's email",
@@ -434,7 +824,7 @@ export default function UserManagementPage() {
     });
   };
 
-  const handleLoginAsUser = (userId: string) => {
+  const handleLoginAsUser = (_userId: string) => {
     toast({
       title: "Login as User",
       description: "You are now logged in as this user",
@@ -443,19 +833,21 @@ export default function UserManagementPage() {
   };
 
   const handleManageRolesPermissions = (userId: string) => {
-    const user = users.find(u => u.id === userId);
+    const user = users.find((u) => u.id === userId);
     if (user) {
       setSelectedUser(user);
       setSelectedRoles(user.roles?.map((role: any) => role.id) || []);
-      setSelectedPermissions(user.permissions?.map((perm: any) => perm.id) || []);
-      
+      setSelectedPermissions(
+        user.permissions?.map((perm: any) => perm.id) || [],
+      );
+
       // Initialize permission status (all active by default)
       const statusMap: { [key: string]: boolean } = {};
       user.permissions?.forEach((perm: any) => {
         statusMap[perm.id] = true; // true = active, false = inactive
       });
       setPermissionStatus(statusMap);
-      
+
       setRolePermissionDrawerOpen(true);
     }
   };
@@ -464,28 +856,34 @@ export default function UserManagementPage() {
     if (checked) {
       setSelectedRoles([...selectedRoles, roleId]);
       // Auto-add all role permissions when role is selected
-      const role = mockRoles.find(r => r.id === roleId);
+      const role = mockRoles.find((r) => r.id === roleId);
       if (role) {
-        const newPermissions = [...new Set([...selectedPermissions, ...role.permissions])];
+        const newPermissions = [
+          ...new Set([...selectedPermissions, ...role.permissions]),
+        ];
         setSelectedPermissions(newPermissions);
-        
+
         // Set all new permissions as active by default
         const newStatusMap = { ...permissionStatus };
-        role.permissions.forEach(permId => {
+        role.permissions.forEach((permId) => {
           newStatusMap[permId] = true;
         });
         setPermissionStatus(newStatusMap);
       }
     } else {
-      setSelectedRoles(selectedRoles.filter(id => id !== roleId));
+      setSelectedRoles(selectedRoles.filter((id) => id !== roleId));
       // Remove role permissions when role is unselected
-      const role = mockRoles.find(r => r.id === roleId);
+      const role = mockRoles.find((r) => r.id === roleId);
       if (role) {
-        setSelectedPermissions(selectedPermissions.filter(permId => !role.permissions.includes(permId)));
-        
+        setSelectedPermissions(
+          selectedPermissions.filter(
+            (permId) => !role.permissions.includes(permId),
+          ),
+        );
+
         // Remove permission status for unselected role permissions
         const newStatusMap = { ...permissionStatus };
-        role.permissions.forEach(permId => {
+        role.permissions.forEach((permId) => {
           delete newStatusMap[permId];
         });
         setPermissionStatus(newStatusMap);
@@ -500,15 +898,17 @@ export default function UserManagementPage() {
       setPermissionStatus({ ...permissionStatus, [permissionId]: true });
     } else {
       // Remove permission (confirmation handled by Popconfirm)
-      const permission = mockPermissions.find(p => p.id === permissionId);
-      const role = mockRoles.find(r => r.permissions.includes(permissionId));
-      
-      setSelectedPermissions(selectedPermissions.filter(id => id !== permissionId));
+      const permission = mockPermissions.find((p) => p.id === permissionId);
+      const role = mockRoles.find((r) => r.permissions.includes(permissionId));
+
+      setSelectedPermissions(
+        selectedPermissions.filter((id) => id !== permissionId),
+      );
       // Remove permission status
       const newStatusMap = { ...permissionStatus };
       delete newStatusMap[permissionId];
       setPermissionStatus(newStatusMap);
-      
+
       if (permission && role) {
         toast({
           title: "Permission Removed",
@@ -519,17 +919,20 @@ export default function UserManagementPage() {
     }
   };
 
-  const handlePermissionStatusChange = (permissionId: string, active: boolean) => {
+  const _handlePermissionStatusChange = (
+    permissionId: string,
+    active: boolean,
+  ) => {
     setPermissionStatus({ ...permissionStatus, [permissionId]: active });
     toast({
       title: "Permission Status Updated",
-      description: `Permission ${active ? 'activated' : 'deactivated'}`,
+      description: `Permission ${active ? "activated" : "deactivated"}`,
       variant: "default",
     });
   };
 
-  const getRolePermissions = (roleId: string) => {
-    const role = mockRoles.find(r => r.id === roleId);
+  const _getRolePermissions = (roleId: string) => {
+    const role = mockRoles.find((r) => r.id === roleId);
     return role ? role.permissions : [];
   };
 
@@ -537,20 +940,20 @@ export default function UserManagementPage() {
     const rolePermissions: { [key: string]: string[] } = {};
     const extraPermissions: string[] = [];
 
-    selectedRoles.forEach(roleId => {
-      const role = mockRoles.find(r => r.id === roleId);
+    selectedRoles.forEach((roleId) => {
+      const role = mockRoles.find((r) => r.id === roleId);
       if (role) {
-        rolePermissions[role.name] = role.permissions.filter(permId => 
-          selectedPermissions.includes(permId)
+        rolePermissions[role.name] = role.permissions.filter((permId) =>
+          selectedPermissions.includes(permId),
         );
       }
     });
 
     // Find extra permissions (not from any role)
-    selectedPermissions.forEach(permId => {
-      const isFromRole = selectedRoles.some(roleId => {
-        const role = mockRoles.find(r => r.id === roleId);
-        return role && role.permissions.includes(permId);
+    selectedPermissions.forEach((permId) => {
+      const isFromRole = selectedRoles.some((roleId) => {
+        const role = mockRoles.find((r) => r.id === roleId);
+        return role?.permissions.includes(permId);
       });
       if (!isFromRole) {
         extraPermissions.push(permId);
@@ -560,32 +963,39 @@ export default function UserManagementPage() {
     return { rolePermissions, extraPermissions };
   };
 
-  const handleSaveRolesPermissions = () => {
+  const _handleSaveRolesPermissions = () => {
     if (selectedUser) {
-      const updatedRoles = mockRoles.filter(role => selectedRoles.includes(role.id));
-      const updatedPermissions = mockPermissions.filter(perm => selectedPermissions.includes(perm.id));
-      
-      setUsers(users.map(user => 
-        user.id === selectedUser.id 
-          ? { ...user, roles: updatedRoles, permissions: updatedPermissions }
-          : user
-      ));
-      
+      const updatedRoles = mockRoles.filter((role) =>
+        selectedRoles.includes(role.id),
+      );
+      const updatedPermissions = mockPermissions.filter((perm) =>
+        selectedPermissions.includes(perm.id),
+      );
+
+      setUsers(
+        users.map((user) =>
+          user.id === selectedUser.id
+            ? { ...user, roles: updatedRoles, permissions: updatedPermissions }
+            : user,
+        ),
+      );
+
       toast({
         title: "Roles & Permissions Updated",
-        description: "User roles and permissions have been successfully updated",
+        description:
+          "User roles and permissions have been successfully updated",
         variant: "default",
       });
-      
+
       setRolePermissionDrawerOpen(false);
     }
   };
 
   const handleResetFilters = () => {
-    setSearchTerm('');
-    setStatusFilter('all');
-    setGenderFilter('all');
-    setDepartmentFilter('all');
+    setSearchTerm("");
+    setStatusFilter("all");
+    setGenderFilter("all");
+    setDepartmentFilter("all");
     setDateRange([]);
     toast({
       title: "Filters Reset",
@@ -596,18 +1006,25 @@ export default function UserManagementPage() {
 
   const columns: ColumnsType<any> = [
     {
-      title: 'User',
-      key: 'user',
+      title: "User",
+      key: "user",
       width: 250,
-      fixed: 'left',
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      fixed: "left",
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
         <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <AntInput
             placeholder="Search users..."
             value={selectedKeys[0]}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
             onPressEnter={() => confirm()}
-            style={{ marginBottom: 8, display: 'block' }}
+            style={{ marginBottom: 8, display: "block" }}
           />
           <Space>
             <AntButton
@@ -620,7 +1037,7 @@ export default function UserManagementPage() {
               Search
             </AntButton>
             <AntButton
-              onClick={() => clearFilters && clearFilters()}
+              onClick={() => clearFilters?.()}
               size="small"
               style={{ width: 90 }}
             >
@@ -629,7 +1046,9 @@ export default function UserManagementPage() {
           </Space>
         </div>
       ),
-      filterIcon: (filtered) => <Search className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
+      filterIcon: (filtered) => (
+        <Search className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
       onFilter: (value, record) =>
         record.name.toLowerCase().includes(value.toLowerCase()) ||
         record.email.toLowerCase().includes(value.toLowerCase()) ||
@@ -641,7 +1060,10 @@ export default function UserManagementPage() {
               <TooltipTrigger asChild>
                 <Avatar className="h-10 w-10 cursor-pointer">
                   <AvatarImage src={record.avatar} alt={record.name} />
-                  <AvatarFallback>{record.firstName[0]}{record.lastName[0]}</AvatarFallback>
+                  <AvatarFallback>
+                    {record.firstName[0]}
+                    {record.lastName[0]}
+                  </AvatarFallback>
                 </Avatar>
               </TooltipTrigger>
               <TooltipContent>
@@ -673,17 +1095,24 @@ export default function UserManagementPage() {
       ),
     },
     {
-      title: 'Contact',
-      key: 'contact',
+      title: "Contact",
+      key: "contact",
       width: 200,
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
         <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <AntInput
             placeholder="Search email or phone..."
             value={selectedKeys[0]}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
             onPressEnter={() => confirm()}
-            style={{ marginBottom: 8, display: 'block' }}
+            style={{ marginBottom: 8, display: "block" }}
           />
           <Space>
             <AntButton
@@ -696,7 +1125,7 @@ export default function UserManagementPage() {
               Search
             </AntButton>
             <AntButton
-              onClick={() => clearFilters && clearFilters()}
+              onClick={() => clearFilters?.()}
               size="small"
               style={{ width: 90 }}
             >
@@ -705,7 +1134,9 @@ export default function UserManagementPage() {
           </Space>
         </div>
       ),
-      filterIcon: (filtered) => <Search className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
+      filterIcon: (filtered) => (
+        <Search className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
       onFilter: (value, record) =>
         record.email.toLowerCase().includes(value.toLowerCase()) ||
         record.phone.includes(value),
@@ -723,38 +1154,46 @@ export default function UserManagementPage() {
       ),
     },
     {
-      title: 'Gender',
-      dataIndex: 'gender',
-      key: 'gender',
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
       width: 100,
       filters: [
-        { text: 'Male', value: 'Male' },
-        { text: 'Female', value: 'Female' },
-        { text: 'Other', value: 'Other' },
+        { text: "Male", value: "Male" },
+        { text: "Female", value: "Female" },
+        { text: "Other", value: "Other" },
       ],
       onFilter: (value, record) => record.gender === value,
-      filterIcon: (filtered) => <Filter className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
+      filterIcon: (filtered) => (
+        <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
       render: (gender) => (
-        <Tag color={gender === 'Male' ? 'blue' : gender === 'Female' ? 'pink' : 'purple'}>
+        <Tag
+          color={
+            gender === "Male" ? "blue" : gender === "Female" ? "pink" : "purple"
+          }
+        >
           {gender}
         </Tag>
       ),
     },
     {
-      title: 'Department',
-      dataIndex: 'department',
-      key: 'department',
+      title: "Department",
+      dataIndex: "department",
+      key: "department",
       width: 120,
       filters: [
-        { text: 'Engineering', value: 'Engineering' },
-        { text: 'Marketing', value: 'Marketing' },
-        { text: 'Sales', value: 'Sales' },
-        { text: 'HR', value: 'HR' },
-        { text: 'Finance', value: 'Finance' },
-        { text: 'Operations', value: 'Operations' },
+        { text: "Engineering", value: "Engineering" },
+        { text: "Marketing", value: "Marketing" },
+        { text: "Sales", value: "Sales" },
+        { text: "HR", value: "HR" },
+        { text: "Finance", value: "Finance" },
+        { text: "Operations", value: "Operations" },
       ],
       onFilter: (value, record) => record.department === value,
-      filterIcon: (filtered) => <Filter className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
+      filterIcon: (filtered) => (
+        <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
       render: (department) => (
         <Badge variant="secondary" className="text-xs">
           {department}
@@ -762,20 +1201,22 @@ export default function UserManagementPage() {
       ),
     },
     {
-      title: 'Location',
-      dataIndex: 'location',
-      key: 'location',
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
       width: 120,
       filters: [
-        { text: 'New York', value: 'New York' },
-        { text: 'Los Angeles', value: 'Los Angeles' },
-        { text: 'Chicago', value: 'Chicago' },
-        { text: 'Houston', value: 'Houston' },
-        { text: 'Phoenix', value: 'Phoenix' },
-        { text: 'Philadelphia', value: 'Philadelphia' },
+        { text: "New York", value: "New York" },
+        { text: "Los Angeles", value: "Los Angeles" },
+        { text: "Chicago", value: "Chicago" },
+        { text: "Houston", value: "Houston" },
+        { text: "Phoenix", value: "Phoenix" },
+        { text: "Philadelphia", value: "Philadelphia" },
       ],
       onFilter: (value, record) => record.location === value,
-      filterIcon: (filtered) => <Filter className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
+      filterIcon: (filtered) => (
+        <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
       render: (location) => (
         <div className="flex items-center space-x-1 text-sm text-gray-600">
           <Globe className="h-3 w-3" />
@@ -784,19 +1225,26 @@ export default function UserManagementPage() {
       ),
     },
     {
-      title: 'Last Login',
-      dataIndex: 'lastLogin',
-      key: 'lastLogin',
+      title: "Last Login",
+      dataIndex: "lastLogin",
+      key: "lastLogin",
       width: 150,
       sorter: (a, b) => dayjs(a.lastLogin).unix() - dayjs(b.lastLogin).unix(),
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
         <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <AntInput
             placeholder="Search by date..."
             value={selectedKeys[0]}
-            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
             onPressEnter={() => confirm()}
-            style={{ marginBottom: 8, display: 'block' }}
+            style={{ marginBottom: 8, display: "block" }}
           />
           <Space>
             <AntButton
@@ -809,7 +1257,7 @@ export default function UserManagementPage() {
               Search
             </AntButton>
             <AntButton
-              onClick={() => clearFilters && clearFilters()}
+              onClick={() => clearFilters?.()}
               size="small"
               style={{ width: 90 }}
             >
@@ -818,41 +1266,52 @@ export default function UserManagementPage() {
           </Space>
         </div>
       ),
-      filterIcon: (filtered) => <Search className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
+      filterIcon: (filtered) => (
+        <Search className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
       onFilter: (value, record) =>
-        dayjs(record.lastLogin).format('MMM DD, YYYY').toLowerCase().includes(value.toLowerCase()),
+        dayjs(record.lastLogin)
+          .format("MMM DD, YYYY")
+          .toLowerCase()
+          .includes(value.toLowerCase()),
       render: (date) => (
         <div className="flex items-center space-x-1 text-sm text-gray-600">
           <Clock className="h-3 w-3" />
-          <span>{dayjs(date).format('MMM DD, YYYY')}</span>
+          <span>{dayjs(date).format("MMM DD, YYYY")}</span>
         </div>
       ),
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
       width: 100,
       filters: [
-        { text: 'Online', value: 'online' },
-        { text: 'Offline', value: 'offline' },
+        { text: "Online", value: "online" },
+        { text: "Offline", value: "offline" },
       ],
       onFilter: (value, record) => record.status === value,
-      filterIcon: (filtered) => <Filter className={`h-4 w-4 ${filtered ? 'text-blue-500' : ''}`} />,
-      render: (status, record) => (
+      filterIcon: (filtered) => (
+        <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
+      render: (status, _record) => (
         <div className="flex items-center space-x-2">
-          <div className={`w-2 h-2 rounded-full ${status === 'online' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-          <span className={`text-sm font-medium ${status === 'online' ? 'text-green-600' : 'text-red-600'}`}>
-            {status === 'online' ? 'Online' : 'Offline'}
+          <div
+            className={`w-2 h-2 rounded-full ${status === "online" ? "bg-green-500" : "bg-red-500"}`}
+          ></div>
+          <span
+            className={`text-sm font-medium ${status === "online" ? "text-green-600" : "text-red-600"}`}
+          >
+            {status === "online" ? "Online" : "Offline"}
           </span>
         </div>
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       width: 180,
-      fixed: 'right',
+      fixed: "right",
       render: (_, record) => (
         <Space size="small">
           <TooltipProvider>
@@ -870,7 +1329,7 @@ export default function UserManagementPage() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -935,7 +1394,7 @@ export default function UserManagementPage() {
     columns,
     dataSource: filteredUsers,
     loading,
-    rowKey: 'id',
+    rowKey: "id",
     scroll: { x: 1200 },
     pagination: {
       total: filteredUsers.length,
@@ -947,13 +1406,38 @@ export default function UserManagementPage() {
   };
 
   // Generate user activity data
-  const generateUserActivity = (userId: string) => {
+  const generateUserActivity = (_userId: string) => {
     const activities = [
-      { id: 1, action: 'Logged in', timestamp: dayjs().subtract(1, 'hour'), type: 'login' },
-      { id: 2, action: 'Updated profile', timestamp: dayjs().subtract(2, 'hours'), type: 'update' },
-      { id: 3, action: 'Changed password', timestamp: dayjs().subtract(1, 'day'), type: 'security' },
-      { id: 4, action: 'Viewed dashboard', timestamp: dayjs().subtract(2, 'days'), type: 'view' },
-      { id: 5, action: 'Downloaded report', timestamp: dayjs().subtract(3, 'days'), type: 'download' }
+      {
+        id: 1,
+        action: "Logged in",
+        timestamp: dayjs().subtract(1, "hour"),
+        type: "login",
+      },
+      {
+        id: 2,
+        action: "Updated profile",
+        timestamp: dayjs().subtract(2, "hours"),
+        type: "update",
+      },
+      {
+        id: 3,
+        action: "Changed password",
+        timestamp: dayjs().subtract(1, "day"),
+        type: "security",
+      },
+      {
+        id: 4,
+        action: "Viewed dashboard",
+        timestamp: dayjs().subtract(2, "days"),
+        type: "view",
+      },
+      {
+        id: 5,
+        action: "Downloaded report",
+        timestamp: dayjs().subtract(3, "days"),
+        type: "download",
+      },
     ];
     return activities;
   };
@@ -961,67 +1445,120 @@ export default function UserManagementPage() {
   // Generate dummy data for different tabs
   const generateTabData = (tab: string) => {
     switch (tab) {
-      case 'settings':
+      case "settings":
         return {
           notifications: {
             email: true,
             push: false,
-            sms: true
+            sms: true,
           },
           privacy: {
-            profileVisibility: 'public',
+            profileVisibility: "public",
             showEmail: false,
-            showPhone: true
+            showPhone: true,
           },
           preferences: {
-            language: 'English',
-            timezone: 'UTC-8',
-            dateFormat: 'MM/DD/YYYY'
-          }
+            language: "English",
+            timezone: "UTC-8",
+            dateFormat: "MM/DD/YYYY",
+          },
         };
-      case 'security':
+      case "security":
         return {
           twoFactor: false,
-          lastPasswordChange: dayjs().subtract(30, 'days'),
+          lastPasswordChange: dayjs().subtract(30, "days"),
           loginHistory: [
-            { id: 1, location: 'San Francisco, CA', ip: '192.168.1.1', timestamp: dayjs().subtract(1, 'hour'), device: 'Chrome on Mac' },
-            { id: 2, location: 'New York, NY', ip: '192.168.1.2', timestamp: dayjs().subtract(1, 'day'), device: 'Safari on iPhone' },
-            { id: 3, location: 'Los Angeles, CA', ip: '192.168.1.3', timestamp: dayjs().subtract(3, 'days'), device: 'Firefox on Windows' }
+            {
+              id: 1,
+              location: "San Francisco, CA",
+              ip: "192.168.1.1",
+              timestamp: dayjs().subtract(1, "hour"),
+              device: "Chrome on Mac",
+            },
+            {
+              id: 2,
+              location: "New York, NY",
+              ip: "192.168.1.2",
+              timestamp: dayjs().subtract(1, "day"),
+              device: "Safari on iPhone",
+            },
+            {
+              id: 3,
+              location: "Los Angeles, CA",
+              ip: "192.168.1.3",
+              timestamp: dayjs().subtract(3, "days"),
+              device: "Firefox on Windows",
+            },
           ],
-          activeSessions: 2
+          activeSessions: 2,
         };
-      case 'activity':
+      case "activity":
         return {
-          recentActivity: generateUserActivity(selectedUser?.id || '1'),
+          recentActivity: generateUserActivity(selectedUser?.id || "1"),
           loginStats: {
             totalLogins: 156,
             thisMonth: 23,
-            lastLogin: dayjs().subtract(1, 'hour')
+            lastLogin: dayjs().subtract(1, "hour"),
           },
           actions: [
-            { id: 1, action: 'Created project', timestamp: dayjs().subtract(2, 'hours'), type: 'create' },
-            { id: 2, action: 'Updated settings', timestamp: dayjs().subtract(4, 'hours'), type: 'update' },
-            { id: 3, action: 'Shared document', timestamp: dayjs().subtract(6, 'hours'), type: 'share' },
-            { id: 4, action: 'Commented on task', timestamp: dayjs().subtract(8, 'hours'), type: 'comment' }
-          ]
+            {
+              id: 1,
+              action: "Created project",
+              timestamp: dayjs().subtract(2, "hours"),
+              type: "create",
+            },
+            {
+              id: 2,
+              action: "Updated settings",
+              timestamp: dayjs().subtract(4, "hours"),
+              type: "update",
+            },
+            {
+              id: 3,
+              action: "Shared document",
+              timestamp: dayjs().subtract(6, "hours"),
+              type: "share",
+            },
+            {
+              id: 4,
+              action: "Commented on task",
+              timestamp: dayjs().subtract(8, "hours"),
+              type: "comment",
+            },
+          ],
         };
-      case 'reports':
+      case "reports":
         return {
           performance: {
             tasksCompleted: 45,
             projectsActive: 3,
-            efficiency: 87
+            efficiency: 87,
           },
           timeTracking: {
             totalHours: 168,
             thisWeek: 42,
-            averagePerDay: 8.4
+            averagePerDay: 8.4,
           },
           achievements: [
-            { id: 1, title: 'Project Master', description: 'Completed 10 projects', date: dayjs().subtract(5, 'days') },
-            { id: 2, title: 'Team Player', description: 'Helped 5 team members', date: dayjs().subtract(10, 'days') },
-            { id: 3, title: 'Early Bird', description: 'Logged in before 8 AM for 7 days', date: dayjs().subtract(15, 'days') }
-          ]
+            {
+              id: 1,
+              title: "Project Master",
+              description: "Completed 10 projects",
+              date: dayjs().subtract(5, "days"),
+            },
+            {
+              id: 2,
+              title: "Team Player",
+              description: "Helped 5 team members",
+              date: dayjs().subtract(10, "days"),
+            },
+            {
+              id: 3,
+              title: "Early Bird",
+              description: "Logged in before 8 AM for 7 days",
+              date: dayjs().subtract(15, "days"),
+            },
+          ],
         };
       default:
         return null;
@@ -1045,7 +1582,9 @@ export default function UserManagementPage() {
             <div className="h-6 w-px bg-gray-300"></div>
             <div className="flex items-center space-x-2">
               <Users className="h-6 w-6 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                User Management
+              </h1>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -1053,13 +1592,18 @@ export default function UserManagementPage() {
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleAddUser}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleAddUser}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add User
             </Button>
           </div>
         </div>
-        <p className="text-gray-600 mt-2">Manage system users and their permissions</p>
+        <p className="text-gray-600 mt-2">
+          Manage system users and their permissions
+        </p>
       </div>
 
       {/* Stats */}
@@ -1073,36 +1617,38 @@ export default function UserManagementPage() {
             <Users className="h-8 w-8 text-blue-600" />
           </div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Online</p>
               <p className="text-2xl font-bold text-green-600">
-                {users.filter(u => u.status === 'online').length}
+                {users.filter((u) => u.status === "online").length}
               </p>
             </div>
             <UserCheck className="h-8 w-8 text-green-600" />
           </div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Offline</p>
               <p className="text-2xl font-bold text-red-600">
-                {users.filter(u => u.status === 'offline').length}
+                {users.filter((u) => u.status === "offline").length}
               </p>
             </div>
             <UserX className="h-8 w-8 text-red-600" />
           </div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Filtered</p>
-              <p className="text-2xl font-bold text-blue-600">{filteredUsers.length}</p>
+              <p className="text-2xl font-bold text-blue-600">
+                {filteredUsers.length}
+              </p>
             </div>
             <Filter className="h-8 w-8 text-blue-600" />
           </div>
@@ -1113,9 +1659,9 @@ export default function UserManagementPage() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleResetFilters}
             className="text-gray-600 hover:text-gray-900"
           >
@@ -1125,7 +1671,9 @@ export default function UserManagementPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Search
+            </label>
             <AntSearch
               placeholder="Search users..."
               value={searchTerm}
@@ -1133,9 +1681,11 @@ export default function UserManagementPage() {
               allowClear
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
             <Select
               value={statusFilter}
               onChange={setStatusFilter}
@@ -1148,7 +1698,9 @@ export default function UserManagementPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Gender
+            </label>
             <Select
               value={genderFilter}
               onChange={setGenderFilter}
@@ -1162,7 +1714,9 @@ export default function UserManagementPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Department
+            </label>
             <Select
               value={departmentFilter}
               onChange={setDepartmentFilter}
@@ -1179,7 +1733,9 @@ export default function UserManagementPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Join Date</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Join Date
+            </label>
             <RangePicker
               value={dateRange}
               onChange={setDateRange}
@@ -1198,20 +1754,20 @@ export default function UserManagementPage() {
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </Button>
-            </div>
+          </div>
         </div>
         <div className="p-4">
           <Table {...tableProps} />
-          </div>
         </div>
-        
+      </div>
+
       {/* Add User Drawer */}
       <Drawer
         title={
           <div className="flex items-center space-x-2">
             <UserPlus className="h-5 w-5 text-blue-600" />
             <span>Add New User</span>
-            </div>
+          </div>
         }
         placement="right"
         size="large"
@@ -1237,164 +1793,198 @@ export default function UserManagementPage() {
           onFinish={handleSaveUser}
           className="space-y-6"
         >
-          <Tabs defaultActiveKey="personal" items={[
-            {
-              key: 'personal',
-              label: 'Personal Details',
-              children: (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}>
-                      <AntInput placeholder="Enter first name" />
-                    </Form.Item>
-                    <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}>
-                      <AntInput placeholder="Enter last name" />
-                    </Form.Item>
-        </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email' }]}>
-                      <AntInput placeholder="Enter email" />
-                    </Form.Item>
-                    <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
-                      <AntInput placeholder="Enter phone number" />
+          <Tabs
+            defaultActiveKey="personal"
+            items={[
+              {
+                key: "personal",
+                label: "Personal Details",
+                children: (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        name="firstName"
+                        label="First Name"
+                        rules={[{ required: true }]}
+                      >
+                        <AntInput placeholder="Enter first name" />
+                      </Form.Item>
+                      <Form.Item
+                        name="lastName"
+                        label="Last Name"
+                        rules={[{ required: true }]}
+                      >
+                        <AntInput placeholder="Enter last name" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[{ required: true, type: "email" }]}
+                      >
+                        <AntInput placeholder="Enter email" />
+                      </Form.Item>
+                      <Form.Item
+                        name="phone"
+                        label="Phone"
+                        rules={[{ required: true }]}
+                      >
+                        <AntInput placeholder="Enter phone number" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        name="gender"
+                        label="Gender"
+                        rules={[{ required: true }]}
+                      >
+                        <Select placeholder="Select gender">
+                          <Option value="Male">Male</Option>
+                          <Option value="Female">Female</Option>
+                          <Option value="Other">Other</Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item name="dateOfBirth" label="Date of Birth">
+                        <DatePicker className="w-full" />
+                      </Form.Item>
+                    </div>
+                    <Form.Item name="about" label="About">
+                      <AntInput.TextArea
+                        rows={4}
+                        placeholder="Tell us about yourself"
+                      />
                     </Form.Item>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-                      <Select placeholder="Select gender">
-                        <Option value="Male">Male</Option>
-                        <Option value="Female">Female</Option>
-                        <Option value="Other">Other</Option>
+                ),
+              },
+              {
+                key: "education",
+                label: "Education",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item name="university" label="University">
+                      <AntInput placeholder="Enter university name" />
+                    </Form.Item>
+                    <Form.Item name="degree" label="Degree">
+                      <AntInput placeholder="Enter degree" />
+                    </Form.Item>
+                    <Form.Item name="fieldOfStudy" label="Field of Study">
+                      <AntInput placeholder="Enter field of study" />
+                    </Form.Item>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item name="graduationYear" label="Graduation Year">
+                        <AntInput placeholder="Enter graduation year" />
+                      </Form.Item>
+                      <Form.Item name="gpa" label="GPA">
+                        <AntInput placeholder="Enter GPA" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                key: "address",
+                label: "Address",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item name="street" label="Street Address">
+                      <AntInput placeholder="Enter street address" />
+                    </Form.Item>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item name="city" label="City">
+                        <AntInput placeholder="Enter city" />
+                      </Form.Item>
+                      <Form.Item name="state" label="State">
+                        <AntInput placeholder="Enter state" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item name="zipCode" label="ZIP Code">
+                        <AntInput placeholder="Enter ZIP code" />
+                      </Form.Item>
+                      <Form.Item name="country" label="Country">
+                        <AntInput placeholder="Enter country" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                key: "social",
+                label: "Social Links",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item name="website" label="Website">
+                      <AntInput placeholder="Enter website URL" />
+                    </Form.Item>
+                    <Form.Item name="linkedin" label="LinkedIn">
+                      <AntInput placeholder="Enter LinkedIn URL" />
+                    </Form.Item>
+                    <Form.Item name="twitter" label="Twitter">
+                      <AntInput placeholder="Enter Twitter URL" />
+                    </Form.Item>
+                    <Form.Item name="facebook" label="Facebook">
+                      <AntInput placeholder="Enter Facebook URL" />
+                    </Form.Item>
+                    <Form.Item name="instagram" label="Instagram">
+                      <AntInput placeholder="Enter Instagram URL" />
+                    </Form.Item>
+                    <Form.Item name="github" label="GitHub">
+                      <AntInput placeholder="Enter GitHub URL" />
+                    </Form.Item>
+                  </div>
+                ),
+              },
+              {
+                key: "work",
+                label: "Work Details",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item
+                      name="department"
+                      label="Department"
+                      rules={[{ required: true }]}
+                    >
+                      <Select placeholder="Select department">
+                        <Option value="Engineering">Engineering</Option>
+                        <Option value="Marketing">Marketing</Option>
+                        <Option value="Sales">Sales</Option>
+                        <Option value="HR">HR</Option>
+                        <Option value="Finance">Finance</Option>
+                        <Option value="Operations">Operations</Option>
                       </Select>
                     </Form.Item>
-                    <Form.Item name="dateOfBirth" label="Date of Birth">
+                    <Form.Item
+                      name="role"
+                      label="Role"
+                      rules={[{ required: true }]}
+                    >
+                      <Select placeholder="Select role">
+                        <Option value="Admin">Admin</Option>
+                        <Option value="Manager">Manager</Option>
+                        <Option value="Employee">Employee</Option>
+                        <Option value="Intern">Intern</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item name="location" label="Work Location">
+                      <AntInput placeholder="Enter work location" />
+                    </Form.Item>
+                    <Form.Item name="joinDate" label="Join Date">
                       <DatePicker className="w-full" />
                     </Form.Item>
-                  </div>
-                  <Form.Item name="about" label="About">
-                    <AntInput.TextArea rows={4} placeholder="Tell us about yourself" />
-                  </Form.Item>
-                </div>
-              )
-            },
-            {
-              key: 'education',
-              label: 'Education',
-              children: (
-                <div className="space-y-4">
-                  <Form.Item name="university" label="University">
-                    <AntInput placeholder="Enter university name" />
-                  </Form.Item>
-                  <Form.Item name="degree" label="Degree">
-                    <AntInput placeholder="Enter degree" />
-                  </Form.Item>
-                  <Form.Item name="fieldOfStudy" label="Field of Study">
-                    <AntInput placeholder="Enter field of study" />
-                  </Form.Item>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="graduationYear" label="Graduation Year">
-                      <AntInput placeholder="Enter graduation year" />
-                    </Form.Item>
-                    <Form.Item name="gpa" label="GPA">
-                      <AntInput placeholder="Enter GPA" />
+                    <Form.Item name="status" label="Status">
+                      <Select placeholder="Select status">
+                        <Option value="active">Active</Option>
+                        <Option value="inactive">Inactive</Option>
+                        <Option value="blocked">Blocked</Option>
+                      </Select>
                     </Form.Item>
                   </div>
-                </div>
-              )
-            },
-            {
-              key: 'address',
-              label: 'Address',
-              children: (
-                <div className="space-y-4">
-                  <Form.Item name="street" label="Street Address">
-                    <AntInput placeholder="Enter street address" />
-                  </Form.Item>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="city" label="City">
-                      <AntInput placeholder="Enter city" />
-                    </Form.Item>
-                    <Form.Item name="state" label="State">
-                      <AntInput placeholder="Enter state" />
-                    </Form.Item>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Form.Item name="zipCode" label="ZIP Code">
-                      <AntInput placeholder="Enter ZIP code" />
-                    </Form.Item>
-                    <Form.Item name="country" label="Country">
-                      <AntInput placeholder="Enter country" />
-                    </Form.Item>
-                  </div>
-                </div>
-              )
-            },
-            {
-              key: 'social',
-              label: 'Social Links',
-              children: (
-                <div className="space-y-4">
-                  <Form.Item name="website" label="Website">
-                    <AntInput placeholder="Enter website URL" />
-                  </Form.Item>
-                  <Form.Item name="linkedin" label="LinkedIn">
-                    <AntInput placeholder="Enter LinkedIn URL" />
-                  </Form.Item>
-                  <Form.Item name="twitter" label="Twitter">
-                    <AntInput placeholder="Enter Twitter URL" />
-                  </Form.Item>
-                  <Form.Item name="facebook" label="Facebook">
-                    <AntInput placeholder="Enter Facebook URL" />
-                  </Form.Item>
-                  <Form.Item name="instagram" label="Instagram">
-                    <AntInput placeholder="Enter Instagram URL" />
-                  </Form.Item>
-                  <Form.Item name="github" label="GitHub">
-                    <AntInput placeholder="Enter GitHub URL" />
-                  </Form.Item>
-                </div>
-              )
-            },
-            {
-              key: 'work',
-              label: 'Work Details',
-              children: (
-                <div className="space-y-4">
-                  <Form.Item name="department" label="Department" rules={[{ required: true }]}>
-                    <Select placeholder="Select department">
-                      <Option value="Engineering">Engineering</Option>
-                      <Option value="Marketing">Marketing</Option>
-                      <Option value="Sales">Sales</Option>
-                      <Option value="HR">HR</Option>
-                      <Option value="Finance">Finance</Option>
-                      <Option value="Operations">Operations</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="role" label="Role" rules={[{ required: true }]}>
-                    <Select placeholder="Select role">
-                      <Option value="Admin">Admin</Option>
-                      <Option value="Manager">Manager</Option>
-                      <Option value="Employee">Employee</Option>
-                      <Option value="Intern">Intern</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="location" label="Work Location">
-                    <AntInput placeholder="Enter work location" />
-                  </Form.Item>
-                  <Form.Item name="joinDate" label="Join Date">
-                    <DatePicker className="w-full" />
-                  </Form.Item>
-                  <Form.Item name="status" label="Status">
-                    <Select placeholder="Select status">
-                      <Option value="active">Active</Option>
-                      <Option value="inactive">Inactive</Option>
-                      <Option value="blocked">Blocked</Option>
-                    </Select>
-                  </Form.Item>
-                </div>
-              )
-            }
-          ]} />
+                ),
+              },
+            ]}
+          />
         </Form>
       </Drawer>
 
@@ -1431,99 +2021,135 @@ export default function UserManagementPage() {
             onFinish={handleSaveUser}
             className="space-y-6"
           >
-            <Tabs defaultActiveKey="personal" items={[
-              {
-                key: 'personal',
-                label: 'Personal Details',
-                children: (
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-4 mb-6">
-                      <AntAvatar size={80} src={selectedUser.avatar} />
-            <div>
-                        <Upload {...{
-                          name: 'avatar',
-                          listType: 'picture-card',
-                          showUploadList: false,
-                          beforeUpload: () => false,
-                        }}>
-                          <Button icon={<UploadIcon />}>Change Avatar</Button>
-                        </Upload>
-            </div>
-          </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item name="firstName" label="First Name" rules={[{ required: true }]}>
-                        <AntInput placeholder="Enter first name" />
-                      </Form.Item>
-                      <Form.Item name="lastName" label="Last Name" rules={[{ required: true }]}>
-                        <AntInput placeholder="Enter last name" />
-                      </Form.Item>
-        </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email' }]}>
-                        <AntInput placeholder="Enter email" />
-                      </Form.Item>
-                      <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
-                        <AntInput placeholder="Enter phone number" />
+            <Tabs
+              defaultActiveKey="personal"
+              items={[
+                {
+                  key: "personal",
+                  label: "Personal Details",
+                  children: (
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-4 mb-6">
+                        <AntAvatar size={80} src={selectedUser.avatar} />
+                        <div>
+                          <Upload
+                            {...{
+                              name: "avatar",
+                              listType: "picture-card",
+                              showUploadList: false,
+                              beforeUpload: () => false,
+                            }}
+                          >
+                            <Button icon={<UploadIcon />}>Change Avatar</Button>
+                          </Upload>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item
+                          name="firstName"
+                          label="First Name"
+                          rules={[{ required: true }]}
+                        >
+                          <AntInput placeholder="Enter first name" />
+                        </Form.Item>
+                        <Form.Item
+                          name="lastName"
+                          label="Last Name"
+                          rules={[{ required: true }]}
+                        >
+                          <AntInput placeholder="Enter last name" />
+                        </Form.Item>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item
+                          name="email"
+                          label="Email"
+                          rules={[{ required: true, type: "email" }]}
+                        >
+                          <AntInput placeholder="Enter email" />
+                        </Form.Item>
+                        <Form.Item
+                          name="phone"
+                          label="Phone"
+                          rules={[{ required: true }]}
+                        >
+                          <AntInput placeholder="Enter phone number" />
+                        </Form.Item>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item
+                          name="gender"
+                          label="Gender"
+                          rules={[{ required: true }]}
+                        >
+                          <Select placeholder="Select gender">
+                            <Option value="Male">Male</Option>
+                            <Option value="Female">Female</Option>
+                            <Option value="Other">Other</Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item name="dateOfBirth" label="Date of Birth">
+                          <DatePicker className="w-full" />
+                        </Form.Item>
+                      </div>
+                      <Form.Item name="about" label="About">
+                        <AntInput.TextArea
+                          rows={4}
+                          placeholder="Tell us about yourself"
+                        />
                       </Form.Item>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-                        <Select placeholder="Select gender">
-                          <Option value="Male">Male</Option>
-                          <Option value="Female">Female</Option>
-                          <Option value="Other">Other</Option>
+                  ),
+                },
+                {
+                  key: "work",
+                  label: "Work Details",
+                  children: (
+                    <div className="space-y-4">
+                      <Form.Item
+                        name="department"
+                        label="Department"
+                        rules={[{ required: true }]}
+                      >
+                        <Select placeholder="Select department">
+                          <Option value="Engineering">Engineering</Option>
+                          <Option value="Marketing">Marketing</Option>
+                          <Option value="Sales">Sales</Option>
+                          <Option value="HR">HR</Option>
+                          <Option value="Finance">Finance</Option>
+                          <Option value="Operations">Operations</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="dateOfBirth" label="Date of Birth">
+                      <Form.Item
+                        name="role"
+                        label="Role"
+                        rules={[{ required: true }]}
+                      >
+                        <Select placeholder="Select role">
+                          <Option value="Admin">Admin</Option>
+                          <Option value="Manager">Manager</Option>
+                          <Option value="Employee">Employee</Option>
+                          <Option value="Intern">Intern</Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item name="location" label="Work Location">
+                        <AntInput placeholder="Enter work location" />
+                      </Form.Item>
+                      <Form.Item name="joinDate" label="Join Date">
                         <DatePicker className="w-full" />
                       </Form.Item>
+                      <Form.Item name="status" label="Status">
+                        <Select placeholder="Select status">
+                          <Option value="active">Active</Option>
+                          <Option value="inactive">Inactive</Option>
+                          <Option value="blocked">Blocked</Option>
+                        </Select>
+                      </Form.Item>
                     </div>
-                    <Form.Item name="about" label="About">
-                      <AntInput.TextArea rows={4} placeholder="Tell us about yourself" />
-                    </Form.Item>
-                  </div>
-                )
-              },
-              {
-                key: 'work',
-                label: 'Work Details',
-                children: (
-                  <div className="space-y-4">
-                    <Form.Item name="department" label="Department" rules={[{ required: true }]}>
-                      <Select placeholder="Select department">
-                        <Option value="Engineering">Engineering</Option>
-                        <Option value="Marketing">Marketing</Option>
-                        <Option value="Sales">Sales</Option>
-                        <Option value="HR">HR</Option>
-                        <Option value="Finance">Finance</Option>
-                        <Option value="Operations">Operations</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item name="role" label="Role" rules={[{ required: true }]}>
-                      <Select placeholder="Select role">
-                        <Option value="Admin">Admin</Option>
-                        <Option value="Manager">Manager</Option>
-                        <Option value="Employee">Employee</Option>
-                        <Option value="Intern">Intern</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item name="location" label="Work Location">
-                      <AntInput placeholder="Enter work location" />
-                    </Form.Item>
-                    <Form.Item name="joinDate" label="Join Date">
-                      <DatePicker className="w-full" />
-                    </Form.Item>
-                    <Form.Item name="status" label="Status">
-                      <Select placeholder="Select status">
-                        <Option value="active">Active</Option>
-                        <Option value="inactive">Inactive</Option>
-                        <Option value="blocked">Blocked</Option>
-                      </Select>
-                    </Form.Item>
-                  </div>
-                )
-              }
-            ]} />
+                  ),
+                },
+              ]}
+            />
           </Form>
         )}
       </Drawer>
@@ -1559,52 +2185,52 @@ export default function UserManagementPage() {
             {/* Navigation Tabs */}
             <div className="border-b border-gray-200">
               <nav className="flex space-x-8">
-                <button 
-                  onClick={() => setActiveTab('overview')}
+                <button
+                  onClick={() => setActiveTab("overview")}
                   className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === 'overview' 
-                      ? 'border-b-2 border-blue-600 text-blue-600' 
-                      : 'text-gray-500 hover:text-gray-700'
+                    activeTab === "overview"
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   Overview
                 </button>
-                <button 
-                  onClick={() => setActiveTab('settings')}
+                <button
+                  onClick={() => setActiveTab("settings")}
                   className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === 'settings' 
-                      ? 'border-b-2 border-blue-600 text-blue-600' 
-                      : 'text-gray-500 hover:text-gray-700'
+                    activeTab === "settings"
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   Settings
                 </button>
-                <button 
-                  onClick={() => setActiveTab('security')}
+                <button
+                  onClick={() => setActiveTab("security")}
                   className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === 'security' 
-                      ? 'border-b-2 border-blue-600 text-blue-600' 
-                      : 'text-gray-500 hover:text-gray-700'
+                    activeTab === "security"
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   Security
                 </button>
-                <button 
-                  onClick={() => setActiveTab('activity')}
+                <button
+                  onClick={() => setActiveTab("activity")}
                   className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === 'activity' 
-                      ? 'border-b-2 border-blue-600 text-blue-600' 
-                      : 'text-gray-500 hover:text-gray-700'
+                    activeTab === "activity"
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   Activity
                 </button>
-                <button 
-                  onClick={() => setActiveTab('reports')}
+                <button
+                  onClick={() => setActiveTab("reports")}
                   className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === 'reports' 
-                      ? 'border-b-2 border-blue-600 text-blue-600' 
-                      : 'text-gray-500 hover:text-gray-700'
+                    activeTab === "reports"
+                      ? "border-b-2 border-blue-600 text-blue-600"
+                      : "text-gray-500 hover:text-gray-700"
                   }`}
                 >
                   Reports
@@ -1613,7 +2239,7 @@ export default function UserManagementPage() {
             </div>
 
             {/* Tab Content */}
-            {activeTab === 'overview' && (
+            {activeTab === "overview" && (
               <>
                 {/* User Profile Summary */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -1621,14 +2247,21 @@ export default function UserManagementPage() {
                     <div className="flex items-center space-x-4">
                       <div className="relative">
                         <AntAvatar size={80} src={selectedUser.avatar} />
-                        <div className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${
-                          selectedUser.status === 'online' ? 'bg-green-500' : 
-                          selectedUser.status === 'blocked' ? 'bg-red-500' : 'bg-gray-400'
-                        }`}></div>
+                        <div
+                          className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${
+                            selectedUser.status === "online"
+                              ? "bg-green-500"
+                              : selectedUser.status === "blocked"
+                                ? "bg-red-500"
+                                : "bg-gray-400"
+                          }`}
+                        ></div>
                       </div>
-            <div>
+                      <div>
                         <div className="flex items-center space-x-2">
-                          <h2 className="text-xl font-bold text-gray-900">{selectedUser.name}</h2>
+                          <h2 className="text-xl font-bold text-gray-900">
+                            {selectedUser.name}
+                          </h2>
                           <CheckCircle className="h-5 w-5 text-blue-600" />
                         </div>
                         <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
@@ -1648,7 +2281,10 @@ export default function UserManagementPage() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
                         Upgrade to Pro
                       </Button>
                       <Button size="sm" variant="outline">
@@ -1666,15 +2302,21 @@ export default function UserManagementPage() {
                   {/* Metrics Cards */}
                   <div className="grid grid-cols-3 gap-4 mt-6">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">↑ $4,500</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        ↑ $4,500
+                      </div>
                       <div className="text-sm text-gray-600">Earnings</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-red-600">↓ 75</div>
+                      <div className="text-2xl font-bold text-red-600">
+                        ↓ 75
+                      </div>
                       <div className="text-sm text-gray-600">Projects</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">↑ 60%</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        ↑ 60%
+                      </div>
                       <div className="text-sm text-gray-600">Success Rate</div>
                     </div>
                   </div>
@@ -1682,11 +2324,16 @@ export default function UserManagementPage() {
                   {/* Profile Completion */}
                   <div className="mt-6">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Profile Completion</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        Profile Completion
+                      </span>
                       <span className="text-sm text-gray-500">50%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '50%' }}></div>
+                      <div
+                        className="bg-green-500 h-2 rounded-full"
+                        style={{ width: "50%" }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -1694,7 +2341,9 @@ export default function UserManagementPage() {
                 {/* Profile Details */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Profile Details</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Profile Details
+                    </h3>
                     <div className="flex items-center space-x-2">
                       <Button size="sm" variant="outline">
                         <Edit className="h-4 w-4 mr-2" />
@@ -1709,42 +2358,70 @@ export default function UserManagementPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-3">
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Full Name:</span>
-                        <span className="text-sm font-medium text-gray-900">{selectedUser.name}</span>
+                        <span className="text-sm text-gray-600">
+                          Full Name:
+                        </span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {selectedUser.name}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600">Company:</span>
-                        <span className="text-sm font-medium text-gray-900">ERP Solutions</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          ERP Solutions
+                        </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Contact Phone:</span>
+                        <span className="text-sm text-gray-600">
+                          Contact Phone:
+                        </span>
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900">{selectedUser.phone}</span>
-                          <Badge color="green" className="text-xs">Verified</Badge>
+                          <span className="text-sm font-medium text-gray-900">
+                            {selectedUser.phone}
+                          </span>
+                          <Badge color="green" className="text-xs">
+                            Verified
+                          </Badge>
                         </div>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Company Site:</span>
-                        <span className="text-sm font-medium text-gray-900">erp-solutions.com</span>
+                        <span className="text-sm text-gray-600">
+                          Company Site:
+                        </span>
+                        <span className="text-sm font-medium text-gray-900">
+                          erp-solutions.com
+                        </span>
                       </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600">Country:</span>
-                        <span className="text-sm font-medium text-gray-900">United States</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Communication:</span>
-                        <span className="text-sm font-medium text-gray-900">Email, Phone</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Allow Changes:</span>
-                        <span className="text-sm font-medium text-gray-900">Yes</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Last Login:</span>
                         <span className="text-sm font-medium text-gray-900">
-                          {dayjs(selectedUser.lastLogin).format('MMM DD, YYYY')}
+                          United States
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">
+                          Communication:
+                        </span>
+                        <span className="text-sm font-medium text-gray-900">
+                          Email, Phone
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">
+                          Allow Changes:
+                        </span>
+                        <span className="text-sm font-medium text-gray-900">
+                          Yes
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">
+                          Last Login:
+                        </span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {dayjs(selectedUser.lastLogin).format("MMM DD, YYYY")}
                         </span>
                       </div>
                     </div>
@@ -1756,39 +2433,42 @@ export default function UserManagementPage() {
                       <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                       <div className="flex-1">
                         <p className="text-sm text-yellow-800">
-                          <strong>We need your attention!</strong> Your account status is {selectedUser.status}. 
-                          To ensure full access, please verify your account details.
-              </p>
-            </div>
+                          <strong>We need your attention!</strong> Your account
+                          status is {selectedUser.status}. To ensure full
+                          access, please verify your account details.
+                        </p>
+                      </div>
                     </div>
-          </div>
-        </div>
-        
+                  </div>
+                </div>
+
                 {/* Action Buttons */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">User Actions</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    User Actions
+                  </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
+                    <Button
+                      size="sm"
+                      variant="outline"
                       onClick={() => handleSendResetPassword(selectedUser.id)}
                       className="flex items-center justify-center space-x-2"
                     >
                       <Key className="h-4 w-4" />
                       <span>Reset Password</span>
                     </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
+                    <Button
+                      size="sm"
+                      variant="outline"
                       onClick={() => handleLoginAsUser(selectedUser.id)}
                       className="flex items-center justify-center space-x-2"
                     >
                       <LogIn className="h-4 w-4" />
                       <span>Login as User</span>
                     </Button>
-                    {selectedUser.status === 'blocked' ? (
-                      <Button 
-                        size="sm" 
+                    {selectedUser.status === "blocked" ? (
+                      <Button
+                        size="sm"
                         onClick={() => handleUnblockUser(selectedUser.id)}
                         className="flex items-center justify-center space-x-2"
                       >
@@ -1796,9 +2476,9 @@ export default function UserManagementPage() {
                         <span>Unblock</span>
                       </Button>
                     ) : (
-                      <Button 
-                        size="sm" 
-                        variant="destructive" 
+                      <Button
+                        size="sm"
+                        variant="destructive"
                         onClick={() => handleBlockUser(selectedUser.id)}
                         className="flex items-center justify-center space-x-2"
                       >
@@ -1806,9 +2486,9 @@ export default function UserManagementPage() {
                         <span>Block</span>
                       </Button>
                     )}
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
+                    <Button
+                      size="sm"
+                      variant="outline"
                       onClick={() => handleEditUser(selectedUser.id)}
                       className="flex items-center justify-center space-x-2"
                     >
@@ -1820,68 +2500,88 @@ export default function UserManagementPage() {
               </>
             )}
 
-            {activeTab === 'settings' && (
+            {activeTab === "settings" && (
               <div className="space-y-6">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Notification Settings</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Notification Settings
+                  </h3>
                   <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
+                    <div className="flex items-center justify-between">
+                      <div>
                         <p className="font-medium">Email Notifications</p>
-                        <p className="text-sm text-gray-600">Receive notifications via email</p>
-            </div>
+                        <p className="text-sm text-gray-600">
+                          Receive notifications via email
+                        </p>
+                      </div>
                       <Switch defaultChecked />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Push Notifications</p>
-                        <p className="text-sm text-gray-600">Receive push notifications</p>
+                        <p className="text-sm text-gray-600">
+                          Receive push notifications
+                        </p>
                       </div>
                       <Switch />
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">SMS Notifications</p>
-                        <p className="text-sm text-gray-600">Receive notifications via SMS</p>
+                        <p className="text-sm text-gray-600">
+                          Receive notifications via SMS
+                        </p>
                       </div>
                       <Switch defaultChecked />
                     </div>
-          </div>
-        </div>
-        
+                  </div>
+                </div>
+
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Privacy Settings</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Privacy Settings
+                  </h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Profile Visibility</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Profile Visibility
+                      </label>
                       <Select defaultValue="public" className="w-full">
                         <Option value="public">Public</Option>
                         <Option value="private">Private</Option>
                         <Option value="friends">Friends Only</Option>
                       </Select>
                     </div>
-          <div className="flex items-center justify-between">
-            <div>
+                    <div className="flex items-center justify-between">
+                      <div>
                         <p className="font-medium">Show Email</p>
-                        <p className="text-sm text-gray-600">Display email address on profile</p>
-            </div>
+                        <p className="text-sm text-gray-600">
+                          Display email address on profile
+                        </p>
+                      </div>
                       <Switch />
-          </div>
+                    </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Show Phone</p>
-                        <p className="text-sm text-gray-600">Display phone number on profile</p>
+                        <p className="text-sm text-gray-600">
+                          Display phone number on profile
+                        </p>
                       </div>
                       <Switch defaultChecked />
                     </div>
-        </div>
-      </div>
+                  </div>
+                </div>
 
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Preferences</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Preferences
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Language
+                      </label>
                       <Select defaultValue="english" className="w-full">
                         <Option value="english">English</Option>
                         <Option value="spanish">Spanish</Option>
@@ -1889,7 +2589,9 @@ export default function UserManagementPage() {
                       </Select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Timezone
+                      </label>
                       <Select defaultValue="utc-8" className="w-full">
                         <Option value="utc-8">UTC-8 (PST)</Option>
                         <Option value="utc-5">UTC-5 (EST)</Option>
@@ -1897,7 +2599,9 @@ export default function UserManagementPage() {
                       </Select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Date Format</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Date Format
+                      </label>
                       <Select defaultValue="mm/dd/yyyy" className="w-full">
                         <Option value="mm/dd/yyyy">MM/DD/YYYY</Option>
                         <Option value="dd/mm/yyyy">DD/MM/YYYY</Option>
@@ -1909,153 +2613,225 @@ export default function UserManagementPage() {
               </div>
             )}
 
-            {activeTab === 'security' && (
+            {activeTab === "security" && (
               <div className="space-y-6">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Security Settings</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Security Settings
+                  </h3>
                   <div className="space-y-4">
-          <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Two-Factor Authentication</p>
-                        <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
-          </div>
-                      <Button size="sm" variant="outline">Enable</Button>
-        </div>
+                        <p className="text-sm text-gray-600">
+                          Add an extra layer of security to your account
+                        </p>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        Enable
+                      </Button>
+                    </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Last Password Change</p>
                         <p className="text-sm text-gray-600">30 days ago</p>
-        </div>
-                      <Button size="sm" variant="outline">Change Password</Button>
-      </div>
+                      </div>
+                      <Button size="sm" variant="outline">
+                        Change Password
+                      </Button>
+                    </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Active Sessions</p>
-                        <p className="text-sm text-gray-600">2 active sessions</p>
+                        <p className="text-sm text-gray-600">
+                          2 active sessions
+                        </p>
                       </div>
-                      <Button size="sm" variant="outline">Manage Sessions</Button>
+                      <Button size="sm" variant="outline">
+                        Manage Sessions
+                      </Button>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Login History</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Login History
+                  </h3>
                   <div className="space-y-3">
-                    {generateTabData('security')?.loginHistory.map((login: any) => (
-                      <div key={login.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <div>
-                            <p className="font-medium text-sm">{login.location}</p>
-                            <p className="text-xs text-gray-600">{login.device}</p>
+                    {generateTabData("security")?.loginHistory.map(
+                      (login: any) => (
+                        <div
+                          key={login.id}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div>
+                              <p className="font-medium text-sm">
+                                {login.location}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {login.device}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">{login.ip}</p>
+                            <p className="text-xs text-gray-600">
+                              {login.timestamp.format("MMM DD, HH:mm")}
+                            </p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium">{login.ip}</p>
-                          <p className="text-xs text-gray-600">{login.timestamp.format('MMM DD, HH:mm')}</p>
-                        </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
             )}
 
-            {activeTab === 'activity' && (
+            {activeTab === "activity" && (
               <div className="space-y-6">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Login Statistics</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Login Statistics
+                  </h3>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">156</div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        156
+                      </div>
                       <div className="text-sm text-gray-600">Total Logins</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">23</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        23
+                      </div>
                       <div className="text-sm text-gray-600">This Month</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">1h</div>
+                      <div className="text-2xl font-bold text-orange-600">
+                        1h
+                      </div>
                       <div className="text-sm text-gray-600">Last Login</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Recent Activity
+                  </h3>
                   <Timeline
-                    items={generateTabData('activity')?.actions.map((action: any) => ({
-                      dot: action.type === 'create' ? <Plus className="h-4 w-4 text-green-500" /> :
-                           action.type === 'update' ? <Edit className="h-4 w-4 text-blue-500" /> :
-                           action.type === 'share' ? <User className="h-4 w-4 text-purple-500" /> :
-                           <MessageSquareIcon className="h-4 w-4 text-orange-500" />,
-                      children: (
-                        <div>
-                          <p className="font-medium">{action.action}</p>
-                          <p className="text-sm text-gray-500">{action.timestamp.format('MMM DD, YYYY HH:mm')}</p>
-                        </div>
-                      )
-                    }))}
+                    items={generateTabData("activity")?.actions.map(
+                      (action: any) => ({
+                        dot:
+                          action.type === "create" ? (
+                            <Plus className="h-4 w-4 text-green-500" />
+                          ) : action.type === "update" ? (
+                            <Edit className="h-4 w-4 text-blue-500" />
+                          ) : action.type === "share" ? (
+                            <User className="h-4 w-4 text-purple-500" />
+                          ) : (
+                            <MessageSquareIcon className="h-4 w-4 text-orange-500" />
+                          ),
+                        children: (
+                          <div>
+                            <p className="font-medium">{action.action}</p>
+                            <p className="text-sm text-gray-500">
+                              {action.timestamp.format("MMM DD, YYYY HH:mm")}
+                            </p>
+                          </div>
+                        ),
+                      }),
+                    )}
                   />
                 </div>
               </div>
             )}
 
-            {activeTab === 'reports' && (
+            {activeTab === "reports" && (
               <div className="space-y-6">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Performance Metrics
+                  </h3>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">45</div>
-                      <div className="text-sm text-gray-600">Tasks Completed</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        45
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Tasks Completed
+                      </div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-600">3</div>
-                      <div className="text-sm text-gray-600">Active Projects</div>
+                      <div className="text-sm text-gray-600">
+                        Active Projects
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">87%</div>
+                      <div className="text-2xl font-bold text-purple-600">
+                        87%
+                      </div>
                       <div className="text-sm text-gray-600">Efficiency</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Time Tracking</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Time Tracking
+                  </h3>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-indigo-600">168h</div>
+                      <div className="text-2xl font-bold text-indigo-600">
+                        168h
+                      </div>
                       <div className="text-sm text-gray-600">Total Hours</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-teal-600">42h</div>
+                      <div className="text-2xl font-bold text-teal-600">
+                        42h
+                      </div>
                       <div className="text-sm text-gray-600">This Week</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-pink-600">8.4h</div>
+                      <div className="text-2xl font-bold text-pink-600">
+                        8.4h
+                      </div>
                       <div className="text-sm text-gray-600">Avg/Day</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Achievements</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Achievements
+                  </h3>
                   <div className="space-y-3">
-                    {generateTabData('reports')?.achievements.map((achievement: any) => (
-                      <div key={achievement.id} className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
-                        <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                          <Star className="h-4 w-4 text-white" />
+                    {generateTabData("reports")?.achievements.map(
+                      (achievement: any) => (
+                        <div
+                          key={achievement.id}
+                          className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg"
+                        >
+                          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <Star className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium">{achievement.title}</p>
+                            <p className="text-sm text-gray-600">
+                              {achievement.description}
+                            </p>
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {achievement.date.format("MMM DD")}
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <p className="font-medium">{achievement.title}</p>
-                          <p className="text-sm text-gray-600">{achievement.description}</p>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {achievement.date.format('MMM DD')}
-                        </div>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
@@ -2080,7 +2856,10 @@ export default function UserManagementPage() {
         className="user-drawer"
         extra={
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => setRolePermissionDrawerOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setRolePermissionDrawerOpen(false)}
+            >
               Cancel
             </Button>
           </div>
@@ -2093,307 +2872,434 @@ export default function UserManagementPage() {
               <div className="flex items-center space-x-4">
                 <AntAvatar size={60} src={selectedUser.avatar} />
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{selectedUser.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {selectedUser.name}
+                  </h3>
                   <p className="text-sm text-gray-600">{selectedUser.email}</p>
-                  <p className="text-sm text-gray-500">{selectedUser.department} • {selectedUser.role}</p>
-        </div>
-        </div>
-      </div>
+                  <p className="text-sm text-gray-500">
+                    {selectedUser.department} • {selectedUser.role}
+                  </p>
+                </div>
+              </div>
+            </div>
 
-            <Tabs defaultActiveKey="roles" items={[
-              {
-                key: 'roles',
-                label: 'Roles',
-                children: (
-                  <div className="space-y-4">
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                      <h4 className="text-md font-semibold text-gray-900 mb-4">Assign Roles</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {mockRoles.map((role) => (
-                          <div key={role.id} className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <div className="flex items-center space-x-3">
-                              <input
-                                type="checkbox"
-                                id={`role-${role.id}`}
-                                checked={selectedRoles.includes(role.id)}
-                                onChange={(e) => handleRoleChange(role.id, e.target.checked)}
-                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                              />
-                              <div className="flex-1">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center space-x-2">
-                                    <Tag color={role.color} size="small">
-                                      {role.name}
-                                    </Tag>
-                                    {role.name === 'Super Admin' && <Crown className="h-4 w-4 text-yellow-500" />}
-                                    {role.name === 'Admin' && <Star className="h-4 w-4 text-orange-500" />}
+            <Tabs
+              defaultActiveKey="roles"
+              items={[
+                {
+                  key: "roles",
+                  label: "Roles",
+                  children: (
+                    <div className="space-y-4">
+                      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                        <h4 className="text-md font-semibold text-gray-900 mb-4">
+                          Assign Roles
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {mockRoles.map((role) => (
+                            <div
+                              key={role.id}
+                              className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                            >
+                              <div className="flex items-center space-x-3">
+                                <input
+                                  type="checkbox"
+                                  id={`role-${role.id}`}
+                                  checked={selectedRoles.includes(role.id)}
+                                  onChange={(e) =>
+                                    handleRoleChange(role.id, e.target.checked)
+                                  }
+                                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                      <Tag color={role.color} size="small">
+                                        {role.name}
+                                      </Tag>
+                                      {role.name === "Super Admin" && (
+                                        <Crown className="h-4 w-4 text-yellow-500" />
+                                      )}
+                                      {role.name === "Admin" && (
+                                        <Star className="h-4 w-4 text-orange-500" />
+                                      )}
+                                    </div>
+                                    <button
+                                      onClick={() =>
+                                        setShowRolePermissions(
+                                          showRolePermissions === role.id
+                                            ? null
+                                            : role.id,
+                                        )
+                                      }
+                                      className="p-1 hover:bg-gray-200 rounded"
+                                    >
+                                      <MoreHorizontal className="h-4 w-4 text-gray-500" />
+                                    </button>
                                   </div>
-                                  <button
-                                    onClick={() => setShowRolePermissions(showRolePermissions === role.id ? null : role.id)}
-                                    className="p-1 hover:bg-gray-200 rounded"
-                                  >
-                                    <MoreHorizontal className="h-4 w-4 text-gray-500" />
-                                  </button>
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    {role.description}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    {role.permissions.length} permissions
+                                    included
+                                  </p>
                                 </div>
-                                <p className="text-sm text-gray-600 mt-1">{role.description}</p>
-                                <p className="text-xs text-gray-500 mt-1">
-                                  {role.permissions.length} permissions included
-                                </p>
                               </div>
-                            </div>
-                            
-                            {/* Role Permissions Table */}
-                            {showRolePermissions === role.id && (
-                              <div className="mt-3">
-                                <div className="flex items-center justify-between mb-3">
-                                  <h5 className="text-sm font-medium text-gray-700">Role Permissions:</h5>
-                                  <AntButton
+
+                              {/* Role Permissions Table */}
+                              {showRolePermissions === role.id && (
+                                <div className="mt-3">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h5 className="text-sm font-medium text-gray-700">
+                                      Role Permissions:
+                                    </h5>
+                                    <AntButton
+                                      size="small"
+                                      type="primary"
+                                      onClick={() => {
+                                        toast({
+                                          title: "Role Permissions Updated",
+                                          description: `Permissions for ${role.name} role have been saved successfully`,
+                                          variant: "default",
+                                        });
+                                      }}
+                                      className="text-xs px-3"
+                                    >
+                                      <Save className="h-3 w-3 mr-1" />
+                                      Save Changes
+                                    </AntButton>
+                                  </div>
+                                  <Table
                                     size="small"
-                                    type="primary"
-                                    onClick={() => {
-                                      toast({
-                                        title: "Role Permissions Updated",
-                                        description: `Permissions for ${role.name} role have been saved successfully`,
-                                        variant: "default",
-                                      });
-                                    }}
-                                    className="text-xs px-3"
-                                  >
-                                    <Save className="h-3 w-3 mr-1" />
-                                    Save Changes
-                                  </AntButton>
-                                </div>
-                                <Table
-                                  size="small"
-                                  dataSource={role.permissions.map(permId => {
-                                    const permission = mockPermissions.find(p => p.id === permId);
-                                    return {
-                                      key: permId,
-                                      id: permId,
-                                      name: permission?.name || '',
-                                      description: permission?.description || '',
-                                      module: permission?.module || '',
-                                      selected: selectedPermissions.includes(permId),
-                                      active: permissionStatus[permId] || false
-                                    };
-                                  })}
-                                  columns={[
-                                    {
-                                      title: 'Select',
-                                      dataIndex: 'selected',
-                                      width: 60,
-                                      render: (selected, record) => (
-                                        selected ? (
-                                          <Popconfirm
-                                            title="Remove Permission"
-                                            description={`Are you sure you want to remove "${record.name}" permission?`}
-                                            onConfirm={() => handlePermissionChange(record.id, false)}
-                                            okText="Yes"
-                                            cancelText="No"
-                                          >
+                                    dataSource={role.permissions.map(
+                                      (permId) => {
+                                        const permission = mockPermissions.find(
+                                          (p) => p.id === permId,
+                                        );
+                                        return {
+                                          key: permId,
+                                          id: permId,
+                                          name: permission?.name || "",
+                                          description:
+                                            permission?.description || "",
+                                          module: permission?.module || "",
+                                          selected:
+                                            selectedPermissions.includes(
+                                              permId,
+                                            ),
+                                          active:
+                                            permissionStatus[permId] || false,
+                                        };
+                                      },
+                                    )}
+                                    columns={[
+                                      {
+                                        title: "Select",
+                                        dataIndex: "selected",
+                                        width: 60,
+                                        render: (selected, record) =>
+                                          selected ? (
+                                            <Popconfirm
+                                              title="Remove Permission"
+                                              description={`Are you sure you want to remove "${record.name}" permission?`}
+                                              onConfirm={() =>
+                                                handlePermissionChange(
+                                                  record.id,
+                                                  false,
+                                                )
+                                              }
+                                              okText="Yes"
+                                              cancelText="No"
+                                            >
+                                              <Checkbox
+                                                checked={selected}
+                                                onChange={(e) => {
+                                                  if (!e.target.checked) {
+                                                    // The Popconfirm will handle the actual removal
+                                                    return;
+                                                  }
+                                                  handlePermissionChange(
+                                                    record.id,
+                                                    e.target.checked,
+                                                  );
+                                                }}
+                                              />
+                                            </Popconfirm>
+                                          ) : (
                                             <Checkbox
                                               checked={selected}
-                                              onChange={(e) => {
-                                                if (!e.target.checked) {
-                                                  // The Popconfirm will handle the actual removal
-                                                  return;
-                                                }
-                                                handlePermissionChange(record.id, e.target.checked);
-                                              }}
+                                              onChange={(e) =>
+                                                handlePermissionChange(
+                                                  record.id,
+                                                  e.target.checked,
+                                                )
+                                              }
                                             />
-                                          </Popconfirm>
-                                        ) : (
-                                          <Checkbox
-                                            checked={selected}
-                                            onChange={(e) => handlePermissionChange(record.id, e.target.checked)}
-                                          />
-                                        )
-                                      )
-                                    },
-                                    {
-                                      title: 'Description',
-                                      dataIndex: 'description',
-                                      render: (description) => (
-                                        <span className="text-xs text-gray-600">{description}</span>
-                                      )
-                                    },
-                                    {
-                                      title: 'Permission Name',
-                                      dataIndex: 'name',
-                                      render: (name, record) => (
-                                        <div>
-                                          <div className="font-medium text-sm">{name}</div>
-                                          <div className="text-xs text-gray-500">{record.id}</div>
-                                        </div>
-                                      )
-                                    },
-                                    {
-                                      title: 'Module Name',
-                                      dataIndex: 'module',
-                                      render: (module) => (
-                                        <Tag color="blue" size="small">
-                                          {module}
-                                        </Tag>
-                                      )
-                                    }
-                                  ]}
-                                  pagination={{
-                                    pageSize: 20,
-                                    showSizeChanger: true,
-                                    showQuickJumper: true,
-                                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} permissions`,
-                                    pageSizeOptions: ['10', '20', '50', '100']
-                                  }}
-                                  className="role-permissions-table"
-                                />
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                                          ),
+                                      },
+                                      {
+                                        title: "Description",
+                                        dataIndex: "description",
+                                        render: (description) => (
+                                          <span className="text-xs text-gray-600">
+                                            {description}
+                                          </span>
+                                        ),
+                                      },
+                                      {
+                                        title: "Permission Name",
+                                        dataIndex: "name",
+                                        render: (name, record) => (
+                                          <div>
+                                            <div className="font-medium text-sm">
+                                              {name}
+                                            </div>
+                                            <div className="text-xs text-gray-500">
+                                              {record.id}
+                                            </div>
+                                          </div>
+                                        ),
+                                      },
+                                      {
+                                        title: "Module Name",
+                                        dataIndex: "module",
+                                        render: (module) => (
+                                          <Tag color="blue" size="small">
+                                            {module}
+                                          </Tag>
+                                        ),
+                                      },
+                                    ]}
+                                    pagination={{
+                                      pageSize: 20,
+                                      showSizeChanger: true,
+                                      showQuickJumper: true,
+                                      showTotal: (total, range) =>
+                                        `${range[0]}-${range[1]} of ${total} permissions`,
+                                      pageSizeOptions: [
+                                        "10",
+                                        "20",
+                                        "50",
+                                        "100",
+                                      ],
+                                    }}
+                                    className="role-permissions-table"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Current Roles Summary */}
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                      <h4 className="text-md font-semibold text-gray-900 mb-4">Current Roles ({selectedRoles.length})</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedRoles.map((roleId) => {
-                          const role = mockRoles.find(r => r.id === roleId);
-                          return role ? (
-                            <Tag key={role.id} color={role.color} className="flex items-center space-x-1">
-                              <span>{role.name}</span>
-                              <X 
-                                className="h-3 w-3 cursor-pointer hover:text-red-500" 
-                                onClick={() => handleRoleChange(role.id, false)}
-                              />
-                            </Tag>
-                          ) : null;
-                        })}
-                        {selectedRoles.length === 0 && (
-                          <p className="text-sm text-gray-500">No roles assigned</p>
-                        )}
+                      {/* Current Roles Summary */}
+                      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                        <h4 className="text-md font-semibold text-gray-900 mb-4">
+                          Current Roles ({selectedRoles.length})
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedRoles.map((roleId) => {
+                            const role = mockRoles.find((r) => r.id === roleId);
+                            return role ? (
+                              <Tag
+                                key={role.id}
+                                color={role.color}
+                                className="flex items-center space-x-1"
+                              >
+                                <span>{role.name}</span>
+                                <X
+                                  className="h-3 w-3 cursor-pointer hover:text-red-500"
+                                  onClick={() =>
+                                    handleRoleChange(role.id, false)
+                                  }
+                                />
+                              </Tag>
+                            ) : null;
+                          })}
+                          {selectedRoles.length === 0 && (
+                            <p className="text-sm text-gray-500">
+                              No roles assigned
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              },
-              {
-                key: 'permissions',
-                label: 'Permissions',
-                children: (
-                  <div className="space-y-4">
-                    {/* Role-based Permissions */}
-                    {(() => {
-                      const { rolePermissions, extraPermissions } = getPermissionsByRole();
-                      return (
-                        <>
-                          {Object.keys(rolePermissions).map((roleName) => {
-                            const role = mockRoles.find(r => r.name === roleName);
-                            const permissions = rolePermissions[roleName];
-                            return (
-                              <div key={roleName} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  ),
+                },
+                {
+                  key: "permissions",
+                  label: "Permissions",
+                  children: (
+                    <div className="space-y-4">
+                      {/* Role-based Permissions */}
+                      {(() => {
+                        const { rolePermissions, extraPermissions } =
+                          getPermissionsByRole();
+                        return (
+                          <>
+                            {Object.keys(rolePermissions).map((roleName) => {
+                              const role = mockRoles.find(
+                                (r) => r.name === roleName,
+                              );
+                              const permissions = rolePermissions[roleName];
+                              return (
+                                <div
+                                  key={roleName}
+                                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
+                                >
+                                  <div className="flex items-center space-x-2 mb-4">
+                                    <Tag color={role?.color} size="small">
+                                      {roleName}
+                                    </Tag>
+                                    <span className="text-sm text-gray-600">
+                                      ({permissions.length} permissions)
+                                    </span>
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    {permissions.map((permissionId) => {
+                                      const permission = mockPermissions.find(
+                                        (p) => p.id === permissionId,
+                                      );
+                                      return permission ? (
+                                        <div
+                                          key={permission.id}
+                                          className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                                        >
+                                          <div>
+                                            <p className="text-sm font-medium">
+                                              {permission.name}
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                              {permission.id}
+                                            </p>
+                                          </div>
+                                          <X
+                                            className="h-4 w-4 cursor-pointer hover:text-red-500"
+                                            onClick={() =>
+                                              handlePermissionChange(
+                                                permission.id,
+                                                false,
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      ) : null;
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })}
+
+                            {/* Extra Permissions */}
+                            {extraPermissions.length > 0 && (
+                              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                                 <div className="flex items-center space-x-2 mb-4">
-                                  <Tag color={role?.color} size="small">
-                                    {roleName}
+                                  <Tag color="purple" size="small">
+                                    Extra Permissions
                                   </Tag>
                                   <span className="text-sm text-gray-600">
-                                    ({permissions.length} permissions)
+                                    ({extraPermissions.length} permissions)
                                   </span>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                  {permissions.map((permissionId) => {
-                                    const permission = mockPermissions.find(p => p.id === permissionId);
+                                  {extraPermissions.map((permissionId) => {
+                                    const permission = mockPermissions.find(
+                                      (p) => p.id === permissionId,
+                                    );
                                     return permission ? (
-                                      <div key={permission.id} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
+                                      <div
+                                        key={permission.id}
+                                        className="flex items-center justify-between p-2 bg-purple-50 rounded border border-purple-200"
+                                      >
                                         <div>
-                                          <p className="text-sm font-medium">{permission.name}</p>
-                                          <p className="text-xs text-gray-500">{permission.id}</p>
+                                          <p className="text-sm font-medium">
+                                            {permission.name}
+                                          </p>
+                                          <p className="text-xs text-gray-500">
+                                            {permission.id}
+                                          </p>
                                         </div>
-                                        <X 
-                                          className="h-4 w-4 cursor-pointer hover:text-red-500" 
-                                          onClick={() => handlePermissionChange(permission.id, false)}
+                                        <X
+                                          className="h-4 w-4 cursor-pointer hover:text-red-500"
+                                          onClick={() =>
+                                            handlePermissionChange(
+                                              permission.id,
+                                              false,
+                                            )
+                                          }
                                         />
                                       </div>
                                     ) : null;
                                   })}
-      </div>
-                              </div>
-                            );
-                          })}
-
-                          {/* Extra Permissions */}
-                          {extraPermissions.length > 0 && (
-                            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                              <div className="flex items-center space-x-2 mb-4">
-                                <Tag color="purple" size="small">
-                                  Extra Permissions
-                                </Tag>
-                                <span className="text-sm text-gray-600">
-                                  ({extraPermissions.length} permissions)
-                                </span>
-                              </div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                {extraPermissions.map((permissionId) => {
-                                  const permission = mockPermissions.find(p => p.id === permissionId);
-                                  return permission ? (
-                                    <div key={permission.id} className="flex items-center justify-between p-2 bg-purple-50 rounded border border-purple-200">
-                                      <div>
-                                        <p className="text-sm font-medium">{permission.name}</p>
-                                        <p className="text-xs text-gray-500">{permission.id}</p>
-                                      </div>
-                                      <X 
-                                        className="h-4 w-4 cursor-pointer hover:text-red-500" 
-                                        onClick={() => handlePermissionChange(permission.id, false)}
-                                      />
-                                    </div>
-                                  ) : null;
-                                })}
-                              </div>
-                            </div>
-                          )}
-
-                          {selectedPermissions.length === 0 && (
-                            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                              <p className="text-gray-500">No permissions assigned</p>
-                              <p className="text-sm text-gray-400 mt-1">Select roles to automatically assign permissions</p>
-                            </div>
-                          )}
-                        </>
-                      );
-                    })()}
-
-                    {/* All Available Permissions */}
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                      <h4 className="text-md font-semibold text-gray-900 mb-4">All Available Permissions</h4>
-                      <div className="space-y-3">
-                        {mockPermissions.map((permission) => (
-                          <div key={permission.id} className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
-                            <input
-                              type="checkbox"
-                              id={`permission-${permission.id}`}
-                              checked={selectedPermissions.includes(permission.id)}
-                              onChange={(e) => handlePermissionChange(permission.id, e.target.checked)}
-                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                            />
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <p className="font-medium text-gray-900">{permission.name}</p>
-                                  <p className="text-sm text-gray-600">{permission.description}</p>
                                 </div>
-                                <Tag color="blue" size="small">
-                                  {permission.id}
-                                </Tag>
+                              </div>
+                            )}
+
+                            {selectedPermissions.length === 0 && (
+                              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                                <p className="text-gray-500">
+                                  No permissions assigned
+                                </p>
+                                <p className="text-sm text-gray-400 mt-1">
+                                  Select roles to automatically assign
+                                  permissions
+                                </p>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
+
+                      {/* All Available Permissions */}
+                      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                        <h4 className="text-md font-semibold text-gray-900 mb-4">
+                          All Available Permissions
+                        </h4>
+                        <div className="space-y-3">
+                          {mockPermissions.map((permission) => (
+                            <div
+                              key={permission.id}
+                              className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                            >
+                              <input
+                                type="checkbox"
+                                id={`permission-${permission.id}`}
+                                checked={selectedPermissions.includes(
+                                  permission.id,
+                                )}
+                                onChange={(e) =>
+                                  handlePermissionChange(
+                                    permission.id,
+                                    e.target.checked,
+                                  )
+                                }
+                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                              />
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    <p className="font-medium text-gray-900">
+                                      {permission.name}
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                      {permission.description}
+                                    </p>
+                                  </div>
+                                  <Tag color="blue" size="small">
+                                    {permission.id}
+                                  </Tag>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              }
-            ]} />
+                  ),
+                },
+              ]}
+            />
           </div>
         )}
       </Drawer>

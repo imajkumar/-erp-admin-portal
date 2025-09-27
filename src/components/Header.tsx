@@ -1,10 +1,34 @@
 "use client";
 
+import {
+  AlertTriangle,
+  Bell,
+  Bot,
+  Calendar,
+  Check,
+  ChevronDown,
+  HelpCircle,
+  LayoutDashboard,
+  Lock,
+  LogOut,
+  MessageSquare,
+  RefreshCw,
+  Search,
+  Settings,
+  UserPlus,
+} from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -12,26 +36,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
-  Search, 
-  MessageSquare, 
-  Bot, 
-  Calendar, 
-  Bell, 
-  Settings, 
-  UserPlus, 
-  HelpCircle, 
-  LogOut, 
-  X, 
-  ChevronDown, 
-  Grid3X3, 
-  Lock,
-  LayoutDashboard,
-  Check,
-  AlertTriangle,
-  RefreshCw
-} from "lucide-react";
-import Logo from "./Logo";
 import Menu from "./Menu";
 
 interface HeaderProps {
@@ -44,14 +48,14 @@ interface HeaderProps {
   sidebarOpen: boolean;
 }
 
-export default function Header({ 
-  user, 
-  onSidebarToggle, 
-  onSearchClick, 
-  onDrawerToggle, 
+export default function Header({
+  user,
+  onSidebarToggle,
+  onSearchClick,
+  onDrawerToggle,
   onNotificationClick,
   onLockScreen,
-  sidebarOpen 
+  sidebarOpen,
 }: HeaderProps) {
   const [currentSession, setCurrentSession] = useState("2025-2026");
   const [showSessionDialog, setShowSessionDialog] = useState(false);
@@ -60,13 +64,13 @@ export default function Header({
   const sessions = [
     { value: "2024-2025", label: "2024-2025" },
     { value: "2025-2026", label: "2025-2026" },
-    { value: "2026-2027", label: "2026-2027" }
+    { value: "2026-2027", label: "2026-2027" },
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    window.location.href = '/';
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
+    window.location.href = "/";
   };
 
   const handleSessionSelect = (session: string) => {
@@ -90,38 +94,41 @@ export default function Header({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 text-gray-900 px-3 py-1 bg-white border-b border-gray-200" style={{ height: '45px' }}>
+    <header
+      className="fixed top-0 left-0 right-0 z-50 text-gray-900 px-3 py-1 bg-white border-b border-gray-200"
+      style={{ height: "45px" }}
+    >
       <div className="flex items-center justify-between h-full">
-            {/* Left Side - App Branding */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                {/* 12 Dots Grid */}
-                <button
-                  onClick={onDrawerToggle}
-                  className="p-0.5 hover:bg-gray-100 rounded transition-colors"
-                  title="Open apps drawer"
-                >
-                  <div className="grid grid-cols-3 gap-0.5 w-4 h-4">
-                    {Array.from({ length: 9 }, (_, i) => (
-                      <div
-                        key={i}
-                        className="w-0.5 h-0.5 bg-blue-600 rounded-full"
-                      />
-                    ))}
-                  </div>
-                </button>
-
-                {/* Separator */}
-                <div className="w-px h-6 bg-gray-300"></div>
-
-                {/* Menu */}
-                <Menu />
+        {/* Left Side - App Branding */}
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
+            {/* 12 Dots Grid */}
+            <button
+              onClick={onDrawerToggle}
+              className="p-0.5 hover:bg-gray-100 rounded transition-colors"
+              title="Open apps drawer"
+            >
+              <div className="grid grid-cols-3 gap-0.5 w-4 h-4">
+                {Array.from({ length: 9 }, (_, i) => (
+                  <div
+                    key={i}
+                    className="w-0.5 h-0.5 bg-blue-600 rounded-full"
+                  />
+                ))}
               </div>
-            </div>
-        
+            </button>
+
+            {/* Separator */}
+            <div className="w-px h-6 bg-gray-300"></div>
+
+            {/* Menu */}
+            <Menu />
+          </div>
+        </div>
+
         {/* Center - Empty */}
         <div className="flex-1"></div>
-        
+
         {/* Right Side Actions */}
         <div className="flex items-center space-x-2">
           {/* Search */}
@@ -141,10 +148,10 @@ export default function Header({
           <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Dashboard */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => window.location.href = '/dashboard'}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => (window.location.href = "/dashboard")}
             className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
             title="Dashboard"
           >
@@ -165,14 +172,20 @@ export default function Header({
           {/* Session Selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-gray-700 hover:bg-gray-100">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-xs text-gray-700 hover:bg-gray-100"
+              >
                 <Calendar className="h-3 w-3 mr-1" />
                 {currentSession}
                 <ChevronDown className="h-3 w-3 ml-1" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-32">
-              <DropdownMenuLabel className="text-xs">Select Session</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs">
+                Select Session
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               {sessions.map((session) => (
                 <DropdownMenuItem
@@ -201,24 +214,36 @@ export default function Header({
 
           {/* Separator */}
           <div className="w-px h-5 bg-gray-300"></div>
-          
+
           {/* Chat */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="text-gray-700 hover:bg-gray-100 px-1 py-0.5 h-7"
-            onClick={() => window.open('/dashboard/messenger', '_blank', 'width=1200,height=800')}
+            onClick={() =>
+              window.open(
+                "/dashboard/messenger",
+                "_blank",
+                "width=1200,height=800",
+              )
+            }
           >
             <MessageSquare className="h-3 w-3 mr-0.5" />
             <span className="text-xs font-medium">Chat</span>
           </Button>
 
           {/* AI Assistant */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="text-gray-700 hover:bg-gray-100 px-1 py-0.5 h-7"
-            onClick={() => window.open('/dashboard/ai-messenger', '_blank', 'width=1200,height=800')}
+            onClick={() =>
+              window.open(
+                "/dashboard/ai-messenger",
+                "_blank",
+                "width=1200,height=800",
+              )
+            }
           >
             <Bot className="h-3 w-3 mr-0.5" />
             <span className="text-xs font-medium">AI</span>
@@ -228,65 +253,86 @@ export default function Header({
           <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Teams */}
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
+          >
             <div className="w-4 h-4 bg-gray-200 rounded flex items-center justify-center">
               <span className="text-xs font-bold text-gray-700">T</span>
             </div>
           </Button>
 
           {/* OneNote */}
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
+          >
             <div className="w-4 h-4 bg-gray-200 rounded flex items-center justify-center">
               <span className="text-xs font-bold text-gray-700">N</span>
             </div>
           </Button>
 
           {/* Calendar/Tasks */}
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
+          >
             <Calendar className="h-3 w-3" />
           </Button>
 
           {/* Separator */}
           <div className="w-px h-5 bg-gray-300"></div>
-          
-              {/* Notifications */}
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7 relative"
-                onClick={onNotificationClick}
-              >
-                <Bell className="h-3 w-3" />
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">3</span>
-              </Button>
-          
+
+          {/* Notifications */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7 relative"
+            onClick={onNotificationClick}
+          >
+            <Bell className="h-3 w-3" />
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full text-xs flex items-center justify-center text-white">
+              3
+            </span>
+          </Button>
+
           {/* Settings */}
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
+          >
             <Settings className="h-3 w-3" />
           </Button>
-          
-              {/* Logout Icon */}
+
+          {/* Logout Icon */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
+            title="Logout"
+          >
+            <LogOut className="h-3 w-3" />
+          </Button>
+
+          {/* User Profile */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                size="sm"
-                onClick={handleLogout}
                 className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-                title="Logout"
               >
-                <LogOut className="h-3 w-3" />
+                <Avatar className="h-5 w-5">
+                  <AvatarFallback className="bg-gray-200 text-xs font-semibold text-gray-700">
+                    {user?.name?.charAt(0) || "A"}
+                  </AvatarFallback>
+                </Avatar>
               </Button>
-
-              {/* User Profile */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7">
-                    <Avatar className="h-5 w-5">
-                      <AvatarFallback className="bg-gray-200 text-xs font-semibold text-gray-700">
-                        {user?.name?.charAt(0) || 'A'}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
+            </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -321,10 +367,13 @@ export default function Header({
               <span>Change Session</span>
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to change the session from <strong>{currentSession}</strong> to <strong>{selectedSession}</strong>?
+              Are you sure you want to change the session from{" "}
+              <strong>{currentSession}</strong> to{" "}
+              <strong>{selectedSession}</strong>?
               <br />
               <br />
-              This will reload all data for the new session and may affect your current work.
+              This will reload all data for the new session and may affect your
+              current work.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex space-x-2">

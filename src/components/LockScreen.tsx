@@ -1,10 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {
+  Battery,
+  Bell,
+  Clock,
+  Eye,
+  EyeOff,
+  Lock,
+  Settings,
+  Shield,
+  User,
+  Wifi,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Lock, Eye, EyeOff, Shield, Clock, User, Settings, Bell, Wifi, Battery } from "lucide-react";
 
 interface LockScreenProps {
   onUnlock: () => void;
@@ -17,11 +28,13 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isAnimating, setIsAnimating] = useState(false);
-  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
+  const [particles, setParticles] = useState<
+    Array<{ id: number; x: number; y: number; delay: number }>
+  >([]);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [batteryLevel, setBatteryLevel] = useState(85);
   const [wifiStrength, setWifiStrength] = useState(4);
-  const [notifications, setNotifications] = useState(3);
+  const [notifications, _setNotifications] = useState(3);
   const [userName] = useState("Admin User");
   const [lastLogin] = useState("2 hours ago");
   const [systemStatus] = useState("All systems operational");
@@ -42,7 +55,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
-        delay: Math.random() * 5
+        delay: Math.random() * 5,
       }));
       setParticles(newParticles);
     };
@@ -53,8 +66,10 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
   // Simulate battery and wifi changes
   useEffect(() => {
     const interval = setInterval(() => {
-      setBatteryLevel(prev => Math.max(20, prev + (Math.random() - 0.5) * 2));
-      setWifiStrength(prev => Math.max(1, Math.min(4, prev + (Math.random() - 0.5) * 0.5)));
+      setBatteryLevel((prev) => Math.max(20, prev + (Math.random() - 0.5) * 2));
+      setWifiStrength((prev) =>
+        Math.max(1, Math.min(4, prev + (Math.random() - 0.5) * 0.5)),
+      );
     }, 10000);
 
     return () => clearInterval(interval);
@@ -88,7 +103,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
   const handleKeyPress = (key: string) => {
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 150);
-    
+
     if (key === "backspace") {
       setPin(pin.slice(0, -1));
       setError("");
@@ -105,21 +120,21 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
 
     setIsLoading(true);
     setIsUnlocking(true);
-    
+
     // Simulate validation delay with beautiful animation
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     if (pin === "9711") {
       setError("");
       // Success animation before unlock
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       onUnlock();
     } else {
       setError("Invalid PIN. Please try again.");
       setPin("");
       setIsUnlocking(false);
     }
-    
+
     setIsLoading(false);
   };
 
@@ -130,22 +145,21 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
     // Remove the other key handling to prevent double input
   };
 
-
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center overflow-hidden">
       {/* Professional Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div 
+        <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='40' cy='40' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='40' cy='40' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         ></div>
-        <div 
+        <div
           className="absolute inset-0 animate-pulse"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M60 60c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm20 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z'/%3E%3C/g%3E%3C/svg%3E")`,
-            animationDelay: '2s'
+            animationDelay: "2s",
           }}
         ></div>
       </div>
@@ -168,8 +182,14 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
 
       {/* Professional Gradient Orbs */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl animate-float-slow"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '3s'}}></div>
-      <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-slate-500/6 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '6s'}}></div>
+      <div
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl animate-float-slow"
+        style={{ animationDelay: "3s" }}
+      ></div>
+      <div
+        className="absolute top-1/2 right-1/3 w-64 h-64 bg-slate-500/6 rounded-full blur-3xl animate-float-slow"
+        style={{ animationDelay: "6s" }}
+      ></div>
 
       {/* Professional Status Bar */}
       <div className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-6 text-white/90">
@@ -181,7 +201,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
             <span className="text-sm font-medium">ERP Admin</span>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <Wifi className="h-4 w-4 text-green-400" />
@@ -190,7 +210,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                 <div
                   key={i}
                   className={`w-1 h-3 bg-white/40 rounded-full transition-all duration-300 ${
-                    i < wifiStrength ? 'bg-green-400' : 'bg-white/20'
+                    i < wifiStrength ? "bg-green-400" : "bg-white/20"
                   }`}
                   style={{ height: `${(i + 1) * 3}px` }}
                 />
@@ -207,7 +227,9 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
           </div>
           <div className="flex items-center space-x-2">
             <Battery className="h-4 w-4 text-green-400" />
-            <span className="text-sm font-medium">{Math.round(batteryLevel)}%</span>
+            <span className="text-sm font-medium">
+              {Math.round(batteryLevel)}%
+            </span>
           </div>
         </div>
       </div>
@@ -225,19 +247,29 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                 <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">{userName}</h1>
-            <p className="text-slate-300 text-base mb-4">Last login: {lastLogin}</p>
+            <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">
+              {userName}
+            </h1>
+            <p className="text-slate-300 text-base mb-4">
+              Last login: {lastLogin}
+            </p>
             <div className="inline-flex items-center space-x-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
               <Shield className="h-4 w-4 text-green-400" />
-              <span className="text-green-400 text-sm font-medium">{systemStatus}</span>
+              <span className="text-green-400 text-sm font-medium">
+                {systemStatus}
+              </span>
             </div>
           </div>
 
           {/* Professional Lock Icon */}
           <div className="flex justify-center mb-10">
-            <div className={`w-32 h-32 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-2xl border border-white/10 ${
-              isUnlocking ? 'animate-success-bounce bg-gradient-to-br from-green-500 to-green-600' : 'hover:scale-105'
-            }`}>
+            <div
+              className={`w-32 h-32 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-2xl border border-white/10 ${
+                isUnlocking
+                  ? "animate-success-bounce bg-gradient-to-br from-green-500 to-green-600"
+                  : "hover:scale-105"
+              }`}
+            >
               {isUnlocking ? (
                 <div className="w-16 h-16 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
@@ -252,7 +284,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
               ERP Admin Portal
             </h2>
             <p className="text-slate-300 text-lg font-medium">
-              {isUnlocking ? 'Unlocking...' : 'Enter your PIN to continue'}
+              {isUnlocking ? "Unlocking..." : "Enter your PIN to continue"}
             </p>
           </div>
         </div>
@@ -267,7 +299,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
             <div className="text-xl text-slate-300 animate-fade-in mb-8 font-medium">
               {formatDate(currentTime)}
             </div>
-            
+
             {/* Professional Clock Info */}
             <div className="text-center space-y-6">
               <div className="inline-flex items-center space-x-2 bg-white/10 px-6 py-3 rounded-full border border-white/20">
@@ -277,7 +309,6 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
               <div className="text-slate-400 text-sm font-medium tracking-wide">
                 REAL-TIME SYSTEM CLOCK
               </div>
-              
             </div>
           </div>
         </div>
@@ -285,15 +316,19 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
 
       {/* Professional PIN Input Card - Bottom Center */}
       <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-20">
-        <Card className={`bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl animate-slide-up transition-all duration-1000 rounded-2xl ${
-          isUnlocking ? 'animate-success-glow' : ''
-        }`}>
+        <Card
+          className={`bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl animate-slide-up transition-all duration-1000 rounded-2xl ${
+            isUnlocking ? "animate-success-glow" : ""
+          }`}
+        >
           <CardHeader className="text-center pb-6 pt-8">
             <h2 className="text-2xl font-bold text-white mb-3 animate-fade-in bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent tracking-tight">
               Enter PIN
             </h2>
             <p className="text-slate-300 animate-fade-in font-medium">
-              {isUnlocking ? 'Unlocking...' : 'Enter your 4-digit PIN to continue'}
+              {isUnlocking
+                ? "Unlocking..."
+                : "Enter your 4-digit PIN to continue"}
             </p>
           </CardHeader>
 
@@ -319,17 +354,23 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                   <div
                     key={index}
                     className={`w-18 h-18 border-2 border-white/20 rounded-2xl flex items-center justify-center bg-white/5 transition-all duration-500 transform hover:scale-110 shadow-xl backdrop-blur-sm ${
-                      pin.length > index ? 'border-blue-400 bg-blue-400/20 animate-pulse shadow-blue-400/30' : ''
-                    } ${isUnlocking ? 'animate-success-pulse' : ''}`}
+                      pin.length > index
+                        ? "border-blue-400 bg-blue-400/20 animate-pulse shadow-blue-400/30"
+                        : ""
+                    } ${isUnlocking ? "animate-success-pulse" : ""}`}
                   >
                     {showPin && pin[index] ? (
                       <span className="text-white text-3xl font-mono animate-fade-in font-bold">
                         {pin[index]}
                       </span>
                     ) : (
-                      <div className={`w-4 h-4 bg-white/40 rounded-full transition-all duration-500 ${
-                        pin.length > index ? 'bg-blue-400 scale-125 animate-ping shadow-lg' : ''
-                      }`}></div>
+                      <div
+                        className={`w-4 h-4 bg-white/40 rounded-full transition-all duration-500 ${
+                          pin.length > index
+                            ? "bg-blue-400 scale-125 animate-ping shadow-lg"
+                            : ""
+                        }`}
+                      ></div>
                     )}
                   </div>
                 ))}
@@ -369,7 +410,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                   size="lg"
                   onClick={() => handleKeyPress(num.toString())}
                   className={`h-16 text-white hover:bg-white/20 text-2xl font-mono transition-all duration-200 transform hover:scale-110 rounded-xl shadow-lg hover:shadow-xl ${
-                    isAnimating ? 'scale-95' : ''
+                    isAnimating ? "scale-95" : ""
                   }`}
                 >
                   {num}
@@ -384,7 +425,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                   setPin("");
                 }}
                 className={`h-16 text-white hover:bg-white/20 transition-all duration-200 transform hover:scale-110 rounded-xl shadow-lg hover:shadow-xl ${
-                  isAnimating ? 'scale-95' : ''
+                  isAnimating ? "scale-95" : ""
                 }`}
               >
                 <Settings className="h-6 w-6" />
@@ -394,7 +435,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                 size="lg"
                 onClick={() => handleKeyPress("0")}
                 className={`h-16 text-white hover:bg-white/20 text-2xl font-mono transition-all duration-200 transform hover:scale-110 rounded-xl shadow-lg hover:shadow-xl ${
-                  isAnimating ? 'scale-95' : ''
+                  isAnimating ? "scale-95" : ""
                 }`}
               >
                 0
@@ -404,7 +445,7 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                 size="lg"
                 onClick={() => handleKeyPress("backspace")}
                 className={`h-16 text-white hover:bg-white/20 transition-all duration-200 transform hover:scale-110 rounded-xl shadow-lg hover:shadow-xl ${
-                  isAnimating ? 'scale-95' : ''
+                  isAnimating ? "scale-95" : ""
                 }`}
               >
                 ⌫
@@ -416,8 +457,10 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
               onClick={handleSubmit}
               disabled={pin.length !== 4 || isLoading}
               className={`w-full h-14 text-white font-bold transition-all duration-500 transform hover:scale-105 relative overflow-hidden rounded-2xl shadow-xl ${
-                pin.length === 4 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 animate-pulse' : 'bg-blue-600 hover:bg-blue-700'
-              } ${isUnlocking ? 'animate-success-glow' : ''}`}
+                pin.length === 4
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 animate-pulse"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } ${isUnlocking ? "animate-success-glow" : ""}`}
             >
               {isLoading ? (
                 <div className="flex items-center space-x-3">
@@ -441,7 +484,6 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
           © 2025 Bellpatra Digital. All rights reserved.
         </p>
       </div>
-
     </div>
   );
 }

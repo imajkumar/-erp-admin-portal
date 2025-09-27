@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Header from "./Header";
-import LeftSidebar from "./LeftSidebar";
-import LeftQuickSidebar from "./LeftQuickSidebar";
-import RightQuickSidebar from "./RightQuickSidebar";
-import QuickLeftSidebarDrawer from "./QuickLeftSidebarDrawer";
-import Footer from "./Footer";
-import SearchSuggestions from "./SearchSuggestions";
-import NotificationDrawer from "./NotificationDrawer";
-import LockScreen from "./LockScreen";
-import ScrollToTop from "./ScrollToTop";
+import { useEffect, useState } from "react";
 import { useInactivityTimer } from "@/hooks/useInactivityTimer";
+import Footer from "./Footer";
+import Header from "./Header";
+import LeftQuickSidebar from "./LeftQuickSidebar";
+import LeftSidebar from "./LeftSidebar";
+import LockScreen from "./LockScreen";
+import NotificationDrawer from "./NotificationDrawer";
+import QuickLeftSidebarDrawer from "./QuickLeftSidebarDrawer";
+import RightQuickSidebar from "./RightQuickSidebar";
+import ScrollToTop from "./ScrollToTop";
+import SearchSuggestions from "./SearchSuggestions";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,10 +20,14 @@ interface LayoutProps {
   onItemClick?: (item: string) => void;
 }
 
-export default function AdminLayout({ children, activeItem = "dashboard", onItemClick }: LayoutProps) {
+export default function AdminLayout({
+  children,
+  activeItem = "dashboard",
+  onItemClick,
+}: LayoutProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [leftQuickSidebar, setLeftQuickSidebar] = useState(true);
+  const [_leftQuickSidebar, _setLeftQuickSidebar] = useState(true);
   const [rightQuickSidebar, setRightQuickSidebar] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -34,11 +38,11 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
   // Inactivity timer for lock screen
   useInactivityTimer({
     onTimeout: () => setIsLocked(true),
-    timeout: 60000 // 1 minute
+    timeout: 60000, // 1 minute
   });
 
   useEffect(() => {
-    const userData = localStorage.getItem('userData');
+    const userData = localStorage.getItem("userData");
     if (userData) {
       setUser(JSON.parse(userData));
     }
@@ -47,28 +51,28 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
   // Keyboard shortcut for search
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setSearchOpen(true);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const handleItemClick = (item: string) => {
     // Handle navigation for specific items
-    if (item === 'erp-settings') {
-      router.push('/dashboard/settings');
+    if (item === "erp-settings") {
+      router.push("/dashboard/settings");
       return;
     }
-    
-    if (item === 'users') {
-      router.push('/dashboard/users');
+
+    if (item === "users") {
+      router.push("/dashboard/users");
       return;
     }
-    
+
     if (onItemClick) {
       onItemClick(item);
     }
@@ -95,8 +99,8 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         sidebarOpen={sidebarOpen}
       />
 
-          {/* Main Content Area */}
-          <div className="flex">
+      {/* Main Content Area */}
+      <div className="flex">
         {/* Left Quick Sidebar - Always Visible */}
         <LeftQuickSidebar
           isOpen={true}
@@ -116,11 +120,11 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         />
 
         {/* Main Content */}
-        <div 
+        <div
           className={`flex-1 transition-all duration-200 ease-in-out ${
-            sidebarOpen ? 'ml-77' : 'ml-12'
-          } ${rightQuickSidebar ? 'mr-12' : 'mr-0'}`}
-          style={{ paddingTop: '45px' }}
+            sidebarOpen ? "ml-77" : "ml-12"
+          } ${rightQuickSidebar ? "mr-12" : "mr-0"}`}
+          style={{ paddingTop: "45px" }}
         >
           {children}
         </div>
@@ -157,7 +161,6 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
-
     </div>
   );
 }

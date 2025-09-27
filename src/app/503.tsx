@@ -1,9 +1,9 @@
 "use client";
 
+import { AlertTriangle, Clock, Home, RefreshCw, Server } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Home, ArrowLeft, RefreshCw, Server, Clock, AlertTriangle } from "lucide-react";
 import Logo from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 
 export default function ServiceUnavailable() {
   const router = useRouter();
@@ -36,7 +36,8 @@ export default function ServiceUnavailable() {
         {/* Error Message */}
         <div className="mb-8">
           <p className="text-lg text-gray-600 mb-4">
-            Our servers are currently undergoing maintenance or experiencing high traffic.
+            Our servers are currently undergoing maintenance or experiencing
+            high traffic.
           </p>
           <p className="text-sm text-gray-500">
             We're working hard to get everything back up and running smoothly!
@@ -47,15 +48,17 @@ export default function ServiceUnavailable() {
         <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 mb-8">
           <div className="flex items-center justify-center mb-4">
             <Clock className="h-5 w-5 text-orange-500 mr-2" />
-            <span className="text-sm font-medium text-gray-700">Service Status</span>
+            <span className="text-sm font-medium text-gray-700">
+              Service Status
+            </span>
           </div>
           <div className="flex items-center justify-center mb-4">
             <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse mr-2"></div>
-            <span className="text-sm text-gray-600">Maintenance in Progress</span>
+            <span className="text-sm text-gray-600">
+              Maintenance in Progress
+            </span>
           </div>
-          <p className="text-xs text-gray-500">
-            Estimated time: 15-30 minutes
-          </p>
+          <p className="text-xs text-gray-500">Estimated time: 15-30 minutes</p>
         </div>
 
         {/* Action Buttons */}
@@ -67,9 +70,9 @@ export default function ServiceUnavailable() {
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
           </Button>
-          
+
           <Button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push("/dashboard")}
             variant="outline"
             className="border-orange-600 text-orange-600 hover:bg-orange-50 px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
@@ -82,10 +85,13 @@ export default function ServiceUnavailable() {
         <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20">
           <div className="flex items-center justify-center mb-4">
             <AlertTriangle className="h-5 w-5 text-orange-500 mr-2" />
-            <span className="text-sm font-medium text-gray-700">Need Immediate Help?</span>
+            <span className="text-sm font-medium text-gray-700">
+              Need Immediate Help?
+            </span>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            If you're experiencing persistent issues, please contact our support team.
+            If you're experiencing persistent issues, please contact our support
+            team.
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Button

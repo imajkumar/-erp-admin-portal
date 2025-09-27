@@ -1,9 +1,9 @@
 "use client";
 
+import { ArrowLeft, Home, RefreshCw, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Home, ArrowLeft, Search, RefreshCw } from "lucide-react";
 import Logo from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   const router = useRouter();
@@ -29,7 +29,8 @@ export default function NotFound() {
         {/* Error Message */}
         <div className="mb-8">
           <p className="text-lg text-gray-600 mb-4">
-            The page you're looking for seems to have vanished into the digital void.
+            The page you're looking for seems to have vanished into the digital
+            void.
           </p>
           <p className="text-sm text-gray-500">
             Don't worry, even the best explorers sometimes take a wrong turn!
@@ -39,13 +40,13 @@ export default function NotFound() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
           <Button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push("/dashboard")}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <Home className="h-4 w-4 mr-2" />
             Go Home
           </Button>
-          
+
           <Button
             onClick={() => router.back()}
             variant="outline"
@@ -60,14 +61,16 @@ export default function NotFound() {
         <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20">
           <div className="flex items-center justify-center mb-4">
             <Search className="h-5 w-5 text-gray-500 mr-2" />
-            <span className="text-sm font-medium text-gray-700">Looking for something specific?</span>
+            <span className="text-sm font-medium text-gray-700">
+              Looking for something specific?
+            </span>
           </div>
           <p className="text-sm text-gray-600 mb-4">
             Try searching for what you need or check out our main sections:
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Button
-              onClick={() => router.push('/dashboard/products')}
+              onClick={() => router.push("/dashboard/products")}
               variant="ghost"
               size="sm"
               className="text-blue-600 hover:bg-blue-50"
@@ -75,7 +78,7 @@ export default function NotFound() {
               Products
             </Button>
             <Button
-              onClick={() => router.push('/dashboard/about')}
+              onClick={() => router.push("/dashboard/about")}
               variant="ghost"
               size="sm"
               className="text-blue-600 hover:bg-blue-50"
@@ -83,7 +86,7 @@ export default function NotFound() {
               About
             </Button>
             <Button
-              onClick={() => router.push('/dashboard/settings')}
+              onClick={() => router.push("/dashboard/settings")}
               variant="ghost"
               size="sm"
               className="text-blue-600 hover:bg-blue-50"

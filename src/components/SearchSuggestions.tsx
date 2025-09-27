@@ -1,26 +1,25 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import {
+  BarChart3,
+  Bell,
+  Building2,
+  Calendar,
+  CheckSquare,
+  Home,
+  MessageSquare,
+  Package,
+  Search,
+  Settings,
+  ShoppingCart,
+  User,
+  Users,
+  X,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Search, 
-  User, 
-  Settings, 
-  BarChart3, 
-  Users, 
-  ShoppingCart, 
-  FileText, 
-  Calendar, 
-  Bell, 
-  Home,
-  Building2,
-  Package,
-  MessageSquare,
-  CheckSquare,
-  X
-} from "lucide-react";
 
 interface SearchSuggestionsProps {
   isOpen: boolean;
@@ -32,33 +31,127 @@ interface SearchItem {
   title: string;
   description: string;
   icon: any;
-  type: 'page' | 'setting' | 'profile' | 'action';
+  type: "page" | "setting" | "profile" | "action";
   path?: string;
   action?: () => void;
 }
 
 const searchItems: SearchItem[] = [
   // Pages
-  { id: 'dashboard', title: 'Dashboard', description: 'Main dashboard overview', icon: Home, type: 'page', path: '/dashboard' },
-  { id: 'users', title: 'Users', description: 'User management and profiles', icon: Users, type: 'page', path: '/dashboard/users' },
-  { id: 'sales', title: 'Sales', description: 'Sales tracking and analytics', icon: ShoppingCart, type: 'page', path: '/dashboard/sales' },
-  { id: 'reports', title: 'Reports', description: 'Analytics and reporting', icon: BarChart3, type: 'page', path: '/dashboard/reports' },
-  { id: 'products', title: 'Products', description: 'Product catalog and inventory', icon: Package, type: 'page', path: '/dashboard/products' },
-  { id: 'calendar', title: 'Calendar', description: 'Schedule and events', icon: Calendar, type: 'page', path: '/calendar' },
-  { id: 'messages', title: 'Messages', description: 'Team communication', icon: MessageSquare, type: 'page', path: '/dashboard/messages' },
-  { id: 'tasks', title: 'Tasks', description: 'Task management', icon: CheckSquare, type: 'page', path: '/dashboard/tasks' },
-  
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    description: "Main dashboard overview",
+    icon: Home,
+    type: "page",
+    path: "/dashboard",
+  },
+  {
+    id: "users",
+    title: "Users",
+    description: "User management and profiles",
+    icon: Users,
+    type: "page",
+    path: "/dashboard/users",
+  },
+  {
+    id: "sales",
+    title: "Sales",
+    description: "Sales tracking and analytics",
+    icon: ShoppingCart,
+    type: "page",
+    path: "/dashboard/sales",
+  },
+  {
+    id: "reports",
+    title: "Reports",
+    description: "Analytics and reporting",
+    icon: BarChart3,
+    type: "page",
+    path: "/dashboard/reports",
+  },
+  {
+    id: "products",
+    title: "Products",
+    description: "Product catalog and inventory",
+    icon: Package,
+    type: "page",
+    path: "/dashboard/products",
+  },
+  {
+    id: "calendar",
+    title: "Calendar",
+    description: "Schedule and events",
+    icon: Calendar,
+    type: "page",
+    path: "/calendar",
+  },
+  {
+    id: "messages",
+    title: "Messages",
+    description: "Team communication",
+    icon: MessageSquare,
+    type: "page",
+    path: "/dashboard/messages",
+  },
+  {
+    id: "tasks",
+    title: "Tasks",
+    description: "Task management",
+    icon: CheckSquare,
+    type: "page",
+    path: "/dashboard/tasks",
+  },
+
   // Settings
-  { id: 'erp-settings', title: 'ERP Settings', description: 'System configuration and settings', icon: Settings, type: 'setting', path: '/dashboard/settings' },
-  { id: 'user-settings', title: 'User Settings', description: 'Personal account settings', icon: User, type: 'setting', path: '/dashboard/profile' },
-  { id: 'company-settings', title: 'Company Settings', description: 'Organization settings', icon: Building2, type: 'setting', path: '/dashboard/company' },
-  
+  {
+    id: "erp-settings",
+    title: "ERP Settings",
+    description: "System configuration and settings",
+    icon: Settings,
+    type: "setting",
+    path: "/dashboard/settings",
+  },
+  {
+    id: "user-settings",
+    title: "User Settings",
+    description: "Personal account settings",
+    icon: User,
+    type: "setting",
+    path: "/dashboard/profile",
+  },
+  {
+    id: "company-settings",
+    title: "Company Settings",
+    description: "Organization settings",
+    icon: Building2,
+    type: "setting",
+    path: "/dashboard/company",
+  },
+
   // Profile
-  { id: 'profile', title: 'My Profile', description: 'View and edit your profile', icon: User, type: 'profile', path: '/dashboard/profile' },
-  { id: 'notifications', title: 'Notifications', description: 'Manage notification preferences', icon: Bell, type: 'profile', path: '/dashboard/notifications' },
+  {
+    id: "profile",
+    title: "My Profile",
+    description: "View and edit your profile",
+    icon: User,
+    type: "profile",
+    path: "/dashboard/profile",
+  },
+  {
+    id: "notifications",
+    title: "Notifications",
+    description: "Manage notification preferences",
+    icon: Bell,
+    type: "profile",
+    path: "/dashboard/notifications",
+  },
 ];
 
-export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestionsProps) {
+export default function SearchSuggestions({
+  isOpen,
+  onClose,
+}: SearchSuggestionsProps) {
   const [query, setQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState<SearchItem[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -75,9 +168,10 @@ export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestions
     if (query.trim() === "") {
       setFilteredItems(searchItems.slice(0, 8)); // Show first 8 items when no query
     } else {
-      const filtered = searchItems.filter(item =>
-        item.title.toLowerCase().includes(query.toLowerCase()) ||
-        item.description.toLowerCase().includes(query.toLowerCase())
+      const filtered = searchItems.filter(
+        (item) =>
+          item.title.toLowerCase().includes(query.toLowerCase()) ||
+          item.description.toLowerCase().includes(query.toLowerCase()),
       );
       setFilteredItems(filtered);
     }
@@ -85,15 +179,17 @@ export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestions
   }, [query]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       onClose();
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex(prev => (prev + 1) % filteredItems.length);
-    } else if (e.key === 'ArrowUp') {
+      setSelectedIndex((prev) => (prev + 1) % filteredItems.length);
+    } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex(prev => (prev - 1 + filteredItems.length) % filteredItems.length);
-    } else if (e.key === 'Enter') {
+      setSelectedIndex(
+        (prev) => (prev - 1 + filteredItems.length) % filteredItems.length,
+      );
+    } else if (e.key === "Enter") {
       e.preventDefault();
       if (filteredItems[selectedIndex]) {
         handleItemClick(filteredItems[selectedIndex]);
@@ -114,21 +210,31 @@ export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestions
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'page': return 'text-blue-600 bg-blue-50';
-      case 'setting': return 'text-purple-600 bg-purple-50';
-      case 'profile': return 'text-green-600 bg-green-50';
-      case 'action': return 'text-orange-600 bg-orange-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case "page":
+        return "text-blue-600 bg-blue-50";
+      case "setting":
+        return "text-purple-600 bg-purple-50";
+      case "profile":
+        return "text-green-600 bg-green-50";
+      case "action":
+        return "text-orange-600 bg-orange-50";
+      default:
+        return "text-gray-600 bg-gray-50";
     }
   };
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'page': return 'Page';
-      case 'setting': return 'Setting';
-      case 'profile': return 'Profile';
-      case 'action': return 'Action';
-      default: return 'Item';
+      case "page":
+        return "Page";
+      case "setting":
+        return "Setting";
+      case "profile":
+        return "Profile";
+      case "action":
+        return "Action";
+      default:
+        return "Item";
     }
   };
 
@@ -137,11 +243,11 @@ export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestions
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={onClose}
       />
-      
+
       {/* Search Modal */}
       <div className="fixed top-20 left-1/2 transform -translate-x-1/2 w-full max-w-2xl z-50">
         <div className="bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden">
@@ -183,26 +289,36 @@ export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestions
                     key={item.id}
                     onClick={() => handleItemClick(item)}
                     className={`flex items-center space-x-3 px-4 py-3 cursor-pointer transition-colors ${
-                      index === selectedIndex ? 'bg-blue-50' : 'hover:bg-gray-50'
+                      index === selectedIndex
+                        ? "bg-blue-50"
+                        : "hover:bg-gray-50"
                     }`}
                   >
                     <div className="flex-shrink-0">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${getTypeColor(item.type)}`}>
+                      <div
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${getTypeColor(item.type)}`}
+                      >
                         <item.icon className="h-5 w-5" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2">
-                        <p className="text-sm font-medium text-gray-900 truncate">{item.title}</p>
-                        <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getTypeColor(item.type)}`}>
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {item.title}
+                        </p>
+                        <span
+                          className={`px-2 py-0.5 text-xs font-medium rounded-full ${getTypeColor(item.type)}`}
+                        >
                           {getTypeLabel(item.type)}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 truncate">{item.description}</p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {item.description}
+                      </p>
                     </div>
                     <div className="flex-shrink-0">
                       <kbd className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded">
-                        {index === selectedIndex ? '↵' : ''}
+                        {index === selectedIndex ? "↵" : ""}
                       </kbd>
                     </div>
                   </div>
@@ -219,7 +335,10 @@ export default function SearchSuggestions({ isOpen, onClose }: SearchSuggestions
                 <span>↵ Select</span>
                 <span>Esc Close</span>
               </div>
-              <span>{filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''}</span>
+              <span>
+                {filteredItems.length} result
+                {filteredItems.length !== 1 ? "s" : ""}
+              </span>
             </div>
           </div>
         </div>

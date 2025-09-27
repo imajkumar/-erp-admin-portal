@@ -1,9 +1,9 @@
 "use client";
 
+import { AlertTriangle, Home, Lock, LogIn, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Home, ArrowLeft, LogIn, Lock, Shield, AlertTriangle } from "lucide-react";
 import Logo from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 
 export default function Unauthorized() {
   const router = useRouter();
@@ -47,10 +47,13 @@ export default function Unauthorized() {
         <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 mb-8">
           <div className="flex items-center justify-center mb-4">
             <Shield className="h-5 w-5 text-red-500 mr-2" />
-            <span className="text-sm font-medium text-gray-700">Security Notice</span>
+            <span className="text-sm font-medium text-gray-700">
+              Security Notice
+            </span>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            This area requires proper authentication. Your access attempt has been logged for security purposes.
+            This area requires proper authentication. Your access attempt has
+            been logged for security purposes.
           </p>
           <div className="flex items-center justify-center">
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></div>
@@ -61,15 +64,15 @@ export default function Unauthorized() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
           <Button
-            onClick={() => router.push('/api/auth/login')}
+            onClick={() => router.push("/api/auth/login")}
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <LogIn className="h-4 w-4 mr-2" />
             Login
           </Button>
-          
+
           <Button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push("/dashboard")}
             variant="outline"
             className="border-red-600 text-red-600 hover:bg-red-50 px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
@@ -82,10 +85,13 @@ export default function Unauthorized() {
         <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20">
           <div className="flex items-center justify-center mb-4">
             <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
-            <span className="text-sm font-medium text-gray-700">Need Help?</span>
+            <span className="text-sm font-medium text-gray-700">
+              Need Help?
+            </span>
           </div>
           <p className="text-sm text-gray-600 mb-4">
-            If you believe you should have access to this resource, please contact your system administrator.
+            If you believe you should have access to this resource, please
+            contact your system administrator.
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
             <Button
