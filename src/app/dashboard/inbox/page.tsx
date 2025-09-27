@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
+import InboxSidebar from "@/components/InboxSidebar";
 import {
   Archive,
   ArrowLeft,
@@ -563,428 +564,437 @@ export default function InboxPage() {
 
   return (
     <AdminLayout>
-      <MainContent>
-        <div className="p-6">
-          {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <Mail className="h-8 w-8 mr-3 text-blue-600" />
-                  Inbox
-                </h1>
-                <p className="text-gray-600 mt-1">Manage your emails</p>
-              </div>
-              <Button
-                type="primary"
-                icon={<Plus className="h-4 w-4" />}
-                onClick={handleCompose}
-              >
-                Compose
-              </Button>
-            </div>
-          </div>
+      <div className="flex h-screen">
+        {/* Inbox Sidebar */}
+        <InboxSidebar
+          currentFolder={folderFilter}
+          onFolderChange={setFolderFilter}
+          onCompose={handleCompose}
+          emailCounts={{
+            inbox: emails.filter((e) => e.folder === "inbox").length,
+            sent: emails.filter((e) => e.folder === "sent").length,
+            drafts: emails.filter((e) => e.folder === "drafts").length,
+            trash: emails.filter((e) => e.folder === "trash").length,
+            spam: emails.filter((e) => e.folder === "spam").length,
+            starred: emails.filter((e) => e.isStarred).length,
+            important: emails.filter((e) => e.isImportant).length,
+          }}
+        />
 
-          {/* Stats Cards */}
-          <Row gutter={16} className="mb-6">
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Total Emails"
-                  value={stats.total}
-                  prefix={<Inbox className="h-4 w-4" />}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Unread"
-                  value={stats.unread}
-                  prefix={<Badge status="processing" />}
-                  valueStyle={{ color: "#faad14" }}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Starred"
-                  value={stats.starred}
-                  prefix={<Star className="h-4 w-4" />}
-                  valueStyle={{ color: "#fadb14" }}
-                />
-              </Card>
-            </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="Important"
-                  value={stats.important}
-                  prefix={<Badge status="error" />}
-                  valueStyle={{ color: "#ff4d4f" }}
-                />
-              </Card>
-            </Col>
-          </Row>
-
-          {/* Filters */}
-          <Card className="mb-6">
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-4">
-                <div className="flex-1 min-w-64">
-                  <AntSearch
-                    placeholder="Search emails..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    allowClear
-                  />
-                </div>
-                <Select
-                  placeholder="Folder"
-                  value={folderFilter}
-                  onChange={setFolderFilter}
-                  style={{ width: 120 }}
-                  options={[
-                    { value: "inbox", label: "Inbox" },
-                    { value: "sent", label: "Sent" },
-                    { value: "drafts", label: "Drafts" },
-                    { value: "trash", label: "Trash" },
-                    { value: "spam", label: "Spam" },
-                  ]}
-                />
-                <Select
-                  placeholder="Priority"
-                  value={priorityFilter}
-                  onChange={setPriorityFilter}
-                  style={{ width: 120 }}
-                  options={[
-                    { value: "all", label: "All Priorities" },
-                    { value: "low", label: "Low" },
-                    { value: "normal", label: "Normal" },
-                    { value: "high", label: "High" },
-                  ]}
-                />
-                <Select
-                  placeholder="Status"
-                  value={statusFilter}
-                  onChange={setStatusFilter}
-                  style={{ width: 120 }}
-                  options={[
-                    { value: "all", label: "All Status" },
-                    { value: "unread", label: "Unread" },
-                    { value: "read", label: "Read" },
-                    { value: "starred", label: "Starred" },
-                    { value: "important", label: "Important" },
-                  ]}
-                />
-                <RangePicker
-                  value={dateRange}
-                  onChange={setDateRange}
-                  placeholder={["Start Date", "End Date"]}
-                />
-              </div>
-
-              {/* Bulk Actions */}
-              {selectedRowKeys.length > 0 && (
-                <div className="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
-                  <span className="text-sm text-blue-700">
-                    {selectedRowKeys.length} email(s) selected
-                  </span>
-                  <Space>
-                    <Button
-                      size="small"
-                      icon={<Check className="h-4 w-4" />}
-                      onClick={() => handleBulkAction("mark-read")}
-                    >
-                      Mark as Read
-                    </Button>
-                    <Button
-                      size="small"
-                      icon={<X className="h-4 w-4" />}
-                      onClick={() => handleBulkAction("mark-unread")}
-                    >
-                      Mark as Unread
-                    </Button>
-                    <Button
-                      size="small"
-                      icon={<Star className="h-4 w-4" />}
-                      onClick={() => handleBulkAction("star")}
-                    >
-                      Star
-                    </Button>
-                    <Button
-                      size="small"
-                      icon={<Archive className="h-4 w-4" />}
-                      onClick={() => handleBulkAction("archive")}
-                    >
-                      Archive
-                    </Button>
-                    <Button
-                      size="small"
-                      danger
-                      icon={<Trash2 className="h-4 w-4" />}
-                      onClick={() => handleBulkAction("delete")}
-                    >
-                      Delete
-                    </Button>
-                  </Space>
-                </div>
-              )}
-            </div>
-          </Card>
-
-          {/* Emails Table */}
-          <Card>
-            <Table
-              columns={columns}
-              dataSource={filteredEmails}
-              rowKey="id"
-              rowSelection={rowSelection}
-              loading={loading}
-              pagination={{
-                total: filteredEmails.length,
-                pageSize: 20,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} emails`,
-              }}
-              scroll={{ x: 800 }}
-              locale={{
-                emptyText: (
-                  <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description="No emails found"
-                  />
-                ),
-              }}
-            />
-          </Card>
-
-          {/* Email Detail Drawer */}
-          <Drawer
-            title="Email Details"
-            placement="right"
-            onClose={() => setEmailDrawerVisible(false)}
-            open={emailDrawerVisible}
-            width="33.333333%"
-            className="email-drawer"
-          >
-            {selectedEmail && (
-              <div className="space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Avatar size="large" src={selectedEmail.sender.avatar}>
-                      {selectedEmail.sender.name.charAt(0)}
-                    </Avatar>
-                    <div>
-                      <div className="font-semibold text-gray-900">
-                        {selectedEmail.sender.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {selectedEmail.sender.email}
-                      </div>
-                    </div>
-                  </div>
-                  <Space>
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={
-                        selectedEmail.isStarred ? (
-                          <StarOff className="h-4 w-4" />
-                        ) : (
-                          <Star className="h-4 w-4" />
-                        )
-                      }
-                      onClick={() => handleStarToggle(selectedEmail.id)}
-                    />
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={<Reply className="h-4 w-4" />}
-                    />
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={<ReplyAll className="h-4 w-4" />}
-                    />
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={<Trash2 className="h-4 w-4" />}
-                      onClick={() => handleDelete([selectedEmail.id])}
-                    />
-                  </Space>
-                </div>
-
-                <Divider />
-
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          <MainContent>
+            <div className="p-6">
+              {/* Header */}
+              <div className="mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {selectedEmail.subject}
-                  </h3>
-                  <div className="flex items-center space-x-2 mb-4">
-                    <Tag color={getPriorityColor(selectedEmail.priority)}>
-                      {selectedEmail.priority}
-                    </Tag>
-                    {selectedEmail.labels.map((label) => (
-                      <Tag key={label} color="blue">
-                        {label}
-                      </Tag>
-                    ))}
-                  </div>
-                  <div className="text-sm text-gray-500 mb-4">
-                    {dayjs(selectedEmail.receivedAt).format(
-                      "MMMM DD, YYYY [at] h:mm A",
-                    )}
-                  </div>
+                  <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+                    <Mail className="h-8 w-8 mr-3 text-blue-600" />
+                    {folderFilter.charAt(0).toUpperCase() +
+                      folderFilter.slice(1)}
+                  </h1>
+                  <p className="text-gray-600 mt-1">Manage your emails</p>
                 </div>
+              </div>
 
-                <Divider />
+              {/* Stats Cards */}
+              <Row gutter={16} className="mb-6">
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                      title="Total Emails"
+                      value={stats.total}
+                      prefix={<Inbox className="h-4 w-4" />}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                      title="Unread"
+                      value={stats.unread}
+                      prefix={<Badge status="processing" />}
+                      valueStyle={{ color: "#faad14" }}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                      title="Starred"
+                      value={stats.starred}
+                      prefix={<Star className="h-4 w-4" />}
+                      valueStyle={{ color: "#fadb14" }}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                      title="Important"
+                      value={stats.important}
+                      prefix={<Badge status="error" />}
+                      valueStyle={{ color: "#ff4d4f" }}
+                    />
+                  </Card>
+                </Col>
+              </Row>
 
-                <div className="prose max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-700">
-                    {selectedEmail.body}
+              {/* Filters */}
+              <Card className="mb-6">
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex-1 min-w-64">
+                      <AntSearch
+                        placeholder="Search emails..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        allowClear
+                      />
+                    </div>
+                    <Select
+                      placeholder="Priority"
+                      value={priorityFilter}
+                      onChange={setPriorityFilter}
+                      style={{ width: 120 }}
+                      options={[
+                        { value: "all", label: "All Priorities" },
+                        { value: "low", label: "Low" },
+                        { value: "normal", label: "Normal" },
+                        { value: "high", label: "High" },
+                      ]}
+                    />
+                    <Select
+                      placeholder="Status"
+                      value={statusFilter}
+                      onChange={setStatusFilter}
+                      style={{ width: 120 }}
+                      options={[
+                        { value: "all", label: "All Status" },
+                        { value: "unread", label: "Unread" },
+                        { value: "read", label: "Read" },
+                        { value: "starred", label: "Starred" },
+                        { value: "important", label: "Important" },
+                      ]}
+                    />
+                    <RangePicker
+                      value={dateRange}
+                      onChange={setDateRange}
+                      placeholder={["Start Date", "End Date"]}
+                    />
                   </div>
-                </div>
 
-                {selectedEmail.hasAttachments && selectedEmail.attachments && (
-                  <>
-                    <Divider />
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">
-                        Attachments
-                      </h4>
-                      <div className="space-y-2">
-                        {selectedEmail.attachments.map((attachment, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center space-x-2 p-2 bg-gray-50 rounded"
-                          >
-                            <Paperclip className="h-4 w-4 text-gray-400" />
-                            <span className="text-sm text-gray-700">
-                              {attachment.name}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              ({attachment.size})
-                            </span>
+                  {/* Bulk Actions */}
+                  {selectedRowKeys.length > 0 && (
+                    <div className="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
+                      <span className="text-sm text-blue-700">
+                        {selectedRowKeys.length} email(s) selected
+                      </span>
+                      <Space>
+                        <Button
+                          size="small"
+                          icon={<Check className="h-4 w-4" />}
+                          onClick={() => handleBulkAction("mark-read")}
+                        >
+                          Mark as Read
+                        </Button>
+                        <Button
+                          size="small"
+                          icon={<X className="h-4 w-4" />}
+                          onClick={() => handleBulkAction("mark-unread")}
+                        >
+                          Mark as Unread
+                        </Button>
+                        <Button
+                          size="small"
+                          icon={<Star className="h-4 w-4" />}
+                          onClick={() => handleBulkAction("star")}
+                        >
+                          Star
+                        </Button>
+                        <Button
+                          size="small"
+                          icon={<Archive className="h-4 w-4" />}
+                          onClick={() => handleBulkAction("archive")}
+                        >
+                          Archive
+                        </Button>
+                        <Button
+                          size="small"
+                          danger
+                          icon={<Trash2 className="h-4 w-4" />}
+                          onClick={() => handleBulkAction("delete")}
+                        >
+                          Delete
+                        </Button>
+                      </Space>
+                    </div>
+                  )}
+                </div>
+              </Card>
+
+              {/* Emails Table */}
+              <Card>
+                <Table
+                  columns={columns}
+                  dataSource={filteredEmails}
+                  rowKey="id"
+                  rowSelection={rowSelection}
+                  loading={loading}
+                  pagination={{
+                    total: filteredEmails.length,
+                    pageSize: 20,
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    showTotal: (total, range) =>
+                      `${range[0]}-${range[1]} of ${total} emails`,
+                  }}
+                  scroll={{ x: 800 }}
+                  locale={{
+                    emptyText: (
+                      <Empty
+                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                        description="No emails found"
+                      />
+                    ),
+                  }}
+                />
+              </Card>
+
+              {/* Email Detail Drawer */}
+              <Drawer
+                title="Email Details"
+                placement="right"
+                onClose={() => setEmailDrawerVisible(false)}
+                open={emailDrawerVisible}
+                width="33.333333%"
+                className="email-drawer"
+              >
+                {selectedEmail && (
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Avatar size="large" src={selectedEmail.sender.avatar}>
+                          {selectedEmail.sender.name.charAt(0)}
+                        </Avatar>
+                        <div>
+                          <div className="font-semibold text-gray-900">
+                            {selectedEmail.sender.name}
                           </div>
+                          <div className="text-sm text-gray-500">
+                            {selectedEmail.sender.email}
+                          </div>
+                        </div>
+                      </div>
+                      <Space>
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={
+                            selectedEmail.isStarred ? (
+                              <StarOff className="h-4 w-4" />
+                            ) : (
+                              <Star className="h-4 w-4" />
+                            )
+                          }
+                          onClick={() => handleStarToggle(selectedEmail.id)}
+                        />
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<Reply className="h-4 w-4" />}
+                        />
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<ReplyAll className="h-4 w-4" />}
+                        />
+                        <Button
+                          type="text"
+                          size="small"
+                          icon={<Trash2 className="h-4 w-4" />}
+                          onClick={() => handleDelete([selectedEmail.id])}
+                        />
+                      </Space>
+                    </div>
+
+                    <Divider />
+
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {selectedEmail.subject}
+                      </h3>
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Tag color={getPriorityColor(selectedEmail.priority)}>
+                          {selectedEmail.priority}
+                        </Tag>
+                        {selectedEmail.labels.map((label) => (
+                          <Tag key={label} color="blue">
+                            {label}
+                          </Tag>
                         ))}
                       </div>
+                      <div className="text-sm text-gray-500 mb-4">
+                        {dayjs(selectedEmail.receivedAt).format(
+                          "MMMM DD, YYYY [at] h:mm A",
+                        )}
+                      </div>
                     </div>
-                  </>
-                )}
-              </div>
-            )}
-          </Drawer>
 
-          {/* Compose Email Modal */}
-          <Modal
-            title="Compose Email"
-            open={composeModalVisible}
-            onCancel={() => setComposeModalVisible(false)}
-            footer={[
-              <Button
-                key="cancel"
-                onClick={() => setComposeModalVisible(false)}
+                    <Divider />
+
+                    <div className="prose max-w-none">
+                      <div className="whitespace-pre-wrap text-gray-700">
+                        {selectedEmail.body}
+                      </div>
+                    </div>
+
+                    {selectedEmail.hasAttachments &&
+                      selectedEmail.attachments && (
+                        <>
+                          <Divider />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 mb-2">
+                              Attachments
+                            </h4>
+                            <div className="space-y-2">
+                              {selectedEmail.attachments.map(
+                                (attachment, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex items-center space-x-2 p-2 bg-gray-50 rounded"
+                                  >
+                                    <Paperclip className="h-4 w-4 text-gray-400" />
+                                    <span className="text-sm text-gray-700">
+                                      {attachment.name}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                      ({attachment.size})
+                                    </span>
+                                  </div>
+                                ),
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                  </div>
+                )}
+              </Drawer>
+
+              {/* Compose Email Modal */}
+              <Modal
+                title="Compose Email"
+                open={composeModalVisible}
+                onCancel={() => setComposeModalVisible(false)}
+                footer={[
+                  <Button
+                    key="cancel"
+                    onClick={() => setComposeModalVisible(false)}
+                  >
+                    Cancel
+                  </Button>,
+                  <Button key="send" type="primary" onClick={handleSendEmail}>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send
+                  </Button>,
+                ]}
+                width={800}
               >
-                Cancel
-              </Button>,
-              <Button key="send" type="primary" onClick={handleSendEmail}>
-                <Send className="h-4 w-4 mr-2" />
-                Send
-              </Button>,
-            ]}
-            width={800}
-          >
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  To *
-                </label>
-                <Input
-                  value={composeEmail.to}
-                  onChange={(e) =>
-                    setComposeEmail({ ...composeEmail, to: e.target.value })
-                  }
-                  placeholder="recipient@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  CC
-                </label>
-                <Input
-                  value={composeEmail.cc}
-                  onChange={(e) =>
-                    setComposeEmail({ ...composeEmail, cc: e.target.value })
-                  }
-                  placeholder="cc@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  BCC
-                </label>
-                <Input
-                  value={composeEmail.bcc}
-                  onChange={(e) =>
-                    setComposeEmail({ ...composeEmail, bcc: e.target.value })
-                  }
-                  placeholder="bcc@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject *
-                </label>
-                <Input
-                  value={composeEmail.subject}
-                  onChange={(e) =>
-                    setComposeEmail({
-                      ...composeEmail,
-                      subject: e.target.value,
-                    })
-                  }
-                  placeholder="Email subject"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Priority
-                </label>
-                <Select
-                  value={composeEmail.priority}
-                  onChange={(value) =>
-                    setComposeEmail({ ...composeEmail, priority: value })
-                  }
-                  style={{ width: 200 }}
-                  options={[
-                    { value: "low", label: "Low" },
-                    { value: "normal", label: "Normal" },
-                    { value: "high", label: "High" },
-                  ]}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Message
-                </label>
-                <TextArea
-                  value={composeEmail.body}
-                  onChange={(e) =>
-                    setComposeEmail({ ...composeEmail, body: e.target.value })
-                  }
-                  placeholder="Type your message here..."
-                  rows={8}
-                />
-              </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      To *
+                    </label>
+                    <Input
+                      value={composeEmail.to}
+                      onChange={(e) =>
+                        setComposeEmail({ ...composeEmail, to: e.target.value })
+                      }
+                      placeholder="recipient@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      CC
+                    </label>
+                    <Input
+                      value={composeEmail.cc}
+                      onChange={(e) =>
+                        setComposeEmail({ ...composeEmail, cc: e.target.value })
+                      }
+                      placeholder="cc@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      BCC
+                    </label>
+                    <Input
+                      value={composeEmail.bcc}
+                      onChange={(e) =>
+                        setComposeEmail({
+                          ...composeEmail,
+                          bcc: e.target.value,
+                        })
+                      }
+                      placeholder="bcc@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Subject *
+                    </label>
+                    <Input
+                      value={composeEmail.subject}
+                      onChange={(e) =>
+                        setComposeEmail({
+                          ...composeEmail,
+                          subject: e.target.value,
+                        })
+                      }
+                      placeholder="Email subject"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Priority
+                    </label>
+                    <Select
+                      value={composeEmail.priority}
+                      onChange={(value) =>
+                        setComposeEmail({ ...composeEmail, priority: value })
+                      }
+                      style={{ width: 200 }}
+                      options={[
+                        { value: "low", label: "Low" },
+                        { value: "normal", label: "Normal" },
+                        { value: "high", label: "High" },
+                      ]}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Message
+                    </label>
+                    <TextArea
+                      value={composeEmail.body}
+                      onChange={(e) =>
+                        setComposeEmail({
+                          ...composeEmail,
+                          body: e.target.value,
+                        })
+                      }
+                      placeholder="Type your message here..."
+                      rows={8}
+                    />
+                  </div>
+                </div>
+              </Modal>
             </div>
-          </Modal>
+          </MainContent>
         </div>
-      </MainContent>
+      </div>
     </AdminLayout>
   );
 }
