@@ -13,6 +13,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  Plus,
   RefreshCw,
   Search,
   Settings,
@@ -146,6 +147,46 @@ export default function Header({
               title="Search (⌘K)"
             />
           </div>
+
+          {/* Create Button - Jira Style */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className="bg-blue-600 hover:bg-blue-700 text-white h-7 px-3 text-xs font-medium rounded"
+                size="sm"
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                Create
+                <ChevronDown className="h-3 w-3 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuLabel className="text-xs font-semibold">
+                Create New
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-xs cursor-pointer">
+                <UserPlus className="h-3 w-3 mr-2" />
+                New User
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-xs cursor-pointer">
+                <Mail className="h-3 w-3 mr-2" />
+                New Email
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-xs cursor-pointer">
+                <MessageSquare className="h-3 w-3 mr-2" />
+                New Chat
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-xs cursor-pointer">
+                <Calendar className="h-3 w-3 mr-2" />
+                New Event
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-xs cursor-pointer">
+                <Settings className="h-3 w-3 mr-2" />
+                New Module
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Separator */}
           <div className="w-px h-5 bg-gray-300"></div>
