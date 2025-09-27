@@ -295,12 +295,12 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
           {/* Professional Digital Clock */}
           <div className="text-center">
             <div className="relative">
-              <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-xl scale-110"></div>
-              <div className="relative text-7xl font-mono font-bold text-white mb-6 tracking-wider drop-shadow-2xl animate-pulse bg-white/5 px-8 py-4 rounded-2xl border border-white/10">
+              <div className="absolute inset-0 bg-blue-500/20 rounded-lg blur-md scale-102"></div>
+              <div className="relative text-3xl font-mono font-bold text-white mb-6 tracking-wide drop-shadow-lg bg-white/5 px-4 py-2 rounded-lg border border-white/10">
                 {formatTime(currentTime)}
               </div>
             </div>
-            <div className="text-2xl text-slate-300 animate-fade-in mb-8 font-medium drop-shadow-lg">
+            <div className="text-xl text-slate-300 animate-fade-in mb-8 font-medium drop-shadow-lg">
               {formatDate(currentTime)}
             </div>
 
