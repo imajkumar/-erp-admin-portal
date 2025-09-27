@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Drawer } from "antd";
 import {
   AlertTriangle,
@@ -132,6 +133,7 @@ export default function NotificationDrawer({
   isOpen,
   onClose,
 }: NotificationDrawerProps) {
+  const router = useRouter();
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "message":
@@ -294,7 +296,15 @@ export default function NotificationDrawer({
       {/* Footer */}
       <div className="p-4 border-t border-gray-200 bg-gray-50">
         <div className="text-center">
-          <Button variant="ghost" size="sm" className="text-xs text-gray-600">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-gray-600"
+            onClick={() => {
+              onClose();
+              router.push("/dashboard/view-all-notifications");
+            }}
+          >
             View All Notifications
           </Button>
         </div>

@@ -73,6 +73,11 @@ export default function AdminLayout({
       return;
     }
 
+    if (item === "view-all-notifications") {
+      router.push("/dashboard/view-all-notifications");
+      return;
+    }
+
     if (onItemClick) {
       onItemClick(item);
     }
