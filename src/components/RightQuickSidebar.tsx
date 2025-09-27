@@ -1,6 +1,6 @@
 "use client";
 
-import { HelpCircle, Palette, Settings } from "lucide-react";
+import { HelpCircle, Palette, Settings, Globe } from "lucide-react";
 import {
   MdBarChart,
   MdCheckBox,
@@ -29,6 +29,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState, useEffect } from "react";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  setTheme,
+  setLanguage as setReduxLanguage,
+} from "@/store/slices/settingsSlice";
+import { useReduxWithLanguage } from "@/hooks/useReduxWithLanguage";
 
 type Theme = "default" | "blue" | "green" | "purple";
 
@@ -39,50 +46,54 @@ interface RightQuickSidebarProps {
   onItemClick: (item: string) => void;
 }
 
-const themes = [
+const getThemes = (t: (key: string) => string) => [
   {
     id: "default",
-    name: "Default",
+    name: t("theme.default"),
     color: "bg-gray-500",
     primary: "bg-gray-600",
     accent: "border-gray-500",
   },
   {
     id: "blue",
-    name: "Blue",
+    name: t("theme.blue"),
     color: "bg-blue-500",
     primary: "bg-blue-600",
     accent: "border-blue-500",
   },
   {
     id: "green",
-    name: "Green",
+    name: t("theme.green"),
     color: "bg-green-500",
     primary: "bg-green-600",
     accent: "border-green-500",
   },
   {
     id: "purple",
-    name: "Purple",
+    name: t("theme.purple"),
     color: "bg-purple-500",
     primary: "bg-purple-600",
     accent: "border-purple-500",
   },
 ];
 
-const quickItems = [
-  { id: "documents", icon: MdDescription, label: "Documents" },
-  { id: "calendar", icon: MdEvent, label: "Calendar" },
-  { id: "messages", icon: MdMessage, label: "Messages" },
-  { id: "tasks", icon: MdCheckBox, label: "Tasks" },
-  { id: "products", icon: MdInventory, label: "Products" },
-  { id: "payments", icon: MdPayment, label: "Payments" },
-  { id: "analytics", icon: MdTrendingUp, label: "Analytics" },
-  { id: "notifications", icon: MdNotifications, label: "Notifications" },
-  { id: "settings", icon: MdSettings, label: "Settings" },
-  { id: "users", icon: MdPersonAdd, label: "Users" },
-  { id: "dashboard", icon: MdBarChart, label: "Dashboard" },
-  { id: "database", icon: MdStorage, label: "Database" },
+const getQuickItems = (t: (key: string) => string) => [
+  { id: "documents", icon: MdDescription, label: t("common.documents") },
+  { id: "calendar", icon: MdEvent, label: t("common.calendar") },
+  { id: "messages", icon: MdMessage, label: t("common.messages") },
+  { id: "tasks", icon: MdCheckBox, label: t("common.tasks") },
+  { id: "products", icon: MdInventory, label: t("common.products") },
+  { id: "payments", icon: MdPayment, label: t("common.payments") },
+  { id: "analytics", icon: MdTrendingUp, label: t("common.analytics") },
+  {
+    id: "notifications",
+    icon: MdNotifications,
+    label: t("common.notifications"),
+  },
+  { id: "settings", icon: MdSettings, label: t("common.settings") },
+  { id: "users", icon: MdPersonAdd, label: t("common.users") },
+  { id: "dashboard", icon: MdBarChart, label: t("common.dashboard") },
+  { id: "database", icon: MdStorage, label: t("common.database") },
 ];
 
 export default function RightQuickSidebar({
@@ -91,16 +102,27 @@ export default function RightQuickSidebar({
   activeItem,
   onItemClick,
 }: RightQuickSidebarProps) {
-  const [currentTheme, setCurrentTheme] = useState<Theme>("default");
+  const { t, language, setLanguage } = useLanguage();
+  const dispatch = useAppDispatch();
+  const currentTheme = useAppSelector(
+    (state) => state.settings.theme.theme,
+  ) as Theme;
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
+
+  // Sync Redux with language context
+  useReduxWithLanguage();
+
+  const themes = getThemes(t);
+  const quickItems = getQuickItems(t);
 
   // Load theme from localStorage on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as Theme;
     if (savedTheme && themes.some((theme) => theme.id === savedTheme)) {
-      setCurrentTheme(savedTheme);
+      dispatch(setTheme(savedTheme));
     }
-  }, []);
+  }, [dispatch]);
 
   // Apply theme to document
   useEffect(() => {
@@ -112,7 +134,7 @@ export default function RightQuickSidebar({
   }, [currentTheme]);
 
   const handleThemeChange = (themeId: Theme) => {
-    setCurrentTheme(themeId);
+    dispatch(setTheme(themeId));
   };
 
   const currentThemeConfig =
@@ -142,7 +164,7 @@ export default function RightQuickSidebar({
               </DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent side="left">
-              <p>Settings Panel</p>
+              <p>{t("sidebar.settings_panel")}</p>
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent side="left" className="w-80 p-0">
@@ -150,7 +172,7 @@ export default function RightQuickSidebar({
               {/* Page Style Setting */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">
-                  Page Style Setting
+                  {t("settings.page_style")}
                 </h3>
                 <div className="flex space-x-2">
                   <div className="w-12 h-12 bg-white border-2 border-blue-500 rounded-lg flex items-center justify-center cursor-pointer">
@@ -167,7 +189,7 @@ export default function RightQuickSidebar({
               {/* Theme Color */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">
-                  Theme Color
+                  {t("settings.theme_color")}
                 </h3>
                 <div className="flex space-x-2">
                   {themes.map((theme) => (
@@ -191,7 +213,7 @@ export default function RightQuickSidebar({
               {/* Navigation Mode */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">
-                  Navigation Mode
+                  {t("settings.navigation_mode")}
                 </h3>
                 <div className="flex space-x-2">
                   <div className="w-12 h-12 bg-gray-100 border-2 border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400">
@@ -211,7 +233,7 @@ export default function RightQuickSidebar({
               {/* SideMenu Type */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">
-                  SideMenu Type
+                  {t("settings.sidemenu_type")}
                 </h3>
                 <div className="flex space-x-2">
                   <div className="w-12 h-12 bg-gray-800 border-2 border-blue-500 rounded-lg flex items-center justify-center cursor-pointer">
@@ -228,10 +250,12 @@ export default function RightQuickSidebar({
               {/* Content Width */}
               <div className="mb-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Content Width</span>
+                  <span className="text-sm text-gray-700">
+                    {t("settings.content_width")}
+                  </span>
                   <select className="text-sm border border-gray-300 rounded px-2 py-1">
-                    <option>Fluid</option>
-                    <option>Fixed</option>
+                    <option>{t("settings.fluid")}</option>
+                    <option>{t("settings.fixed")}</option>
                   </select>
                 </div>
               </div>
@@ -239,19 +263,25 @@ export default function RightQuickSidebar({
               {/* Toggle Settings */}
               <div className="space-y-4 mb-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Fixed Header</span>
+                  <span className="text-sm text-gray-700">
+                    {t("settings.fixed_header")}
+                  </span>
                   <div className="w-10 h-5 bg-gray-300 rounded-full cursor-pointer">
                     <div className="w-4 h-4 bg-white rounded-full mt-0.5 ml-0.5"></div>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Fixed Sidebar</span>
+                  <span className="text-sm text-gray-700">
+                    {t("settings.fixed_sidebar")}
+                  </span>
                   <div className="w-10 h-5 bg-blue-500 rounded-full cursor-pointer">
                     <div className="w-4 h-4 bg-white rounded-full mt-0.5 ml-5"></div>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Split Menus</span>
+                  <span className="text-sm text-gray-700">
+                    {t("settings.split_menus")}
+                  </span>
                   <div className="w-10 h-5 bg-gray-300 rounded-full cursor-pointer">
                     <div className="w-4 h-4 bg-white rounded-full mt-0.5 ml-0.5"></div>
                   </div>
@@ -261,10 +291,15 @@ export default function RightQuickSidebar({
               {/* Regional Settings */}
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3">
-                  Regional Settings
+                  {t("settings.regional_settings")}
                 </h3>
                 <div className="space-y-2">
-                  {["Header", "Footer", "Menu", "Menu Header"].map((item) => (
+                  {[
+                    t("settings.header"),
+                    t("settings.footer"),
+                    t("settings.menu"),
+                    t("settings.menu_header"),
+                  ].map((item) => (
                     <div
                       key={item}
                       className="flex items-center justify-between"
@@ -281,7 +316,9 @@ export default function RightQuickSidebar({
               {/* Other Settings */}
               <div className="mb-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">Weak Mode</span>
+                  <span className="text-sm text-gray-700">
+                    {t("settings.weak_mode")}
+                  </span>
                   <div className="w-10 h-5 bg-gray-300 rounded-full cursor-pointer">
                     <div className="w-4 h-4 bg-white rounded-full mt-0.5 ml-0.5"></div>
                   </div>
@@ -295,8 +332,7 @@ export default function RightQuickSidebar({
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                   <p className="text-xs text-yellow-800">
-                    Setting panel shows in development environment only, please
-                    manually modify
+                    {t("settings.development_warning")}
                   </p>
                 </div>
               </div>
@@ -305,9 +341,61 @@ export default function RightQuickSidebar({
               <Button className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-gray-400 rounded"></div>
-                  <span className="text-sm">Copy Setting</span>
+                  <span className="text-sm">{t("settings.copy_setting")}</span>
                 </div>
               </Button>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Language Switcher */}
+        <DropdownMenu open={languageOpen} onOpenChange={setLanguageOpen}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-8 h-10 p-0 hover:bg-gray-200 mb-2"
+                >
+                  <div className="w-6 h-8 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <Globe className="h-5 w-5 text-gray-600" />
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              <p>{t("language.select_language")}</p>
+            </TooltipContent>
+          </Tooltip>
+          <DropdownMenuContent side="left" className="w-48">
+            <div className="p-2">
+              <div className="text-xs font-semibold text-gray-700 mb-2">
+                {t("language.select_language")}
+              </div>
+              <div className="space-y-1">
+                {[
+                  { id: "en", name: t("language.english"), flag: "🇺🇸" },
+                  { id: "hi", name: t("language.hindi"), flag: "🇮🇳" },
+                  { id: "ru", name: t("language.russian"), flag: "🇷🇺" },
+                  { id: "pl", name: t("language.polish"), flag: "🇵🇱" },
+                ].map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.id}
+                    onClick={() => {
+                      setLanguage(lang.id as Language);
+                      dispatch(setReduxLanguage(lang.id as Language));
+                    }}
+                    className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-50 rounded"
+                  >
+                    <span className="text-lg">{lang.flag}</span>
+                    <span className="text-sm">{lang.name}</span>
+                    {language === lang.id && (
+                      <div className="ml-auto w-2 h-2 bg-blue-600 rounded-full"></div>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </div>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>

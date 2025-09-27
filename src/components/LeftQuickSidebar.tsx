@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LeftQuickSidebarProps {
   isOpen: boolean;
@@ -32,19 +33,23 @@ interface LeftQuickSidebarProps {
   onSidebarToggle: () => void;
 }
 
-const quickItems = [
-  { id: "dashboard", icon: MdDashboard, label: "Dashboard" },
-  { id: "users", icon: MdPeople, label: "Users" },
-  { id: "sales", icon: MdShoppingCart, label: "Sales" },
-  { id: "revenue", icon: MdAttachMoney, label: "Revenue" },
-  { id: "activity", icon: MdLocalActivity, label: "Activity" },
-  { id: "settings", icon: MdSettings, label: "Settings" },
-  { id: "notifications", icon: MdNotifications, label: "Notifications" },
-  { id: "home", icon: MdHome, label: "Home" },
-  { id: "reports", icon: MdDescription, label: "Reports" },
-  { id: "calendar", icon: MdEvent, label: "Calendar" },
-  { id: "products", icon: MdInventory, label: "Products" },
-  { id: "analytics", icon: MdTrendingUp, label: "Analytics" },
+const getQuickItems = (t: (key: string) => string) => [
+  { id: "dashboard", icon: MdDashboard, label: t("common.dashboard") },
+  { id: "users", icon: MdPeople, label: t("common.users") },
+  { id: "sales", icon: MdShoppingCart, label: t("common.sales") },
+  { id: "revenue", icon: MdAttachMoney, label: t("common.revenue") },
+  { id: "activity", icon: MdLocalActivity, label: t("common.activity") },
+  { id: "settings", icon: MdSettings, label: t("common.settings") },
+  {
+    id: "notifications",
+    icon: MdNotifications,
+    label: t("common.notifications"),
+  },
+  { id: "home", icon: MdHome, label: t("common.home") },
+  { id: "reports", icon: MdDescription, label: t("common.reports") },
+  { id: "calendar", icon: MdEvent, label: t("common.calendar") },
+  { id: "products", icon: MdInventory, label: t("common.products") },
+  { id: "analytics", icon: MdTrendingUp, label: t("common.analytics") },
 ];
 
 export default function LeftQuickSidebar({
@@ -55,6 +60,9 @@ export default function LeftQuickSidebar({
   sidebarOpen,
   onSidebarToggle,
 }: LeftQuickSidebarProps) {
+  const { t } = useLanguage();
+  const quickItems = getQuickItems(t);
+
   return (
     <TooltipProvider>
       {/* Left Quick Sidebar - Always Visible and Sticky */}
@@ -71,10 +79,14 @@ export default function LeftQuickSidebar({
               onClick={onSidebarToggle}
               className={`mb-4 w-8 h-8 p-0 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg ${
                 sidebarOpen
-                  ? "bg-red-500 hover:bg-red-600 shadow-red-500/25"
+                  ? "bg-red-500 hover:bg-blue-600 shadow-blue-500/25"
                   : "bg-blue-500 hover:bg-blue-600 shadow-blue-500/25"
               }`}
-              title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+              title={
+                sidebarOpen
+                  ? t("sidebar.close_sidebar")
+                  : t("sidebar.open_sidebar")
+              }
             >
               {sidebarOpen ? (
                 <X className="h-4 w-4 text-white animate-in fade-in-0 zoom-in-95 duration-200" />
@@ -87,7 +99,11 @@ export default function LeftQuickSidebar({
             side="right"
             className="animate-in fade-in-0 zoom-in-95 duration-200"
           >
-            <p>{sidebarOpen ? "Close sidebar" : "Open sidebar"}</p>
+            <p>
+              {sidebarOpen
+                ? t("sidebar.close_sidebar")
+                : t("sidebar.open_sidebar")}
+            </p>
           </TooltipContent>
         </Tooltip>
 

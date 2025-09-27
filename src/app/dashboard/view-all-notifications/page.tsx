@@ -21,7 +21,6 @@ import {
   Settings,
   Trash2,
   Archive,
-  MarkAsRead,
 } from "lucide-react";
 import {
   Table,
@@ -207,7 +206,7 @@ const getNotificationActions = (type: Notification["type"], id: number) => {
     actions.push({
       id: "resolve",
       label: "Mark as Resolved",
-      type: "default" as const,
+      type: "primary" as const,
       onClick: () => console.log(`Resolve notification ${id}`),
     });
   }
@@ -321,7 +320,7 @@ export default function ViewAllNotificationsPage() {
     setFilteredNotifications(filtered);
   };
 
-  const handleMarkAsRead = (notificationIds: string[]) => {
+  const handleCheckCircle = (notificationIds: string[]) => {
     setNotifications((prev) =>
       prev.map((notification) =>
         notificationIds.includes(notification.id)
@@ -459,15 +458,11 @@ export default function ViewAllNotificationsPage() {
               {record.message}
             </p>
             <div className="flex items-center space-x-2 mt-2">
-              <Tag color={getTypeColor(record.type)} size="small">
-                {record.type}
-              </Tag>
-              <Tag color={getPriorityColor(record.priority)} size="small">
+              <Tag color={getTypeColor(record.type)}>{record.type}</Tag>
+              <Tag color={getPriorityColor(record.priority)}>
                 {record.priority}
               </Tag>
-              <Tag color="default" size="small">
-                {record.category}
-              </Tag>
+              <Tag color="default">{record.category}</Tag>
             </div>
           </div>
         </div>
@@ -514,14 +509,10 @@ export default function ViewAllNotificationsPage() {
       width: 120,
       render: (_, record) => (
         <div className="space-y-1">
-          <Tag color={record.isRead ? "green" : "orange"} size="small">
+          <Tag color={record.isRead ? "green" : "orange"}>
             {record.isRead ? "Read" : "Unread"}
           </Tag>
-          {record.isArchived && (
-            <Tag color="default" size="small">
-              Archived
-            </Tag>
-          )}
+          {record.isArchived && <Tag color="default">Archived</Tag>}
         </div>
       ),
     },
@@ -553,7 +544,7 @@ export default function ViewAllNotificationsPage() {
                   onClick: () =>
                     record.isRead
                       ? handleMarkAsUnread([record.id])
-                      : handleMarkAsRead([record.id]),
+                      : handleCheckCircle([record.id]),
                 },
                 {
                   key: "archive",
@@ -599,7 +590,7 @@ export default function ViewAllNotificationsPage() {
 
     switch (action) {
       case "mark-read":
-        handleMarkAsRead(selectedIds);
+        handleCheckCircle(selectedIds);
         break;
       case "mark-unread":
         handleMarkAsUnread(selectedIds);
@@ -760,7 +751,7 @@ export default function ViewAllNotificationsPage() {
                 />
                 <RangePicker
                   value={dateRange}
-                  onChange={setDateRange}
+                  onChange={(dates) => setDateRange(dates as [any, any] | null)}
                   placeholder={["Start Date", "End Date"]}
                 />
               </div>

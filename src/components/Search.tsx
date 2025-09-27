@@ -35,7 +35,11 @@ interface SearchItem {
   email?: string;
   description?: string;
   customer?: string;
+  role?: string;
+  product?: string;
   amount?: string;
+  status?: string;
+  lastLogin?: string;
   date?: string;
 }
 

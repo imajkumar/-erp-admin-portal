@@ -8,7 +8,7 @@ interface JiraButtonProps {
   className?: string;
   title?: string;
   variant?: "icon" | "text" | "create";
-  size?: "sm" | "md";
+  size?: "default" | "sm" | "lg" | "icon";
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   debounceMs?: number;
@@ -22,7 +22,7 @@ export const JiraButton = React.forwardRef<HTMLButtonElement, JiraButtonProps>(
       className,
       title,
       variant = "icon",
-      size = "sm",
+      size = "default",
       disabled = false,
       type = "button",
       debounceMs = 300,
@@ -46,8 +46,10 @@ export const JiraButton = React.forwardRef<HTMLButtonElement, JiraButtonProps>(
     };
 
     const sizeClasses = {
+      default: "text-sm",
       sm: "text-xs",
-      md: "text-sm",
+      lg: "text-base",
+      icon: "text-sm",
     };
 
     const handleClick = useCallback(

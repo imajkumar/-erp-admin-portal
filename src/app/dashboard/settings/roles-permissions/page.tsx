@@ -412,7 +412,7 @@ export default function RolesPermissionsPage() {
             : role.permissions.modules.filter((id) => id !== moduleId);
 
           // Update individual permissions based on module checkbox
-          const modulePermissionIds = module.permissions.map((p) => p.id);
+          const modulePermissionIds = module.permissions.map((p: any) => p.id);
           const newIndividual = checked
             ? [
                 ...new Set([
@@ -421,7 +421,7 @@ export default function RolesPermissionsPage() {
                 ]),
               ]
             : role.permissions.individual.filter(
-                (permission) => !modulePermissionIds.includes(permission),
+                (permission: any) => !modulePermissionIds.includes(permission),
               );
 
           return {
@@ -439,14 +439,14 @@ export default function RolesPermissionsPage() {
 
     // Update selectedRole state for immediate UI update
     if (selectedRole && selectedRole.id === roleId) {
-      setSelectedRole((prev) => {
+      setSelectedRole((prev: any) => {
         if (!prev) return prev;
         const newModules = checked
           ? [...prev.permissions.modules, moduleId]
-          : prev.permissions.modules.filter((id) => id !== moduleId);
+          : prev.permissions.modules.filter((id: any) => id !== moduleId);
 
         // Update individual permissions based on module checkbox
-        const modulePermissionIds = module.permissions.map((p) => p.id);
+        const modulePermissionIds = module.permissions.map((p: any) => p.id);
         const newIndividual = checked
           ? [
               ...new Set([
@@ -455,7 +455,7 @@ export default function RolesPermissionsPage() {
               ]),
             ]
           : prev.permissions.individual.filter(
-              (permission) => !modulePermissionIds.includes(permission),
+              (permission: any) => !modulePermissionIds.includes(permission),
             );
 
         return {
@@ -489,11 +489,14 @@ export default function RolesPermissionsPage() {
           let newModules = [...role.permissions.modules];
 
           if (module) {
-            const modulePermissionIds = module.permissions.map((p) => p.id);
-            const hasAllModulePermissions = modulePermissionIds.every((perm) =>
-              checked
-                ? newPermissions.includes(perm)
-                : newPermissions.includes(perm),
+            const modulePermissionIds = module.permissions.map(
+              (p: any) => p.id,
+            );
+            const hasAllModulePermissions = modulePermissionIds.every(
+              (perm: any) =>
+                checked
+                  ? newPermissions.includes(perm)
+                  : newPermissions.includes(perm),
             );
 
             if (
@@ -526,24 +529,27 @@ export default function RolesPermissionsPage() {
 
     // Update selectedRole state for immediate UI update
     if (selectedRole && selectedRole.id === roleId) {
-      setSelectedRole((prev) => {
+      setSelectedRole((prev: any) => {
         if (!prev) return prev;
         const newPermissions = checked
           ? [...prev.permissions.individual, permissionId]
-          : prev.permissions.individual.filter((id) => id !== permissionId);
+          : prev.permissions.individual.filter(
+              (id: any) => id !== permissionId,
+            );
 
         // Check if all permissions of a module are selected/deselected
-        const module = mockModules.find((m) =>
-          m.permissions.some((p) => p.id === permissionId),
+        const module = mockModules.find((m: any) =>
+          m.permissions.some((p: any) => p.id === permissionId),
         );
         let newModules = [...prev.permissions.modules];
 
         if (module) {
-          const modulePermissionIds = module.permissions.map((p) => p.id);
-          const hasAllModulePermissions = modulePermissionIds.every((perm) =>
-            checked
-              ? newPermissions.includes(perm)
-              : newPermissions.includes(perm),
+          const modulePermissionIds = module.permissions.map((p: any) => p.id);
+          const hasAllModulePermissions = modulePermissionIds.every(
+            (perm: any) =>
+              checked
+                ? newPermissions.includes(perm)
+                : newPermissions.includes(perm),
           );
 
           if (
@@ -598,11 +604,11 @@ export default function RolesPermissionsPage() {
 
     // Update selectedRole state for immediate UI update
     if (selectedRole && selectedRole.id === roleId) {
-      setSelectedRole((prev) => {
+      setSelectedRole((prev: any) => {
         if (!prev) return prev;
         const newExtra = checked
           ? [...prev.permissions.extra, permissionId]
-          : prev.permissions.extra.filter((id) => id !== permissionId);
+          : prev.permissions.extra.filter((id: any) => id !== permissionId);
         return {
           ...prev,
           permissions: {

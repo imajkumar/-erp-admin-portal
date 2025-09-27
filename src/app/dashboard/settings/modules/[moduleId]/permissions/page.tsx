@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { Permission } from "@/store/types";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -45,180 +46,220 @@ const mockPermissions = [
     name: "View Dashboard",
     alias: "dashboard.view",
     description: "Allow users to view the main dashboard",
-    permissionCode: "DASH_VIEW",
+    code: "DASH_VIEW",
     isActive: true,
     moduleId: "1",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "2",
     name: "Edit Dashboard",
     alias: "dashboard.edit",
     description: "Allow users to edit dashboard widgets",
-    permissionCode: "DASH_EDIT",
+    code: "DASH_EDIT",
     isActive: true,
     moduleId: "1",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "3",
     name: "Delete Dashboard",
     alias: "dashboard.delete",
     description: "Allow users to delete dashboard items",
-    permissionCode: "DASH_DELETE",
+    code: "DASH_DELETE",
     isActive: false,
     moduleId: "1",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "4",
     name: "View Users",
     alias: "users.view",
     description: "Allow users to view user list",
-    permissionCode: "USR_VIEW",
+    code: "USR_VIEW",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "5",
     name: "Create Users",
     alias: "users.create",
     description: "Allow users to create new users",
-    permissionCode: "USR_CREATE",
+    code: "USR_CREATE",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "6",
     name: "Edit Users",
     alias: "users.edit",
     description: "Allow users to edit existing users",
-    permissionCode: "USR_EDIT",
+    code: "USR_EDIT",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "7",
     name: "Delete Users",
     alias: "users.delete",
     description: "Allow users to delete users",
-    permissionCode: "USR_DELETE",
+    code: "USR_DELETE",
     isActive: false,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "8",
     name: "View User Profile",
     alias: "users.profile.view",
     description: "Allow users to view user profiles",
-    permissionCode: "USR_PROF_VIEW",
+    code: "USR_PROF_VIEW",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "9",
     name: "Edit User Profile",
     alias: "users.profile.edit",
     description: "Allow users to edit user profiles",
-    permissionCode: "USR_PROF_EDIT",
+    code: "USR_PROF_EDIT",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "10",
     name: "Change User Password",
     alias: "users.password.change",
     description: "Allow users to change passwords",
-    permissionCode: "USR_PWD_CHANGE",
+    code: "USR_PWD_CHANGE",
     isActive: false,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "11",
     name: "Reset User Password",
     alias: "users.password.reset",
     description: "Allow users to reset passwords",
-    permissionCode: "USR_PWD_RESET",
+    code: "USR_PWD_RESET",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "12",
     name: "Assign User Roles",
     alias: "users.roles.assign",
     description: "Allow users to assign roles to users",
-    permissionCode: "USR_ROLE_ASSIGN",
+    code: "USR_ROLE_ASSIGN",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "13",
     name: "View User Roles",
     alias: "users.roles.view",
     description: "Allow users to view user roles",
-    permissionCode: "USR_ROLE_VIEW",
+    code: "USR_ROLE_VIEW",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "14",
     name: "Manage User Permissions",
     alias: "users.permissions.manage",
     description: "Allow users to manage user permissions",
-    permissionCode: "USR_PERM_MANAGE",
+    code: "USR_PERM_MANAGE",
     isActive: false,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "15",
     name: "Export User Data",
     alias: "users.export",
     description: "Allow users to export user data",
-    permissionCode: "USR_EXPORT",
+    code: "USR_EXPORT",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "16",
     name: "Import User Data",
     alias: "users.import",
     description: "Allow users to import user data",
-    permissionCode: "USR_IMPORT",
+    code: "USR_IMPORT",
     isActive: false,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "17",
     name: "Bulk User Operations",
     alias: "users.bulk",
     description: "Allow users to perform bulk operations",
-    permissionCode: "USR_BULK",
+    code: "USR_BULK",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "18",
     name: "View User Activity",
     alias: "users.activity.view",
     description: "Allow users to view user activity logs",
-    permissionCode: "USR_ACT_VIEW",
+    code: "USR_ACT_VIEW",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "19",
     name: "Manage User Sessions",
     alias: "users.sessions.manage",
     description: "Allow users to manage user sessions",
-    permissionCode: "USR_SESS_MANAGE",
+    code: "USR_SESS_MANAGE",
     isActive: false,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
   {
     id: "20",
     name: "View User Statistics",
     alias: "users.stats.view",
     description: "Allow users to view user statistics",
-    permissionCode: "USR_STATS_VIEW",
+    code: "USR_STATS_VIEW",
     isActive: true,
     moduleId: "2",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
   },
 ];
 
@@ -248,7 +289,7 @@ export default function ModulePermissionsPage() {
     name: "",
     alias: "",
     description: "",
-    permissionCode: "",
+    code: "",
     isActive: true,
   });
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -259,28 +300,24 @@ export default function ModulePermissionsPage() {
     (permission) =>
       permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       permission.alias.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      permission.permissionCode
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()),
+      permission.code.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleAddPermission = () => {
-    if (
-      newPermission.name &&
-      newPermission.alias &&
-      newPermission.permissionCode
-    ) {
+    if (newPermission.name && newPermission.alias && newPermission.code) {
       const permission = {
         id: Date.now().toString(),
         ...newPermission,
         moduleId: moduleId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
       setPermissions([...permissions, permission]);
       setNewPermission({
         name: "",
         alias: "",
         description: "",
-        permissionCode: "",
+        code: "",
         isActive: true,
       });
       setIsAddDialogOpen(false);
@@ -407,8 +444,8 @@ export default function ModulePermissionsPage() {
     },
     {
       title: "Permission Code",
-      dataIndex: "permissionCode",
-      key: "permissionCode",
+      dataIndex: "code",
+      key: "code",
       width: 180,
       render: (text) => (
         <div className="flex items-center space-x-2">
@@ -583,11 +620,11 @@ export default function ModulePermissionsPage() {
                 </label>
                 <Input
                   id="permission-code"
-                  value={newPermission.permissionCode}
+                  value={newPermission.code}
                   onChange={(e) =>
                     setNewPermission({
                       ...newPermission,
-                      permissionCode: e.target.value,
+                      code: e.target.value,
                     })
                   }
                   placeholder="e.g., DASH_VIEW"
@@ -768,11 +805,11 @@ export default function ModulePermissionsPage() {
                   Permission Code
                 </label>
                 <Input
-                  value={editingPermission.permissionCode}
+                  value={editingPermission.code}
                   onChange={(e) =>
                     setEditingPermission({
                       ...editingPermission,
-                      permissionCode: e.target.value,
+                      code: e.target.value,
                     })
                   }
                   className="mt-1"

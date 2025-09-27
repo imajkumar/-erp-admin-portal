@@ -618,7 +618,7 @@ export default function UserManagementPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<string>("all");
   const [departmentFilter, setDepartmentFilter] = useState<string>("all");
-  const [dateRange, setDateRange] = useState<any[]>([]);
+  const [dateRange, setDateRange] = useState<[any, any] | null>(null);
   const [addDrawerOpen, setAddDrawerOpen] = useState(false);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [viewDrawerOpen, setViewDrawerOpen] = useState(false);
@@ -997,7 +997,7 @@ export default function UserManagementPage() {
     setStatusFilter("all");
     setGenderFilter("all");
     setDepartmentFilter("all");
-    setDateRange([]);
+    setDateRange(null);
     toast({
       title: "Filters Reset",
       description: "All filters have been cleared",
@@ -1050,10 +1050,15 @@ export default function UserManagementPage() {
       filterIcon: (filtered) => (
         <Search className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
       ),
-      onFilter: (value, record) =>
-        record.name.toLowerCase().includes(value.toLowerCase()) ||
-        record.email.toLowerCase().includes(value.toLowerCase()) ||
-        record.role.toLowerCase().includes(value.toLowerCase()),
+      onFilter: (value, record) => {
+        const searchValue =
+          typeof value === "string" ? value.toLowerCase() : "";
+        return (
+          record.name.toLowerCase().includes(searchValue) ||
+          record.email.toLowerCase().includes(searchValue) ||
+          record.role.toLowerCase().includes(searchValue)
+        );
+      },
       render: (_, record) => (
         <div className="flex items-center space-x-3">
           <TooltipProvider>
@@ -1081,14 +1086,12 @@ export default function UserManagementPage() {
             <div className="text-sm text-gray-500">{record.role}</div>
             <div className="flex flex-wrap gap-1 mt-1">
               {record.roles?.slice(0, 2).map((role: any) => (
-                <Tag key={role.id} color={role.color} size="small">
+                <Tag key={role.id} color={role.color}>
                   {role.name}
                 </Tag>
               ))}
               {record.roles?.length > 2 && (
-                <Tag color="default" size="small">
-                  +{record.roles.length - 2}
-                </Tag>
+                <Tag color="default">+{record.roles.length - 2}</Tag>
               )}
             </div>
           </div>
@@ -1138,9 +1141,14 @@ export default function UserManagementPage() {
       filterIcon: (filtered) => (
         <Search className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
       ),
-      onFilter: (value, record) =>
-        record.email.toLowerCase().includes(value.toLowerCase()) ||
-        record.phone.includes(value),
+      onFilter: (value, record) => {
+        const searchValue =
+          typeof value === "string" ? value.toLowerCase() : "";
+        return (
+          record.email.toLowerCase().includes(searchValue) ||
+          record.phone.includes(value)
+        );
+      },
       render: (_, record) => (
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-sm">
@@ -1270,11 +1278,14 @@ export default function UserManagementPage() {
       filterIcon: (filtered) => (
         <Search className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
       ),
-      onFilter: (value, record) =>
-        dayjs(record.lastLogin)
+      onFilter: (value, record) => {
+        const searchValue =
+          typeof value === "string" ? value.toLowerCase() : "";
+        return dayjs(record.lastLogin)
           .format("MMM DD, YYYY")
           .toLowerCase()
-          .includes(value.toLowerCase()),
+          .includes(searchValue);
+      },
       render: (date) => (
         <div className="flex items-center space-x-1 text-sm text-gray-600">
           <Clock className="h-3 w-3" />
@@ -2033,7 +2044,10 @@ export default function UserManagementPage() {
                               beforeUpload: () => false,
                             }}
                           >
-                            <Button icon={<UploadIcon />}>Change Avatar</Button>
+                            <Button>
+                              <UploadIcon className="h-4 w-4 mr-2" />
+                              Change Avatar
+                            </Button>
                           </Upload>
                         </div>
                       </div>
@@ -2645,7 +2659,7 @@ export default function UserManagementPage() {
                     Login History
                   </h3>
                   <div className="space-y-3">
-                    {generateTabData("security")?.loginHistory.map(
+                    {generateTabData("security")?.loginHistory?.map(
                       (login: any) => (
                         <div
                           key={login.id}
@@ -2709,7 +2723,7 @@ export default function UserManagementPage() {
                     Recent Activity
                   </h3>
                   <Timeline
-                    items={generateTabData("activity")?.actions.map(
+                    items={generateTabData("activity")?.actions?.map(
                       (action: any) => ({
                         dot:
                           action.type === "create" ? (
@@ -2797,7 +2811,7 @@ export default function UserManagementPage() {
                     Achievements
                   </h3>
                   <div className="space-y-3">
-                    {generateTabData("reports")?.achievements.map(
+                    {generateTabData("reports")?.achievements?.map(
                       (achievement: any) => (
                         <div
                           key={achievement.id}
@@ -2900,9 +2914,7 @@ export default function UserManagementPage() {
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-2">
-                                      <Tag color={role.color} size="small">
-                                        {role.name}
-                                      </Tag>
+                                      <Tag color={role.color}>{role.name}</Tag>
                                       {role.name === "Super Admin" && (
                                         <Crown className="h-4 w-4 text-yellow-500" />
                                       )}
@@ -3051,9 +3063,7 @@ export default function UserManagementPage() {
                                         title: "Module Name",
                                         dataIndex: "module",
                                         render: (module) => (
-                                          <Tag color="blue" size="small">
-                                            {module}
-                                          </Tag>
+                                          <Tag color="blue">{module}</Tag>
                                         ),
                                       },
                                     ]}
@@ -3135,9 +3145,7 @@ export default function UserManagementPage() {
                                   className="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
                                 >
                                   <div className="flex items-center space-x-2 mb-4">
-                                    <Tag color={role?.color} size="small">
-                                      {roleName}
-                                    </Tag>
+                                    <Tag color={role?.color}>{roleName}</Tag>
                                     <span className="text-sm text-gray-600">
                                       ({permissions.length} permissions)
                                     </span>
@@ -3181,9 +3189,7 @@ export default function UserManagementPage() {
                             {extraPermissions.length > 0 && (
                               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                                 <div className="flex items-center space-x-2 mb-4">
-                                  <Tag color="purple" size="small">
-                                    Extra Permissions
-                                  </Tag>
+                                  <Tag color="purple">Extra Permissions</Tag>
                                   <span className="text-sm text-gray-600">
                                     ({extraPermissions.length} permissions)
                                   </span>
@@ -3272,9 +3278,7 @@ export default function UserManagementPage() {
                                       {permission.description}
                                     </p>
                                   </div>
-                                  <Tag color="blue" size="small">
-                                    {permission.id}
-                                  </Tag>
+                                  <Tag color="blue">{permission.id}</Tag>
                                 </div>
                               </div>
                             </div>

@@ -227,10 +227,8 @@ export default function QuickLeftSidebarDrawer({
                   key={`recent-${item.id}`}
                   className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
                 >
-                  <div
-                    className={`w-8 h-8 ${item.color} rounded-lg flex items-center justify-center`}
-                  >
-                    <item.icon className="h-4 w-4 text-white" />
+                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <item.icon className="h-4 w-4 text-gray-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-900">{item.name}</p>
