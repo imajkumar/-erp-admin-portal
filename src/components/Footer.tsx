@@ -11,6 +11,7 @@ import {
   VolumeX,
   Settings
 } from "lucide-react";
+import Logo from "./Logo";
 
 export default function Footer() {
   const [time, setTime] = useState<Date | null>(null);
@@ -61,6 +62,15 @@ export default function Footer() {
         <div className="flex items-center justify-between">
           {/* Left Side - Quick Actions and Copyright */}
           <div className="flex items-center space-x-4">
+            {/* Logo */}
+            <Logo className="h-5 w-auto" alt="Coca-Cola" />
+            
+            {/* Separator */}
+            <div className="w-px h-4 bg-gray-300"></div>
+            
+            <div className="text-xs text-gray-500">
+              Powered by <a href="https://bellpatra.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline">Bellpatra Digital</a>
+            </div>
             <Button
               variant="ghost"
               size="sm"
@@ -82,14 +92,6 @@ export default function Footer() {
                 <span className="text-xs font-bold text-white">S</span>
               </div>
             </Button>
-            
-            <div className="text-xs text-gray-500">
-              © 2025
-            </div>
-            
-            <div className="text-xs text-gray-500">
-              Powered by <a href="https://bellpatra.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline">Bellpatra Digital</a>
-            </div>
           </div>
 
           {/* Right Side - Digital Clock and System Status */}

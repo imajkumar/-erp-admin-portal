@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
+import Logo from "./Logo";
 import { 
   MdDescription,
   MdEvent,
@@ -26,25 +27,26 @@ interface RightQuickSidebarProps {
 }
 
 const quickItems = [
-  { id: 'documents', icon: MdDescription, label: 'Documents', bgColor: 'bg-blue-500', iconColor: 'text-white' },
-  { id: 'calendar', icon: MdEvent, label: 'Calendar', bgColor: 'bg-green-500', iconColor: 'text-white' },
-  { id: 'messages', icon: MdMessage, label: 'Messages', bgColor: 'bg-purple-500', iconColor: 'text-white' },
-  { id: 'tasks', icon: MdCheckBox, label: 'Tasks', bgColor: 'bg-orange-500', iconColor: 'text-white' },
-  { id: 'products', icon: MdInventory, label: 'Products', bgColor: 'bg-cyan-500', iconColor: 'text-white' },
-  { id: 'payments', icon: MdPayment, label: 'Payments', bgColor: 'bg-yellow-500', iconColor: 'text-white' },
-  { id: 'analytics', icon: MdTrendingUp, label: 'Analytics', bgColor: 'bg-emerald-500', iconColor: 'text-white' },
-  { id: 'notifications', icon: MdNotifications, label: 'Notifications', bgColor: 'bg-red-500', iconColor: 'text-white' },
-  { id: 'settings', icon: MdSettings, label: 'Settings', bgColor: 'bg-gray-500', iconColor: 'text-white' },
-  { id: 'users', icon: MdPersonAdd, label: 'Users', bgColor: 'bg-indigo-500', iconColor: 'text-white' },
-  { id: 'dashboard', icon: MdBarChart, label: 'Dashboard', bgColor: 'bg-teal-500', iconColor: 'text-white' },
-  { id: 'database', icon: MdStorage, label: 'Database', bgColor: 'bg-pink-500', iconColor: 'text-white' }
+  { id: 'documents', icon: MdDescription, label: 'Documents' },
+  { id: 'calendar', icon: MdEvent, label: 'Calendar' },
+  { id: 'messages', icon: MdMessage, label: 'Messages' },
+  { id: 'tasks', icon: MdCheckBox, label: 'Tasks' },
+  { id: 'products', icon: MdInventory, label: 'Products' },
+  { id: 'payments', icon: MdPayment, label: 'Payments' },
+  { id: 'analytics', icon: MdTrendingUp, label: 'Analytics' },
+  { id: 'notifications', icon: MdNotifications, label: 'Notifications' },
+  { id: 'settings', icon: MdSettings, label: 'Settings' },
+  { id: 'users', icon: MdPersonAdd, label: 'Users' },
+  { id: 'dashboard', icon: MdBarChart, label: 'Dashboard' },
+  { id: 'database', icon: MdStorage, label: 'Database' }
 ];
 
 export default function RightQuickSidebar({ isOpen, onToggle, activeItem, onItemClick }: RightQuickSidebarProps) {
   return (
     <TooltipProvider>
       {/* Right Quick Sidebar - Always Visible */}
-      <div className="fixed right-0 h-[calc(100vh-45px)] z-40 bg-gray-50 border-l border-purple-500 flex flex-col items-center py-4 space-y-2 overflow-y-auto w-12" style={{ top: '45px' }}>
+      <div className="fixed right-0 h-[calc(100vh-45px-32px)] z-40 bg-gray-50 border-l border-purple-500 flex flex-col items-center py-4 space-y-2 overflow-y-auto w-12" style={{ top: '45px' }}>
+
         {/* Dummy Icon - Help Circle */}
         <Tooltip>
           <TooltipTrigger asChild>
@@ -56,6 +58,9 @@ export default function RightQuickSidebar({ isOpen, onToggle, activeItem, onItem
             <p>Help & Support</p>
           </TooltipContent>
         </Tooltip>
+
+        {/* Separator */}
+        <div className="w-6 h-px bg-gray-300 mb-2"></div>
         
         {quickItems.map((item) => (
           <div key={item.id} className="relative flex items-center">
@@ -74,8 +79,8 @@ export default function RightQuickSidebar({ isOpen, onToggle, activeItem, onItem
                     activeItem === item.id ? 'mr-1' : ''
                   }`}
                 >
-                  <div className={`w-6 h-6 ${item.bgColor} rounded-lg flex items-center justify-center`}>
-                    <item.icon className={`h-4 w-4 ${item.iconColor}`} />
+                  <div className="w-6 h-6 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <item.icon className="h-4 w-4 text-gray-600" />
                   </div>
                 </Button>
               </TooltipTrigger>

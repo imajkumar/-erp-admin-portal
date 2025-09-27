@@ -62,8 +62,9 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
+      hour: "numeric",
       minute: "2-digit",
+      second: "2-digit",
       hour12: true,
     });
   };
@@ -129,136 +130,176 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
     // Remove the other key handling to prevent double input
   };
 
+
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center overflow-hidden">
-      {/* Enhanced Animated Background Pattern */}
-      <div className="absolute inset-0 opacity-15">
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center overflow-hidden">
+      {/* Professional Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
         <div 
-          className="absolute inset-0 animate-pulse"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='40' cy='40' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }}
         ></div>
         <div 
           className="absolute inset-0 animate-pulse"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
-            animationDelay: '1s'
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M60 60c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm20 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z'/%3E%3C/g%3E%3C/svg%3E")`,
+            animationDelay: '2s'
           }}
         ></div>
       </div>
 
-      {/* Enhanced Floating Particles */}
+      {/* Subtle Floating Particles */}
       {particles.map((particle) => (
         <div
           key={particle.id}
-          className="absolute bg-white/30 rounded-full animate-float"
+          className="absolute bg-white/20 rounded-full animate-float"
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,
             animationDelay: `${particle.delay}s`,
-            animationDuration: `${4 + Math.random() * 3}s`,
-            width: `${2 + Math.random() * 3}px`,
-            height: `${2 + Math.random() * 3}px`,
+            animationDuration: `${6 + Math.random() * 4}s`,
+            width: `${1 + Math.random() * 2}px`,
+            height: `${1 + Math.random() * 2}px`,
           }}
         />
       ))}
 
-      {/* Enhanced Animated Gradient Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-500/15 rounded-full blur-3xl animate-float-slow"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '1s'}}></div>
-      <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '2s'}}></div>
-      <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '3s'}}></div>
+      {/* Professional Gradient Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/8 rounded-full blur-3xl animate-float-slow"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-500/8 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '3s'}}></div>
+      <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-slate-500/6 rounded-full blur-3xl animate-float-slow" style={{animationDelay: '6s'}}></div>
 
-      {/* Status Bar */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-4 text-white/80">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1">
-            <Wifi className="h-4 w-4" />
+      {/* Professional Status Bar */}
+      <div className="absolute top-0 left-0 right-0 z-20 flex justify-between items-center p-6 text-white/90">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">E</span>
+            </div>
+            <span className="text-sm font-medium">ERP Admin</span>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <Wifi className="h-4 w-4 text-green-400" />
             <div className="flex space-x-0.5">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`w-1 h-3 bg-white/60 rounded-full transition-all duration-300 ${
-                    i < wifiStrength ? 'bg-white' : 'bg-white/30'
+                  className={`w-1 h-3 bg-white/40 rounded-full transition-all duration-300 ${
+                    i < wifiStrength ? 'bg-green-400' : 'bg-white/20'
                   }`}
                   style={{ height: `${(i + 1) * 3}px` }}
                 />
               ))}
             </div>
           </div>
-        </div>
-        
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-1">
-            <Bell className="h-4 w-4" />
+          <div className="flex items-center space-x-2">
+            <Bell className="h-4 w-4 text-blue-400" />
             {notifications > 0 && (
-              <div className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+              <div className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                 {notifications}
               </div>
             )}
           </div>
-          <div className="flex items-center space-x-1">
-            <Battery className="h-4 w-4" />
-            <span className="text-xs">{Math.round(batteryLevel)}%</span>
+          <div className="flex items-center space-x-2">
+            <Battery className="h-4 w-4 text-green-400" />
+            <span className="text-sm font-medium">{Math.round(batteryLevel)}%</span>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 w-full max-w-lg mx-4 animate-fade-in">
-        {/* User Profile Section */}
-        <div className="text-center mb-6">
-          <div className="relative inline-block">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 animate-pulse">
-              <User className="h-10 w-10 text-white" />
-            </div>
-            <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-900 animate-ping"></div>
-          </div>
-          <h1 className="text-2xl font-bold text-white mb-1">{userName}</h1>
-          <p className="text-gray-300 text-sm">Last login: {lastLogin}</p>
-          <div className="flex items-center justify-center mt-2 space-x-2">
-            <Shield className="h-4 w-4 text-green-400" />
-            <span className="text-green-400 text-xs">{systemStatus}</span>
-          </div>
-        </div>
-
-        {/* Digital Clock with Enhanced Animation */}
-        <div className="text-center mb-8">
-          <div className="text-7xl font-mono font-bold text-white mb-2 animate-pulse bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-            {formatTime(currentTime)}
-          </div>
-          <div className="text-xl text-gray-300 animate-fade-in">
-            {formatDate(currentTime)}
-          </div>
-        </div>
-
-        {/* Lock Screen Card */}
-        <Card className={`bg-white/10 backdrop-blur-md border-white/20 shadow-2xl animate-slide-up transition-all duration-1000 ${
-          isUnlocking ? 'animate-success-glow' : ''
-        }`}>
-          <CardHeader className="text-center pb-4">
-            <div className="flex justify-center mb-4">
-              <div className={`w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center transition-all duration-500 shadow-lg ${
-                isUnlocking ? 'animate-success-bounce bg-gradient-to-br from-green-500 to-green-600' : 'animate-bounce'
-              }`}>
-                {isUnlocking ? (
-                  <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <Lock className="h-10 w-10 text-white" />
-                )}
+      <div className="relative z-10 w-full h-full flex animate-fade-in">
+        {/* Left Column - 50% Lock Screen */}
+        <div className="w-1/2 flex flex-col items-center justify-center px-8">
+          {/* Professional User Profile Section */}
+          <div className="text-center mb-12">
+            <div className="relative inline-block">
+              <div className="w-28 h-28 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center mb-6 shadow-2xl border border-white/10">
+                <User className="h-14 w-14 text-white" />
+              </div>
+              <div className="absolute -top-2 -right-2 w-7 h-7 bg-green-500 rounded-full border-3 border-slate-900 flex items-center justify-center">
+                <div className="w-2 h-2 bg-white rounded-full"></div>
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2 animate-fade-in bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">{userName}</h1>
+            <p className="text-slate-300 text-base mb-4">Last login: {lastLogin}</p>
+            <div className="inline-flex items-center space-x-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-500/30">
+              <Shield className="h-4 w-4 text-green-400" />
+              <span className="text-green-400 text-sm font-medium">{systemStatus}</span>
+            </div>
+          </div>
+
+          {/* Professional Lock Icon */}
+          <div className="flex justify-center mb-10">
+            <div className={`w-32 h-32 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-2xl border border-white/10 ${
+              isUnlocking ? 'animate-success-bounce bg-gradient-to-br from-green-500 to-green-600' : 'hover:scale-105'
+            }`}>
+              {isUnlocking ? (
+                <div className="w-16 h-16 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <Lock className="h-16 w-16 text-white" />
+              )}
+            </div>
+          </div>
+
+          {/* Professional Portal Title */}
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-white mb-3 tracking-tight bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
               ERP Admin Portal
             </h2>
-            <p className="text-gray-300 animate-fade-in text-lg">
+            <p className="text-slate-300 text-lg font-medium">
               {isUnlocking ? 'Unlocking...' : 'Enter your PIN to continue'}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column - 50% Professional Digital Clock */}
+        <div className="w-1/2 flex flex-col items-center justify-center px-8 border-l border-white/10">
+          {/* Professional Digital Clock */}
+          <div className="text-center">
+            <div className="text-6xl font-mono font-bold text-white mb-6 tracking-wider">
+              {formatTime(currentTime)}
+            </div>
+            <div className="text-xl text-slate-300 animate-fade-in mb-8 font-medium">
+              {formatDate(currentTime)}
+            </div>
+            
+            {/* Professional Clock Info */}
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center space-x-2 bg-white/10 px-6 py-3 rounded-full border border-white/20">
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span className="text-white font-medium">Live Clock</span>
+              </div>
+              <div className="text-slate-400 text-sm font-medium tracking-wide">
+                REAL-TIME SYSTEM CLOCK
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Professional PIN Input Card - Bottom Center */}
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-20">
+        <Card className={`bg-white/5 backdrop-blur-xl border border-white/20 shadow-2xl animate-slide-up transition-all duration-1000 rounded-2xl ${
+          isUnlocking ? 'animate-success-glow' : ''
+        }`}>
+          <CardHeader className="text-center pb-6 pt-8">
+            <h2 className="text-2xl font-bold text-white mb-3 animate-fade-in bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent tracking-tight">
+              Enter PIN
+            </h2>
+            <p className="text-slate-300 animate-fade-in font-medium">
+              {isUnlocking ? 'Unlocking...' : 'Enter your 4-digit PIN to continue'}
             </p>
           </CardHeader>
 
-          <CardContent className="space-y-6">
-            {/* Number Input Field */}
-            <div className="space-y-4">
+          <CardContent className="space-y-8 px-8 pb-8">
+            {/* Professional Number Input Field */}
+            <div className="space-y-6">
               <div className="flex justify-center">
                 <Input
                   type="number"
@@ -267,26 +308,26 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
                   onKeyDown={handleKeyDown}
                   placeholder="Enter 4-digit PIN"
                   maxLength={4}
-                  className="w-56 h-14 text-center text-3xl font-mono bg-white/20 border-white/30 text-white placeholder:text-white/50 focus:border-blue-400 focus:ring-blue-400 rounded-xl shadow-lg transition-all duration-300 hover:bg-white/25 focus:bg-white/25"
+                  className="w-64 h-16 text-center text-4xl font-mono bg-white/10 border border-white/30 text-white placeholder:text-white/40 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 rounded-2xl shadow-xl transition-all duration-300 hover:bg-white/15 focus:bg-white/15 backdrop-blur-sm"
                   autoFocus
                 />
               </div>
 
-              {/* Enhanced PIN Dots Display */}
-              <div className="flex justify-center space-x-4">
+              {/* Professional PIN Dots Display */}
+              <div className="flex justify-center space-x-5">
                 {[0, 1, 2, 3].map((index) => (
                   <div
                     key={index}
-                    className={`w-16 h-16 border-2 border-white/30 rounded-xl flex items-center justify-center bg-white/10 transition-all duration-500 transform hover:scale-110 shadow-lg ${
-                      pin.length > index ? 'border-blue-400 bg-blue-400/20 animate-pulse shadow-blue-400/25' : ''
+                    className={`w-18 h-18 border-2 border-white/20 rounded-2xl flex items-center justify-center bg-white/5 transition-all duration-500 transform hover:scale-110 shadow-xl backdrop-blur-sm ${
+                      pin.length > index ? 'border-blue-400 bg-blue-400/20 animate-pulse shadow-blue-400/30' : ''
                     } ${isUnlocking ? 'animate-success-pulse' : ''}`}
                   >
                     {showPin && pin[index] ? (
-                      <span className="text-white text-2xl font-mono animate-fade-in">
+                      <span className="text-white text-3xl font-mono animate-fade-in font-bold">
                         {pin[index]}
                       </span>
                     ) : (
-                      <div className={`w-3 h-3 bg-white/50 rounded-full transition-all duration-500 ${
+                      <div className={`w-4 h-4 bg-white/40 rounded-full transition-all duration-500 ${
                         pin.length > index ? 'bg-blue-400 scale-125 animate-ping shadow-lg' : ''
                       }`}></div>
                     )}
@@ -370,21 +411,21 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
               </Button>
             </div>
 
-            {/* Submit Button */}
+            {/* Professional Submit Button */}
             <Button
               onClick={handleSubmit}
               disabled={pin.length !== 4 || isLoading}
-              className={`w-full h-12 text-white font-semibold transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${
-                pin.length === 4 ? 'bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse' : 'bg-blue-600 hover:bg-blue-700'
+              className={`w-full h-14 text-white font-bold transition-all duration-500 transform hover:scale-105 relative overflow-hidden rounded-2xl shadow-xl ${
+                pin.length === 4 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 animate-pulse' : 'bg-blue-600 hover:bg-blue-700'
               } ${isUnlocking ? 'animate-success-glow' : ''}`}
             >
               {isLoading ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Verifying...</span>
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span className="text-lg">Verifying...</span>
                 </div>
               ) : (
-                <span className="relative z-10">Unlock</span>
+                <span className="relative z-10 text-lg">Unlock System</span>
               )}
               {pin.length === 4 && (
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
@@ -392,14 +433,15 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
             </Button>
           </CardContent>
         </Card>
-
-        {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-gray-400 text-sm">
-            © 2025 Bellpatra Digital. All rights reserved.
-          </p>
-        </div>
       </div>
+
+      {/* Professional Footer */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
+        <p className="text-slate-400 text-sm font-medium tracking-wide">
+          © 2025 Bellpatra Digital. All rights reserved.
+        </p>
+      </div>
+
     </div>
   );
 }

@@ -187,6 +187,7 @@
   scrollbar-color: #0078d4 #f1f5f9;
 }
 
+
 /* Ant Design Drawer Custom Styles */
 .antd-drawer-custom .ant-drawer-content {
   background-color: white;
@@ -202,6 +203,71 @@
   padding: 0;
 }
 
+/* Notification Drawer Custom Styles */
+.notification-drawer-custom .ant-drawer-content {
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.notification-drawer-custom .ant-drawer-header {
+  background: #fafafa;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 24px;
+}
+
+.notification-drawer-custom .ant-drawer-body {
+  padding: 0;
+  background: #ffffff;
+}
+
+/* Permissions Table Custom Styles */
+.permissions-table .ant-table-thead > tr > th {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  color: #374151;
+}
+
+.permissions-table .ant-table-tbody > tr:hover > td {
+  background: #f1f5f9;
+}
+
+.permissions-table .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 12px 16px;
+}
+
+.permissions-table .ant-pagination {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.permissions-table .ant-table-pagination.ant-pagination {
+  margin: 16px 0 0 0;
+}
+
+.permissions-table .ant-switch-checked {
+  background-color: #10b981;
+}
+
+.permissions-table .ant-tag {
+  border-radius: 6px;
+  font-size: 11px;
+  padding: 2px 8px;
+  margin: 0;
+}
+
+.permissions-table .ant-btn-text {
+  padding: 4px 8px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.permissions-table .ant-btn-text:hover {
+  background-color: #f1f5f9;
+}
+
 .antd-drawer-custom .ant-drawer-close {
   color: #666;
 }
@@ -209,6 +275,245 @@
 .antd-drawer-custom .ant-drawer-close:hover {
   color: #333;
 }
+
+/* Permissions Drawer Custom Styles */
+.permissions-drawer .ant-drawer-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  background: #ffffff;
+}
+
+.permissions-drawer .ant-drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.permissions-drawer .ant-drawer-body {
+  padding: 24px;
+  background: #f8fafc;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.permissions-drawer .ant-drawer-extra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.permissions-drawer .ant-drawer-close {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.permissions-drawer .ant-drawer-close:hover {
+  color: #374151;
+}
+
+/* Full screen drawer */
+.permissions-drawer.ant-drawer-open {
+  z-index: 1000;
+}
+
+.permissions-drawer .ant-drawer-content {
+  border-radius: 0;
+}
+
+.permissions-drawer .ant-drawer-content-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* User Drawer Custom Styles */
+.user-drawer .ant-drawer-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  background: #ffffff;
+}
+
+.user-drawer .ant-drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.user-drawer .ant-drawer-body {
+  padding: 24px;
+  background: #f8fafc;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.user-drawer .ant-drawer-extra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-drawer .ant-drawer-close {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.user-drawer .ant-drawer-close:hover {
+  color: #374151;
+}
+
+/* Full screen drawer */
+.user-drawer.ant-drawer-open {
+  z-index: 1000;
+}
+
+.user-drawer .ant-drawer-content {
+  border-radius: 0;
+}
+
+.user-drawer .ant-drawer-content-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Table Skeleton Loading */
+.ant-table-tbody > tr.ant-table-placeholder > td {
+  padding: 0 !important;
+}
+
+.ant-skeleton {
+  padding: 16px;
+}
+
+.ant-skeleton-content .ant-skeleton-title {
+  margin-bottom: 16px;
+}
+
+.ant-skeleton-content .ant-skeleton-paragraph > li {
+  margin-bottom: 8px;
+}
+
+/* Role Permissions Table */
+.role-permissions-table .ant-table-thead > tr > th {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 8px 12px;
+}
+
+.role-permissions-table .ant-table-tbody > tr > td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.role-permissions-table .ant-table-tbody > tr:hover > td {
+  background: #f8fafc;
+}
+
+.role-permissions-table .ant-checkbox-wrapper {
+  margin: 0;
+}
+
+.role-permissions-table .ant-btn-sm {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 11px;
+  line-height: 22px;
+}
+
+/* Checkbox Blue Styling */
+.permissions-drawer [data-state="checked"] {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+.permissions-drawer [data-state="checked"]:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+.permissions-drawer [data-state="unchecked"]:hover {
+  border-color: #3b82f6 !important;
+}
+
+/* Ensure checkboxes maintain blue color */
+.permissions-drawer .checkbox-blue {
+  accent-color: #3b82f6;
+}
+
+.permissions-drawer input[type="checkbox"]:checked {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
+
+.permissions-drawer input[type="checkbox"]:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Module Cards Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+
 
 /* Custom animations for lock screen */
 @keyframes fade-in {

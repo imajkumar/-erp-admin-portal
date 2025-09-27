@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,9 +28,18 @@ import {
 
 export default function SettingsPage() {
   const [activeMenuItem, setActiveMenuItem] = useState("erp-settings");
+  const router = useRouter();
 
   const handleItemClick = (item: string) => {
     setActiveMenuItem(item);
+  };
+
+  const handleModuleClick = () => {
+    router.push('/dashboard/settings/modules');
+  };
+
+  const handleRolePermissionsClick = () => {
+    router.push('/dashboard/settings/roles-permissions');
   };
 
   const settingsCategories = [
@@ -40,7 +50,9 @@ export default function SettingsPage() {
       color: "bg-blue-50 border-blue-200",
       iconColor: "text-blue-600",
       items: [
+        { name: "Modules", icon: Shield, description: "Manage modules and features" },
         { name: "Role & Permissions", icon: Shield, description: "Manage user roles and access control" },
+
         { name: "User Management", icon: Users, description: "Add, edit, and manage system users" },
         { name: "System Logs", icon: FileText, description: "View system activity and audit logs" }
       ]
@@ -162,6 +174,7 @@ export default function SettingsPage() {
                     {category.items.map((item, itemIndex) => (
                       <div 
                         key={itemIndex}
+                        onClick={item.name === "Modules" ? handleModuleClick : item.name === "Role & Permissions" ? handleRolePermissionsClick : undefined}
                         className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors cursor-pointer group"
                       >
                         <div className="flex items-center space-x-3">

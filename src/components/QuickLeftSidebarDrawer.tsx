@@ -33,23 +33,23 @@ interface QuickLeftSidebarDrawerProps {
 }
 
 const appItems = [
-  { id: 'home', name: 'Home', icon: Home, color: 'bg-blue-500', description: 'Main dashboard' },
-  { id: 'users', name: 'Users', icon: Users, color: 'bg-purple-500', description: 'User management' },
-  { id: 'sales', name: 'Sales', icon: ShoppingCart, color: 'bg-green-500', description: 'Sales tracking' },
-  { id: 'reports', name: 'Reports', icon: BarChart3, color: 'bg-yellow-500', description: 'Analytics & reports' },
-  { id: 'calendar', name: 'Calendar', icon: Calendar, color: 'bg-orange-500', description: 'Schedule & events' },
-  { id: 'mail', name: 'Mail', icon: Mail, color: 'bg-red-500', description: 'Email management' },
-  { id: 'files', name: 'Files', icon: FileText, color: 'bg-indigo-500', description: 'Document storage' },
-  { id: 'settings', name: 'Settings', icon: Settings, color: 'bg-gray-500', description: 'System settings' },
-  { id: 'notifications', name: 'Notifications', icon: Bell, color: 'bg-pink-500', description: 'Alerts & updates' },
-  { id: 'help', name: 'Help', icon: HelpCircle, color: 'bg-teal-500', description: 'Support center' },
-  { id: 'company', name: 'Company', icon: Building2, color: 'bg-cyan-500', description: 'Organization info' },
-  { id: 'automation', name: 'Automation', icon: Zap, color: 'bg-emerald-500', description: 'Workflow automation' },
-  { id: 'security', name: 'Security', icon: Shield, color: 'bg-rose-500', description: 'Security center' },
-  { id: 'inventory', name: 'Inventory', icon: Package, color: 'bg-amber-500', description: 'Stock management' },
-  { id: 'messages', name: 'Messages', icon: MessageSquare, color: 'bg-violet-500', description: 'Team communication' },
-  { id: 'tasks', name: 'Tasks', icon: CheckSquare, color: 'bg-lime-500', description: 'Task management' },
-  { id: 'bugs', name: 'Bugs', icon: Bug, color: 'bg-red-600', description: 'Issue tracking' }
+  { id: 'home', name: 'Home', icon: Home, description: 'Main dashboard' },
+  { id: 'users', name: 'Users', icon: Users, description: 'User management' },
+  { id: 'sales', name: 'Sales', icon: ShoppingCart, description: 'Sales tracking' },
+  { id: 'reports', name: 'Reports', icon: BarChart3, description: 'Analytics & reports' },
+  { id: 'calendar', name: 'Calendar', icon: Calendar, description: 'Schedule & events' },
+  { id: 'mail', name: 'Mail', icon: Mail, description: 'Email management' },
+  { id: 'files', name: 'Files', icon: FileText, description: 'Document storage' },
+  { id: 'settings', name: 'Settings', icon: Settings, description: 'System settings' },
+  { id: 'notifications', name: 'Notifications', icon: Bell, description: 'Alerts & updates' },
+  { id: 'help', name: 'Help', icon: HelpCircle, description: 'Support center' },
+  { id: 'company', name: 'Company', icon: Building2, description: 'Organization info' },
+  { id: 'automation', name: 'Automation', icon: Zap, description: 'Workflow automation' },
+  { id: 'security', name: 'Security', icon: Shield, description: 'Security center' },
+  { id: 'inventory', name: 'Inventory', icon: Package, description: 'Stock management' },
+  { id: 'messages', name: 'Messages', icon: MessageSquare, description: 'Team communication' },
+  { id: 'tasks', name: 'Tasks', icon: CheckSquare, description: 'Task management' },
+  { id: 'bugs', name: 'Bugs', icon: Bug, description: 'Issue tracking' }
 ];
 
 export default function QuickLeftSidebarDrawer({ isOpen, onClose }: QuickLeftSidebarDrawerProps) {
@@ -101,8 +101,8 @@ export default function QuickLeftSidebarDrawer({ isOpen, onClose }: QuickLeftSid
                   <Card key={item.id} className="cursor-pointer hover:shadow-md transition-shadow duration-200">
                     <CardContent className="p-3">
                       <div className="flex items-center space-x-3">
-                        <div className={`w-8 h-8 ${item.color} rounded-lg flex items-center justify-center`}>
-                          <item.icon className="h-4 w-4 text-white" />
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <item.icon className="h-4 w-4 text-gray-600" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
@@ -124,8 +124,8 @@ export default function QuickLeftSidebarDrawer({ isOpen, onClose }: QuickLeftSid
                     key={item.id}
                     className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200"
                   >
-                    <div className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center`}>
-                      <item.icon className="h-5 w-5 text-white" />
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <item.icon className="h-5 w-5 text-gray-600" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900">{item.name}</p>

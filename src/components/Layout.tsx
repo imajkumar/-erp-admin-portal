@@ -8,7 +8,8 @@ import LeftQuickSidebar from "./LeftQuickSidebar";
 import RightQuickSidebar from "./RightQuickSidebar";
 import QuickLeftSidebarDrawer from "./QuickLeftSidebarDrawer";
 import Footer from "./Footer";
-import SearchModal from "./Search";
+import SearchSuggestions from "./SearchSuggestions";
+import NotificationDrawer from "./NotificationDrawer";
 import LockScreen from "./LockScreen";
 import ScrollToTop from "./ScrollToTop";
 import { useInactivityTimer } from "@/hooks/useInactivityTimer";
@@ -26,6 +27,7 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
   const [rightQuickSidebar, setRightQuickSidebar] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [user, setUser] = useState<any>(null);
 
@@ -42,10 +44,28 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
     }
   }, []);
 
+  // Keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleItemClick = (item: string) => {
     // Handle navigation for specific items
     if (item === 'erp-settings') {
       router.push('/dashboard/settings');
+      return;
+    }
+    
+    if (item === 'users') {
+      router.push('/dashboard/users');
       return;
     }
     
@@ -70,6 +90,7 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
         onSearchClick={() => setSearchOpen(true)}
         onDrawerToggle={() => setDrawerOpen(!drawerOpen)}
+        onNotificationClick={() => setNotificationOpen(!notificationOpen)}
         onLockScreen={() => setIsLocked(true)}
         sidebarOpen={sidebarOpen}
       />
@@ -116,12 +137,16 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
       {/* Footer */}
       <Footer />
 
-      {/* Modals */}
-      <SearchModal
+      {/* Search Suggestions */}
+      <SearchSuggestions
         isOpen={searchOpen}
         onClose={() => setSearchOpen(false)}
-        searchQuery=""
-        onSearchChange={() => {}}
+      />
+
+      {/* Notification Drawer */}
+      <NotificationDrawer
+        isOpen={notificationOpen}
+        onClose={() => setNotificationOpen(false)}
       />
 
       {/* Scroll to Top Button */}
