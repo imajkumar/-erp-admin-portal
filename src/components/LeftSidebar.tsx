@@ -56,31 +56,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  {
-    id: 'dashboards',
-    label: 'Dashboards',
-    icon: Grid3X3,
-    children: [
-      { id: 'dashboard', label: 'Default', icon: BarChart3 },
-      { id: 'ecommerce', label: 'eCommerce', icon: ShoppingCart },
-      { id: 'projects', label: 'Projects', icon: FolderOpen },
-      { id: 'online-courses', label: 'Online Courses', icon: FileText },
-      { id: 'marketing', label: 'Marketing', icon: TrendingUp },
-      { id: 'bidding', label: 'Bidding', icon: DollarSign },
-      { id: 'pos-system', label: 'POS System', icon: CreditCard },
-      { id: 'call-center', label: 'Call Center', icon: MessageSquare },
-      { id: 'logistics', label: 'Logistics', icon: Package },
-      { id: 'website-analytics', label: 'Website Analytics', icon: Activity },
-      { id: 'finance-performance', label: 'Finance Performance', icon: PieChart },
-      { id: 'store-analytics', label: 'Store Analytics', icon: BarChart3 },
-      { id: 'social', label: 'Social', icon: Users },
-      { id: 'delivery', label: 'Delivery', icon: Package },
-      { id: 'crypto', label: 'Crypto', icon: Zap },
-      { id: 'school', label: 'School', icon: FileText },
-      { id: 'podcast', label: 'Podcast', icon: MessageSquare },
-      { id: 'landing', label: 'Landing', icon: Home }
-    ]
-  },
+
   {
     id: 'pages',
     label: 'Pages',
@@ -218,7 +194,7 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
   if (!isOpen) return null;
 
   return (
-        <aside className="fixed left-0 w-64 h-[calc(100vh-45px)] z-40 bg-gray-900 border-r border-gray-700" style={{ top: '45px' }}>
+        <aside className="fixed left-12 w-64 h-[calc(100vh-45px)] z-30 bg-gray-900 border-r border-gray-700" style={{ top: '45px' }}>
       <div className="flex flex-col h-full">
 
         {/* Quick Search */}

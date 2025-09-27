@@ -65,10 +65,10 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
 
           {/* Main Content Area */}
           <div className="flex">
-        {/* Left Quick Sidebar */}
+        {/* Left Quick Sidebar - Always Visible */}
         <LeftQuickSidebar
-          isOpen={leftQuickSidebar}
-          onToggle={() => setLeftQuickSidebar(!leftQuickSidebar)}
+          isOpen={true}
+          onToggle={() => {}}
           activeItem={activeItem}
           onItemClick={handleItemClick}
         />
@@ -84,10 +84,8 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         {/* Main Content */}
         <div 
           className={`flex-1 transition-all duration-200 ease-in-out ${
-            sidebarOpen ? 'ml-64' : 'ml-12'
-          } ${leftQuickSidebar ? 'ml-12' : 'ml-0'} ${
-            rightQuickSidebar ? 'mr-12' : 'mr-0'
-          }`}
+            sidebarOpen ? 'ml-80' : 'ml-12'
+          } ${rightQuickSidebar ? 'mr-12' : 'mr-0'}`}
           style={{ paddingTop: '45px' }}
         >
           {children}

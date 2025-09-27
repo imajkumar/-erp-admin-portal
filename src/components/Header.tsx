@@ -83,7 +83,9 @@ export default function Header({
               </div>
             </button>
             
-            <h1 className="text-xs font-semibold text-white">ERP Admin</h1>
+           
+            
+            <h1 className="text-xs font-semibold text-white ml-2">ERP Admin</h1>
             <p className="text-xs text-blue-100">Next.js + ShadcnUI</p>
           </div>
         </div>
