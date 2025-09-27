@@ -30,6 +30,10 @@ import {
   X,
   FileText,
   ShoppingCart,
+  User,
+  AtSign,
+  MessageSquare,
+  Forward,
 } from "lucide-react";
 import {
   Table,
@@ -264,6 +268,71 @@ export default function InboxPage() {
     priority: "normal" as Email["priority"],
   });
   const [activeTab, setActiveTab] = useState("all");
+  const [newComment, setNewComment] = useState("");
+  const [commentMention, setCommentMention] = useState("");
+  const [showMentionDropdown, setShowMentionDropdown] = useState(false);
+  const [comments, setComments] = useState<
+    Array<{
+      id: string;
+      author: string;
+      authorEmail: string;
+      content: string;
+      timestamp: string;
+      mentions: string[];
+    }>
+  >([]);
+
+  // Mock users for mentions
+  const mentionUsers = [
+    {
+      id: "1",
+      name: "John Smith",
+      email: "john.smith@company.com",
+      username: "john.smith",
+    },
+    {
+      id: "2",
+      name: "Sarah Johnson",
+      email: "sarah.j@techcorp.com",
+      username: "sarah.j",
+    },
+    {
+      id: "3",
+      name: "Mike Chen",
+      email: "mike.chen@startup.io",
+      username: "mike.chen",
+    },
+    {
+      id: "4",
+      name: "Emily Davis",
+      email: "emily.davis@enterprise.com",
+      username: "emily.davis",
+    },
+    {
+      id: "5",
+      name: "David Wilson",
+      email: "d.wilson@business.net",
+      username: "d.wilson",
+    },
+    {
+      id: "6",
+      name: "Lisa Brown",
+      email: "lisa.brown@corp.org",
+      username: "lisa.brown",
+    },
+    {
+      id: "7",
+      name: "Tom Anderson",
+      email: "tom.anderson@company.com",
+      username: "tom.anderson",
+    },
+    {
+      id: "8",
+      name: "Anna Garcia",
+      email: "anna.garcia@tech.com",
+      username: "anna.garcia",
+    },
+  ];
 
   useEffect(() => {
     // Simulate loading
@@ -466,6 +535,73 @@ export default function InboxPage() {
     });
     message.success("Email sent successfully");
   };
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) {
+      message.error("Please enter a comment");
+      return;
+    }
+
+    const mentions = newComment.match(/@\w+/g) || [];
+    const newCommentObj = {
+      id: Date.now().toString(),
+      author: "You",
+      authorEmail: "admin@erp.com",
+      content: newComment,
+      timestamp: new Date().toISOString(),
+      mentions: mentions.map((mention) => mention.substring(1)),
+    };
+
+    setComments((prev) => [...prev, newCommentObj]);
+    setNewComment("");
+
+    // Send notifications to mentioned users
+    if (mentions.length > 0) {
+      message.success(`Comment added and ${mentions.length} user(s) notified`);
+    } else {
+      message.success("Comment added");
+    }
+  };
+
+  const handleMentionInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setNewComment(value);
+
+    const cursorPos = e.target.selectionStart;
+    const textBeforeCursor = value.substring(0, cursorPos);
+    const lastAtIndex = textBeforeCursor.lastIndexOf("@");
+
+    if (lastAtIndex !== -1) {
+      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+      if (!textAfterAt.includes(" ")) {
+        setCommentMention(textAfterAt);
+        setShowMentionDropdown(true);
+        return;
+      }
+    }
+
+    setShowMentionDropdown(false);
+  };
+
+  const insertMention = (username: string) => {
+    const cursorPos = newComment.lastIndexOf("@" + commentMention);
+    const beforeMention = newComment.substring(0, cursorPos);
+    const afterMention = newComment.substring(
+      cursorPos + commentMention.length + 1,
+    );
+
+    setNewComment(beforeMention + "@" + username + " " + afterMention);
+    setShowMentionDropdown(false);
+    setCommentMention("");
+  };
+
+  // Filter users based on mention input
+  const filteredMentionUsers = mentionUsers.filter(
+    (user) =>
+      user.name.toLowerCase().includes(commentMention.toLowerCase()) ||
+      user.email.toLowerCase().includes(commentMention.toLowerCase()) ||
+      user.username.toLowerCase().includes(commentMention.toLowerCase()),
+  );
 
   const getPriorityColor = (priority: Email["priority"]) => {
     switch (priority) {
@@ -819,11 +955,12 @@ export default function InboxPage() {
                 placement="right"
                 onClose={() => setEmailDrawerVisible(false)}
                 open={emailDrawerVisible}
-                width="33.333333%"
+                width="50%"
                 className="email-drawer"
               >
                 {selectedEmail && (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
+                    {/* Header with Actions */}
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3">
                         <Avatar size="large" src={selectedEmail.sender.avatar}>
@@ -864,6 +1001,11 @@ export default function InboxPage() {
                         <Button
                           type="text"
                           size="small"
+                          icon={<Forward className="h-4 w-4" />}
+                        />
+                        <Button
+                          type="text"
+                          size="small"
                           icon={<Trash2 className="h-4 w-4" />}
                           onClick={() => handleDelete([selectedEmail.id])}
                         />
@@ -872,8 +1014,9 @@ export default function InboxPage() {
 
                     <Divider />
 
+                    {/* Subject and Metadata */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">
                         {selectedEmail.subject}
                       </h3>
                       <div className="flex items-center space-x-2 mb-4">
@@ -895,12 +1038,47 @@ export default function InboxPage() {
 
                     <Divider />
 
+                    {/* Recipients Details */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        Recipients
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-gray-500 w-12">To:</span>
+                          <span className="text-gray-700">
+                            {selectedEmail.recipients.join(", ")}
+                          </span>
+                        </div>
+                        {selectedEmail.cc && selectedEmail.cc.length > 0 && (
+                          <div className="flex items-center space-x-2">
+                            <span className="text-gray-500 w-12">CC:</span>
+                            <span className="text-gray-700">
+                              {selectedEmail.cc.join(", ")}
+                            </span>
+                          </div>
+                        )}
+                        {selectedEmail.bcc && selectedEmail.bcc.length > 0 && (
+                          <div className="flex items-center space-x-2">
+                            <span className="text-gray-500 w-12">BCC:</span>
+                            <span className="text-gray-700">
+                              {selectedEmail.bcc.join(", ")}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <Divider />
+
+                    {/* Email Body */}
                     <div className="prose max-w-none">
                       <div className="whitespace-pre-wrap text-gray-700">
                         {selectedEmail.body}
                       </div>
                     </div>
 
+                    {/* Attachments */}
                     {selectedEmail.hasAttachments &&
                       selectedEmail.attachments && (
                         <>
@@ -930,6 +1108,136 @@ export default function InboxPage() {
                           </div>
                         </>
                       )}
+
+                    <Divider />
+
+                    {/* Comments Section */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        Comments ({comments.length})
+                      </h4>
+
+                      {/* Add Comment */}
+                      <div className="mb-4">
+                        <div className="relative">
+                          <TextArea
+                            value={newComment}
+                            onChange={handleMentionInput}
+                            placeholder="Add a comment... Use @username to mention someone"
+                            rows={3}
+                            className="resize-none"
+                          />
+                          {showMentionDropdown && (
+                            <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-10 mt-1 max-h-48 overflow-y-auto">
+                              <div className="p-2">
+                                <div className="text-xs text-gray-500 mb-2 font-medium">
+                                  Mention users:
+                                </div>
+                                {filteredMentionUsers.length > 0 ? (
+                                  filteredMentionUsers.map((user) => (
+                                    <div
+                                      key={user.id}
+                                      className="p-3 hover:bg-gray-50 cursor-pointer rounded text-sm border-b border-gray-100 last:border-b-0"
+                                      onClick={() =>
+                                        insertMention(user.username)
+                                      }
+                                    >
+                                      <div className="flex items-center space-x-3">
+                                        <Avatar
+                                          size="small"
+                                          className="bg-blue-500"
+                                        >
+                                          {user.name.charAt(0)}
+                                        </Avatar>
+                                        <div className="flex-1">
+                                          <div className="font-medium text-gray-900">
+                                            {user.name}
+                                          </div>
+                                          <div className="text-xs text-gray-500">
+                                            {user.email}
+                                          </div>
+                                        </div>
+                                        <div className="text-xs text-blue-600 font-medium">
+                                          @{user.username}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="p-2 text-sm text-gray-500 text-center">
+                                    No users found
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex justify-end mt-2">
+                          <Button
+                            type="primary"
+                            size="small"
+                            onClick={handleAddComment}
+                            disabled={!newComment.trim()}
+                          >
+                            <MessageSquare className="h-4 w-4 mr-1" />
+                            Add Comment
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Comments List */}
+                      <div className="space-y-4 max-h-96 overflow-y-auto">
+                        {comments.map((comment) => (
+                          <div
+                            key={comment.id}
+                            className="border-l-2 border-blue-200 pl-4"
+                          >
+                            <div className="flex items-start space-x-2 mb-2">
+                              <Avatar size="small" className="bg-blue-500">
+                                {comment.author.charAt(0)}
+                              </Avatar>
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-2">
+                                  <span className="font-medium text-gray-900">
+                                    {comment.author}
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    {dayjs(comment.timestamp).format(
+                                      "MMM DD, h:mm A",
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="text-sm text-gray-600 mt-1">
+                                  {comment.content
+                                    .split(/(@\w+)/g)
+                                    .map((part, index) =>
+                                      part.startsWith("@") ? (
+                                        <span
+                                          key={index}
+                                          className="text-blue-600 font-medium"
+                                        >
+                                          {part}
+                                        </span>
+                                      ) : (
+                                        part
+                                      ),
+                                    )}
+                                </div>
+                                {comment.mentions.length > 0 && (
+                                  <div className="flex items-center space-x-1 mt-1">
+                                    <AtSign className="h-3 w-3 text-gray-400" />
+                                    <span className="text-xs text-gray-500">
+                                      Mentioned: {comment.mentions.join(", ")}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
               </Drawer>
