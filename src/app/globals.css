@@ -419,6 +419,35 @@
   line-height: 22px;
 }
 
+/* Email Drawer Custom Styles */
+.email-drawer .ant-drawer-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 24px;
+  background: #ffffff;
+}
+
+.email-drawer .ant-drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.email-drawer .ant-drawer-body {
+  padding: 24px;
+  background: #f8fafc;
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.email-drawer .ant-drawer-close {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.email-drawer .ant-drawer-close:hover {
+  color: #374151;
+}
+
 /* Checkbox Blue Styling */
 .permissions-drawer [data-state="checked"] {
   background-color: #3b82f6;

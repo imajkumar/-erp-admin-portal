@@ -78,6 +78,11 @@ export default function AdminLayout({
       return;
     }
 
+    if (item === "inbox") {
+      router.push("/dashboard/inbox");
+      return;
+    }
+
     if (onItemClick) {
       onItemClick(item);
     }
@@ -100,6 +105,7 @@ export default function AdminLayout({
         onSearchClick={() => setSearchOpen(true)}
         onDrawerToggle={() => setDrawerOpen(!drawerOpen)}
         onNotificationClick={() => setNotificationOpen(!notificationOpen)}
+        onInboxClick={() => handleItemClick("inbox")}
         onLockScreen={() => setIsLocked(true)}
         sidebarOpen={sidebarOpen}
       />

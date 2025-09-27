@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   Lock,
   LogOut,
+  Mail,
   MessageSquare,
   RefreshCw,
   Search,
@@ -44,6 +45,7 @@ interface HeaderProps {
   onSearchClick: () => void;
   onDrawerToggle: () => void;
   onNotificationClick: () => void;
+  onInboxClick: () => void;
   onLockScreen: () => void;
   sidebarOpen: boolean;
 }
@@ -54,6 +56,7 @@ export default function Header({
   onSearchClick,
   onDrawerToggle,
   onNotificationClick,
+  onInboxClick,
   onLockScreen,
   sidebarOpen,
 }: HeaderProps) {
@@ -202,14 +205,15 @@ export default function Header({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Refresh */}
+          {/* Inbox */}
           <Button
             variant="ghost"
             size="sm"
             className="text-gray-700 hover:bg-gray-100 p-0.5 h-7 w-7"
-            title="Refresh"
+            title="Inbox"
+            onClick={onInboxClick}
           >
-            <RefreshCw className="h-3 w-3" />
+            <Mail className="h-3 w-3" />
           </Button>
 
           {/* Separator */}
