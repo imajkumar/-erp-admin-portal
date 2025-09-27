@@ -47,6 +47,7 @@ import {
   Spin,
   Drawer,
   Divider,
+  Tabs,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { RangePickerProps } from "antd/es/date-picker";
@@ -226,6 +227,7 @@ export default function InboxPage() {
     body: "",
     priority: "normal" as Email["priority"],
   });
+  const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
     // Simulate loading
@@ -572,17 +574,34 @@ export default function InboxPage() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           <MainContent>
-            <div className="p-6">
-              {/* Header */}
-              <div className="mb-6">
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                    <Mail className="h-8 w-8 mr-3 text-blue-600" />
+            <div className="p-4">
+              {/* Header with Tabs */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h1 className="text-xl font-bold text-gray-900 flex items-center">
+                    <Mail className="h-6 w-6 mr-2 text-blue-600" />
                     {folderFilter.charAt(0).toUpperCase() +
                       folderFilter.slice(1)}
                   </h1>
-                  <p className="text-gray-600 mt-1">Manage your emails</p>
                 </div>
+                <Tabs
+                  activeKey={activeTab}
+                  onChange={setActiveTab}
+                  items={[
+                    {
+                      key: "all",
+                      label: "All",
+                    },
+                    {
+                      key: "order",
+                      label: "Order",
+                    },
+                    {
+                      key: "sample",
+                      label: "Sample",
+                    },
+                  ]}
+                />
               </div>
 
               {/* Filters */}
