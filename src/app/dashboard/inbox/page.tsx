@@ -54,7 +54,9 @@ import {
   Drawer,
   Divider,
   Tabs,
+  Tooltip,
 } from "antd";
+import { Editor } from "@tinymce/tinymce-react";
 import type { ColumnsType } from "antd/es/table";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
@@ -271,6 +273,8 @@ export default function InboxPage() {
   const [newComment, setNewComment] = useState("");
   const [commentMention, setCommentMention] = useState("");
   const [showMentionDropdown, setShowMentionDropdown] = useState(false);
+  const [showMarkdownHelp, setShowMarkdownHelp] = useState(false);
+  const [editorContent, setEditorContent] = useState("");
   const [comments, setComments] = useState<
     Array<{
       id: string;
@@ -537,23 +541,30 @@ export default function InboxPage() {
   };
 
   const handleAddComment = () => {
-    if (!newComment.trim()) {
+    if (!editorContent.trim()) {
       message.error("Please enter a comment");
       return;
     }
 
-    const mentions = newComment.match(/@\w+/g) || [];
+    // Extract mentions from HTML content
+    const mentionRegex = /@(\w+)/g;
+    const mentions: string[] = [];
+    let match;
+    while ((match = mentionRegex.exec(editorContent)) !== null) {
+      mentions.push(match[1]);
+    }
+
     const newCommentObj = {
       id: Date.now().toString(),
       author: "You",
       authorEmail: "admin@erp.com",
-      content: newComment,
+      content: editorContent,
       timestamp: new Date().toISOString(),
-      mentions: mentions.map((mention) => mention.substring(1)),
+      mentions: mentions,
     };
 
     setComments((prev) => [...prev, newCommentObj]);
-    setNewComment("");
+    setEditorContent("");
 
     // Send notifications to mentioned users
     if (mentions.length > 0) {
@@ -563,20 +574,26 @@ export default function InboxPage() {
     }
   };
 
-  const handleMentionInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setNewComment(value);
+  const handleEditorChange = (content: string) => {
+    setEditorContent(content);
 
-    const cursorPos = e.target.selectionStart;
-    const textBeforeCursor = value.substring(0, cursorPos);
-    const lastAtIndex = textBeforeCursor.lastIndexOf("@");
+    // Check for @ mentions
+    const cursorPos = content.lastIndexOf("@");
+    if (cursorPos !== -1) {
+      const textAfterAt = content.substring(cursorPos + 1);
+      const nextSpace = textAfterAt.indexOf(" ");
+      const nextTag = textAfterAt.indexOf("<");
 
-    if (lastAtIndex !== -1) {
-      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
-      if (!textAfterAt.includes(" ")) {
-        setCommentMention(textAfterAt);
-        setShowMentionDropdown(true);
-        return;
+      if (nextSpace === -1 || (nextTag !== -1 && nextTag < nextSpace)) {
+        const mentionText =
+          nextSpace === -1
+            ? textAfterAt.substring(0, nextTag)
+            : textAfterAt.substring(0, nextSpace);
+        if (mentionText.length > 0 && mentionText.length < 20) {
+          setCommentMention(mentionText);
+          setShowMentionDropdown(true);
+          return;
+        }
       }
     }
 
@@ -584,13 +601,15 @@ export default function InboxPage() {
   };
 
   const insertMention = (username: string) => {
-    const cursorPos = newComment.lastIndexOf("@" + commentMention);
-    const beforeMention = newComment.substring(0, cursorPos);
-    const afterMention = newComment.substring(
+    const currentContent = editorContent;
+    const cursorPos = currentContent.lastIndexOf("@" + commentMention);
+    const beforeMention = currentContent.substring(0, cursorPos);
+    const afterMention = currentContent.substring(
       cursorPos + commentMention.length + 1,
     );
 
-    setNewComment(beforeMention + "@" + username + " " + afterMention);
+    const newContent = beforeMention + "@" + username + " " + afterMention;
+    setEditorContent(newContent);
     setShowMentionDropdown(false);
     setCommentMention("");
   };
@@ -602,6 +621,11 @@ export default function InboxPage() {
       user.email.toLowerCase().includes(commentMention.toLowerCase()) ||
       user.username.toLowerCase().includes(commentMention.toLowerCase()),
   );
+
+  // Render HTML content for comments
+  const renderCommentContent = (content: string) => {
+    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+  };
 
   const getPriorityColor = (priority: Email["priority"]) => {
     switch (priority) {
@@ -1121,13 +1145,65 @@ export default function InboxPage() {
                       {/* Add Comment */}
                       <div className="mb-4">
                         <div className="relative">
-                          <TextArea
-                            value={newComment}
-                            onChange={handleMentionInput}
-                            placeholder="Add a comment... Use @username to mention someone"
-                            rows={3}
-                            className="resize-none"
-                          />
+                          <div className="border border-gray-200 rounded-md">
+                            <Editor
+                              apiKey="no-api-key" // You can add your TinyMCE API key here
+                              value={editorContent}
+                              onEditorChange={handleEditorChange}
+                              init={{
+                                height: 200,
+                                menubar: false,
+                                plugins: [
+                                  "advlist",
+                                  "autolink",
+                                  "lists",
+                                  "link",
+                                  "image",
+                                  "charmap",
+                                  "preview",
+                                  "anchor",
+                                  "searchreplace",
+                                  "visualblocks",
+                                  "code",
+                                  "fullscreen",
+                                  "insertdatetime",
+                                  "media",
+                                  "table",
+                                  "help",
+                                  "wordcount",
+                                  "mentions",
+                                ],
+                                toolbar:
+                                  "undo redo | blocks | " +
+                                  "bold italic forecolor | alignleft aligncenter " +
+                                  "alignright alignjustify | bullist numlist outdent indent | " +
+                                  "removeformat | help | @",
+                                content_style:
+                                  "body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }",
+                                placeholder:
+                                  "Add a comment... Use @username to mention someone",
+                                mentions: {
+                                  source: filteredMentionUsers.map((user) => ({
+                                    name: user.name,
+                                    value: user.username,
+                                    email: user.email,
+                                  })),
+                                  render: (item: any) => `
+                                    <div class="flex items-center space-x-2 p-2">
+                                      <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
+                                        ${item.name.charAt(0)}
+                                      </div>
+                                      <div>
+                                        <div class="font-medium">${item.name}</div>
+                                        <div class="text-xs text-gray-500">${item.email}</div>
+                                      </div>
+                                    </div>
+                                  `,
+                                },
+                              }}
+                            />
+                          </div>
+
                           {showMentionDropdown && (
                             <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-10 mt-1 max-h-48 overflow-y-auto">
                               <div className="p-2">
@@ -1173,12 +1249,17 @@ export default function InboxPage() {
                             </div>
                           )}
                         </div>
-                        <div className="flex justify-end mt-2">
+
+                        <div className="flex justify-between items-center mt-2">
+                          <div className="text-xs text-gray-500">
+                            Use @ to mention users • Rich text editor with full
+                            formatting
+                          </div>
                           <Button
                             type="primary"
                             size="small"
                             onClick={handleAddComment}
-                            disabled={!newComment.trim()}
+                            disabled={!editorContent.trim()}
                           >
                             <MessageSquare className="h-4 w-4 mr-1" />
                             Add Comment
@@ -1208,21 +1289,8 @@ export default function InboxPage() {
                                     )}
                                   </span>
                                 </div>
-                                <div className="text-sm text-gray-600 mt-1">
-                                  {comment.content
-                                    .split(/(@\w+)/g)
-                                    .map((part, index) =>
-                                      part.startsWith("@") ? (
-                                        <span
-                                          key={index}
-                                          className="text-blue-600 font-medium"
-                                        >
-                                          {part}
-                                        </span>
-                                      ) : (
-                                        part
-                                      ),
-                                    )}
+                                <div className="text-sm text-gray-600 mt-1 prose prose-sm max-w-none">
+                                  {renderCommentContent(comment.content)}
                                 </div>
                                 {comment.mentions.length > 0 && (
                                   <div className="flex items-center space-x-1 mt-1">
