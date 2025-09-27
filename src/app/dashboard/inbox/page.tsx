@@ -672,12 +672,11 @@ export default function InboxPage() {
                 <Tabs
                   activeKey={activeTab}
                   onChange={setActiveTab}
-                  className="custom-tabs"
                   items={[
                     {
                       key: "all",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-blue-100">
+                        <span className="flex items-center space-x-2">
                           <Inbox className="h-4 w-4" />
                           <span>All</span>
                         </span>
@@ -686,7 +685,7 @@ export default function InboxPage() {
                     {
                       key: "order",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-green-100">
+                        <span className="flex items-center space-x-2">
                           <ShoppingCart className="h-4 w-4" />
                           <span>Order</span>
                         </span>
@@ -695,7 +694,7 @@ export default function InboxPage() {
                     {
                       key: "sample",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-purple-100">
+                        <span className="flex items-center space-x-2">
                           <FileText className="h-4 w-4" />
                           <span>Sample</span>
                         </span>
@@ -704,7 +703,7 @@ export default function InboxPage() {
                     {
                       key: "inventory",
                       label: (
-                        <span className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-orange-100">
+                        <span className="flex items-center space-x-2">
                           <FileText className="h-4 w-4" />
                           <span>Inventory</span>
                         </span>
