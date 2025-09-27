@@ -794,13 +794,14 @@ export default function InboxPage() {
                   loading={loading}
                   pagination={{
                     total: filteredEmails.length,
-                    pageSize: 20,
+                    pageSize: 10,
                     showSizeChanger: true,
                     showQuickJumper: true,
                     showTotal: (total, range) =>
                       `${range[0]}-${range[1]} of ${total} emails`,
+                    pageSizeOptions: ["10", "20", "50", "100"],
                   }}
-                  scroll={{ x: 800 }}
+                  scroll={{ x: 800, y: 600 }}
                   locale={{
                     emptyText: (
                       <Empty
