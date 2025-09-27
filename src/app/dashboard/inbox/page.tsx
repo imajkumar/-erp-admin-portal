@@ -57,10 +57,11 @@ import {
   Tooltip,
 } from "antd";
 import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-// Dynamically import ReactQuill to avoid SSR issues
-const ReactQuill = dynamic(() => import("react-quill"), {
+// Dynamically import MDEditor to avoid SSR issues
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
   loading: () => (
     <div className="h-[200px] border border-gray-200 rounded-md flex items-center justify-center text-gray-500">
@@ -637,38 +638,87 @@ export default function InboxPage() {
       user.username.toLowerCase().includes(commentMention.toLowerCase()),
   );
 
-  // React Quill configuration
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ color: [] }, { background: [] }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ align: [] }],
-      ["link", "blockquote", "code-block"],
-      ["clean"],
-    ],
-  };
+  // MDEditor configuration
+  const editorHeight = 200;
 
-  const quillFormats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "color",
-    "background",
-    "list",
-    "bullet",
-    "align",
-    "link",
-    "blockquote",
-    "code-block",
-  ];
-
-  // Render HTML content for comments
+  // Render markdown content for comments
   const renderCommentContent = (content: string) => {
-    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+    return (
+      <div className="prose prose-sm max-w-none">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            // Custom styling for mentions
+            p: ({ children, ...props }) => {
+              const text = children?.toString() || "";
+              if (text.includes("@")) {
+                const parts = text.split(/(@\w+)/g);
+                return (
+                  <p {...props}>
+                    {parts.map((part, index) =>
+                      part.startsWith("@") ? (
+                        <span key={index} className="text-blue-600 font-medium">
+                          {part}
+                        </span>
+                      ) : (
+                        part
+                      ),
+                    )}
+                  </p>
+                );
+              }
+              return <p {...props}>{children}</p>;
+            },
+            // Custom styling for other elements
+            strong: ({ children }) => (
+              <strong className="font-semibold">{children}</strong>
+            ),
+            em: ({ children }) => <em className="italic">{children}</em>,
+            code: ({ children }) => (
+              <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">
+                {children}
+              </code>
+            ),
+            h1: ({ children }) => (
+              <h1 className="text-xl font-bold mt-4 mb-2">{children}</h1>
+            ),
+            h2: ({ children }) => (
+              <h2 className="text-lg font-semibold mt-3 mb-2">{children}</h2>
+            ),
+            h3: ({ children }) => (
+              <h3 className="text-base font-semibold mt-2 mb-1">{children}</h3>
+            ),
+            ul: ({ children }) => (
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                {children}
+              </ul>
+            ),
+            ol: ({ children }) => (
+              <ol className="list-decimal list-inside space-y-1 ml-4">
+                {children}
+              </ol>
+            ),
+            blockquote: ({ children }) => (
+              <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-600">
+                {children}
+              </blockquote>
+            ),
+            a: ({ children, href }) => (
+              <a
+                href={href}
+                className="text-blue-600 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {children}
+              </a>
+            ),
+          }}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    );
   };
 
   const getPriorityColor = (priority: Email["priority"]) => {
@@ -1191,18 +1241,24 @@ export default function InboxPage() {
                         <div className="relative">
                           <div className="border border-gray-200 rounded-md">
                             {isEditorMounted ? (
-                              <ReactQuill
-                                theme="snow"
+                              <MDEditor
                                 value={editorContent}
-                                onChange={handleEditorChange}
-                                modules={quillModules}
-                                formats={quillFormats}
-                                placeholder="Add a comment... Use @username to mention someone"
-                                style={{
-                                  height: "200px",
-                                  fontFamily:
-                                    "-apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif",
-                                  fontSize: "14px",
+                                onChange={(val) =>
+                                  handleEditorChange(val || "")
+                                }
+                                height={editorHeight}
+                                data-color-mode="light"
+                                preview="edit"
+                                hideToolbar={false}
+                                visibleDragbar={false}
+                                textareaProps={{
+                                  placeholder:
+                                    "Add a comment... Use @username to mention someone. Supports **bold**, *italic*, ~~strikethrough~~, `code`, [links](url), # headers, and lists",
+                                  style: {
+                                    fontSize: 14,
+                                    fontFamily:
+                                      "-apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif",
+                                  },
                                 }}
                               />
                             ) : (
