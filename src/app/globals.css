@@ -768,3 +768,51 @@
 .animate-ripple {
   animation: ripple 0.6s ease-out;
 }
+
+/* Theme Variables */
+:root {
+  --theme-primary: #3b82f6; /* blue-500 */
+  --theme-primary-hover: #2563eb; /* blue-600 */
+  --theme-accent: #3b82f6; /* blue-500 */
+}
+
+[data-theme="default"] {
+  --theme-primary: #6b7280; /* gray-500 */
+  --theme-primary-hover: #4b5563; /* gray-600 */
+  --theme-accent: #6b7280; /* gray-500 */
+}
+
+[data-theme="blue"] {
+  --theme-primary: #3b82f6; /* blue-500 */
+  --theme-primary-hover: #2563eb; /* blue-600 */
+  --theme-accent: #3b82f6; /* blue-500 */
+}
+
+[data-theme="green"] {
+  --theme-primary: #10b981; /* emerald-500 */
+  --theme-primary-hover: #059669; /* emerald-600 */
+  --theme-accent: #10b981; /* emerald-500 */
+}
+
+[data-theme="purple"] {
+  --theme-primary: #8b5cf6; /* violet-500 */
+  --theme-primary-hover: #7c3aed; /* violet-600 */
+  --theme-accent: #8b5cf6; /* violet-500 */
+}
+
+/* Theme-aware classes */
+.theme-primary {
+  background-color: var(--theme-primary);
+}
+
+.theme-primary-hover:hover {
+  background-color: var(--theme-primary-hover);
+}
+
+.theme-accent-border {
+  border-color: var(--theme-accent);
+}
+
+.theme-accent-text {
+  color: var(--theme-accent);
+}
