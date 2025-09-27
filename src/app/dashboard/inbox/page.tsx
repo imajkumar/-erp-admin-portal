@@ -563,7 +563,7 @@ export default function InboxPage() {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout forceSidebarClosed={true}>
       <div className="flex h-screen">
         {/* Inbox Sidebar */}
         <InboxSidebar

@@ -18,15 +18,17 @@ interface LayoutProps {
   children: React.ReactNode;
   activeItem?: string;
   onItemClick?: (item: string) => void;
+  forceSidebarClosed?: boolean;
 }
 
 export default function AdminLayout({
   children,
   activeItem = "dashboard",
   onItemClick,
+  forceSidebarClosed = false,
 }: LayoutProps) {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(!forceSidebarClosed);
   const [_leftQuickSidebar, _setLeftQuickSidebar] = useState(true);
   const [rightQuickSidebar, setRightQuickSidebar] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -47,6 +49,13 @@ export default function AdminLayout({
       setUser(JSON.parse(userData));
     }
   }, []);
+
+  // Handle forceSidebarClosed prop changes
+  useEffect(() => {
+    if (forceSidebarClosed) {
+      setSidebarOpen(false);
+    }
+  }, [forceSidebarClosed]);
 
   // Keyboard shortcut for search
   useEffect(() => {
