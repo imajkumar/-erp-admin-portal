@@ -103,6 +103,7 @@ const generateMockEmails = (): Email[] => {
   ];
 
   const subjects = [
+    // General subjects
     "Project Update - Q4 Planning",
     "Meeting Reminder - Tomorrow at 2 PM",
     "Budget Approval Required",
@@ -112,12 +113,47 @@ const generateMockEmails = (): Email[] => {
     "Team Building Event",
     "Quarterly Review Results",
     "Security Alert - Password Reset",
-    "Invoice #12345 - Payment Due",
     "Contract Renewal Discussion",
     "Training Session Invitation",
     "Performance Metrics Report",
     "Holiday Schedule Update",
     "Equipment Request Form",
+
+    // Order-related subjects
+    "Order Confirmation #ORD-001",
+    "Purchase Order Approval Required",
+    "Invoice #12345 - Payment Due",
+    "Order Status Update - Shipped",
+    "Payment Received - Order #ORD-002",
+    "Order Cancellation Request",
+    "Bulk Order Processing",
+    "Order Delivery Confirmation",
+    "Purchase Order Modification",
+    "Order Refund Processed",
+
+    // Sample-related subjects
+    "Sample Product Request",
+    "Demo Session Scheduled",
+    "Trial Period Extension",
+    "Sample Feedback Required",
+    "Test Results Available",
+    "Demo Account Setup",
+    "Sample Product Shipped",
+    "Trial Account Expiring Soon",
+    "Sample Review Meeting",
+    "Demo Environment Access",
+
+    // Inventory-related subjects
+    "Inventory Stock Alert",
+    "Product Stock Update",
+    "Warehouse Inventory Report",
+    "Low Stock Warning - Product ABC",
+    "Inventory Count Scheduled",
+    "Product Restock Notification",
+    "Warehouse Capacity Alert",
+    "Inventory Audit Results",
+    "Product Discontinuation Notice",
+    "Stock Transfer Request",
   ];
 
   const folders: Email["folder"][] = [
@@ -248,6 +284,7 @@ export default function InboxPage() {
     priorityFilter,
     statusFilter,
     dateRange,
+    activeTab,
   ]);
 
   const filterEmails = () => {
@@ -255,6 +292,40 @@ export default function InboxPage() {
 
     // Folder filter
     filtered = filtered.filter((email) => email.folder === folderFilter);
+
+    // Tab filter - show different data based on active tab
+    if (activeTab === "order") {
+      filtered = filtered.filter(
+        (email) =>
+          email.subject.toLowerCase().includes("order") ||
+          email.subject.toLowerCase().includes("purchase") ||
+          email.subject.toLowerCase().includes("invoice") ||
+          email.subject.toLowerCase().includes("payment") ||
+          email.body.toLowerCase().includes("order") ||
+          email.body.toLowerCase().includes("purchase"),
+      );
+    } else if (activeTab === "sample") {
+      filtered = filtered.filter(
+        (email) =>
+          email.subject.toLowerCase().includes("sample") ||
+          email.subject.toLowerCase().includes("demo") ||
+          email.subject.toLowerCase().includes("test") ||
+          email.subject.toLowerCase().includes("trial") ||
+          email.body.toLowerCase().includes("sample") ||
+          email.body.toLowerCase().includes("demo"),
+      );
+    } else if (activeTab === "inventory") {
+      filtered = filtered.filter(
+        (email) =>
+          email.subject.toLowerCase().includes("inventory") ||
+          email.subject.toLowerCase().includes("stock") ||
+          email.subject.toLowerCase().includes("warehouse") ||
+          email.subject.toLowerCase().includes("product") ||
+          email.body.toLowerCase().includes("inventory") ||
+          email.body.toLowerCase().includes("stock"),
+      );
+    }
+    // "all" tab shows all emails (no additional filtering)
 
     // Search filter
     if (searchTerm) {
