@@ -7,17 +7,23 @@ import {
   Calendar,
   Check,
   ChevronDown,
+  FileText,
   HelpCircle,
   LayoutDashboard,
   Lock,
   LogOut,
   Mail,
   MessageSquare,
+  Package,
   Plus,
   RefreshCw,
   Search,
   Settings,
+  ShoppingCart,
+  Truck,
   UserPlus,
+  Users,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -76,6 +82,64 @@ export default function Header({
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     window.location.href = "/";
+  };
+
+  const handleCreateNew = (type: string) => {
+    switch (type) {
+      case "user":
+        window.location.href = "/dashboard/users";
+        break;
+      case "sample":
+        window.location.href = "/dashboard/samples";
+        break;
+      case "order":
+        window.location.href = "/dashboard/orders";
+        break;
+      case "product":
+        window.location.href = "/dashboard/products";
+        break;
+      case "customer":
+        window.location.href = "/dashboard/customers";
+        break;
+      case "supplier":
+        window.location.href = "/dashboard/suppliers";
+        break;
+      case "invoice":
+        window.location.href = "/dashboard/invoices";
+        break;
+      case "quotation":
+        window.location.href = "/dashboard/quotations";
+        break;
+      case "purchase":
+        window.location.href = "/dashboard/purchases";
+        break;
+      case "inventory":
+        window.location.href = "/dashboard/inventory";
+        break;
+      case "email":
+        window.location.href = "/dashboard/inbox";
+        break;
+      case "chat":
+        window.open("/dashboard/messenger", "_blank", "width=1200,height=800");
+        break;
+      case "event":
+        window.location.href = "/dashboard/calendar";
+        break;
+      case "module":
+        window.location.href = "/dashboard/settings/modules";
+        break;
+      case "report":
+        window.location.href = "/dashboard/reports";
+        break;
+      case "task":
+        window.location.href = "/dashboard/tasks";
+        break;
+      case "project":
+        window.location.href = "/dashboard/projects";
+        break;
+      default:
+        console.log(`Create ${type} clicked`);
+    }
   };
 
   const handleSessionSelect = (session: string) => {
@@ -154,30 +218,148 @@ export default function Header({
                 <ChevronDown className="h-3 w-3 ml-1" />
               </JiraButton>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuLabel className="text-xs font-semibold">
+            <DropdownMenuContent align="end" className="w-56 z-50">
+              <DropdownMenuLabel className="text-xs font-semibold text-gray-700">
                 Create New
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-xs cursor-pointer">
+
+              {/* User Management */}
+              <DropdownMenuLabel className="text-xs font-medium text-gray-500 px-2 py-1">
+                User Management
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("user")}
+              >
                 <UserPlus className="h-3 w-3 mr-2" />
-                New User
+                Create User
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs cursor-pointer">
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("customer")}
+              >
+                <Users className="h-3 w-3 mr-2" />
+                Create Customer
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("supplier")}
+              >
+                <Truck className="h-3 w-3 mr-2" />
+                Create Supplier
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              {/* Business Operations */}
+              <DropdownMenuLabel className="text-xs font-medium text-gray-500 px-2 py-1">
+                Business Operations
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("order")}
+              >
+                <ShoppingCart className="h-3 w-3 mr-2" />
+                Create Order
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("sample")}
+              >
+                <Package className="h-3 w-3 mr-2" />
+                Create Sample
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("product")}
+              >
+                <Package className="h-3 w-3 mr-2" />
+                Create Product
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("invoice")}
+              >
+                <FileText className="h-3 w-3 mr-2" />
+                Create Invoice
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("quotation")}
+              >
+                <FileText className="h-3 w-3 mr-2" />
+                Create Quotation
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("purchase")}
+              >
+                <ShoppingCart className="h-3 w-3 mr-2" />
+                Create Purchase
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              {/* Communication */}
+              <DropdownMenuLabel className="text-xs font-medium text-gray-500 px-2 py-1">
+                Communication
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("email")}
+              >
                 <Mail className="h-3 w-3 mr-2" />
-                New Email
+                Create Email
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs cursor-pointer">
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("chat")}
+              >
                 <MessageSquare className="h-3 w-3 mr-2" />
-                New Chat
+                Create Chat
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs cursor-pointer">
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("event")}
+              >
                 <Calendar className="h-3 w-3 mr-2" />
-                New Event
+                Create Event
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-xs cursor-pointer">
+
+              <DropdownMenuSeparator />
+
+              {/* System & Reports */}
+              <DropdownMenuLabel className="text-xs font-medium text-gray-500 px-2 py-1">
+                System & Reports
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("module")}
+              >
                 <Settings className="h-3 w-3 mr-2" />
-                New Module
+                Create Module
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("report")}
+              >
+                <FileText className="h-3 w-3 mr-2" />
+                Create Report
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("task")}
+              >
+                <Zap className="h-3 w-3 mr-2" />
+                Create Task
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xs cursor-pointer"
+                onClick={() => handleCreateNew("project")}
+              >
+                <Package className="h-3 w-3 mr-2" />
+                Create Project
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -303,11 +485,6 @@ export default function Header({
             <Settings className="h-3.5 w-3.5" />
           </JiraButton>
 
-          {/* Logout Icon */}
-          <JiraButton onClick={handleLogout} title="Logout">
-            <LogOut className="h-3.5 w-3.5" />
-          </JiraButton>
-
           {/* User Profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -341,6 +518,10 @@ export default function Header({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* Logout Icon */}
+          <JiraButton onClick={handleLogout} title="Logout">
+            <LogOut className="h-3.5 w-3.5" />
+          </JiraButton>
         </div>
       </div>
 

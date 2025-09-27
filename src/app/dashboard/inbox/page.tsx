@@ -56,6 +56,7 @@ import {
   Tabs,
   Tooltip,
 } from "antd";
+import { JiraButton } from "@/components/ui/jira-button";
 import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -801,24 +802,24 @@ export default function InboxPage() {
       width: 100,
       render: (_, record) => (
         <Space size="small">
-          <Button
-            type="text"
-            size="small"
-            icon={
-              record.isStarred ? (
-                <StarOff className="h-3 w-3" />
-              ) : (
-                <Star className="h-3 w-3" />
-              )
-            }
+          <JiraButton
+            variant="icon"
             onClick={() => handleStarToggle(record.id)}
-          />
-          <Button
-            type="text"
-            size="small"
-            icon={<Trash2 className="h-3 w-3" />}
+            title={record.isStarred ? "Remove star" : "Add star"}
+          >
+            {record.isStarred ? (
+              <StarOff className="h-3 w-3" />
+            ) : (
+              <Star className="h-3 w-3" />
+            )}
+          </JiraButton>
+          <JiraButton
+            variant="icon"
             onClick={() => handleDelete([record.id])}
-          />
+            title="Delete email"
+          >
+            <Trash2 className="h-3 w-3" />
+          </JiraButton>
         </Space>
       ),
     },
@@ -951,42 +952,42 @@ export default function InboxPage() {
                         {selectedRowKeys.length} email(s) selected
                       </span>
                       <Space>
-                        <Button
-                          size="small"
-                          icon={<Check className="h-4 w-4" />}
+                        <JiraButton
+                          variant="text"
                           onClick={() => handleBulkAction("mark-read")}
                         >
+                          <Check className="h-4 w-4 mr-1" />
                           Mark as Read
-                        </Button>
-                        <Button
-                          size="small"
-                          icon={<X className="h-4 w-4" />}
+                        </JiraButton>
+                        <JiraButton
+                          variant="text"
                           onClick={() => handleBulkAction("mark-unread")}
                         >
+                          <X className="h-4 w-4 mr-1" />
                           Mark as Unread
-                        </Button>
-                        <Button
-                          size="small"
-                          icon={<Star className="h-4 w-4" />}
+                        </JiraButton>
+                        <JiraButton
+                          variant="text"
                           onClick={() => handleBulkAction("star")}
                         >
+                          <Star className="h-4 w-4 mr-1" />
                           Star
-                        </Button>
-                        <Button
-                          size="small"
-                          icon={<Archive className="h-4 w-4" />}
+                        </JiraButton>
+                        <JiraButton
+                          variant="text"
                           onClick={() => handleBulkAction("archive")}
                         >
+                          <Archive className="h-4 w-4 mr-1" />
                           Archive
-                        </Button>
-                        <Button
-                          size="small"
-                          danger
-                          icon={<Trash2 className="h-4 w-4" />}
+                        </JiraButton>
+                        <JiraButton
+                          variant="text"
                           onClick={() => handleBulkAction("delete")}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >
+                          <Trash2 className="h-4 w-4 mr-1" />
                           Delete
-                        </Button>
+                        </JiraButton>
                       </Space>
                     </div>
                   )}
@@ -1094,39 +1095,35 @@ export default function InboxPage() {
                         </div>
                       </div>
                       <Space>
-                        <Button
-                          type="text"
-                          size="small"
-                          icon={
-                            selectedEmail.isStarred ? (
-                              <StarOff className="h-4 w-4" />
-                            ) : (
-                              <Star className="h-4 w-4" />
-                            )
-                          }
+                        <JiraButton
+                          variant="icon"
                           onClick={() => handleStarToggle(selectedEmail.id)}
-                        />
-                        <Button
-                          type="text"
-                          size="small"
-                          icon={<Reply className="h-4 w-4" />}
-                        />
-                        <Button
-                          type="text"
-                          size="small"
-                          icon={<ReplyAll className="h-4 w-4" />}
-                        />
-                        <Button
-                          type="text"
-                          size="small"
-                          icon={<Forward className="h-4 w-4" />}
-                        />
-                        <Button
-                          type="text"
-                          size="small"
-                          icon={<Trash2 className="h-4 w-4" />}
+                          title={
+                            selectedEmail.isStarred ? "Remove star" : "Add star"
+                          }
+                        >
+                          {selectedEmail.isStarred ? (
+                            <StarOff className="h-4 w-4" />
+                          ) : (
+                            <Star className="h-4 w-4" />
+                          )}
+                        </JiraButton>
+                        <JiraButton variant="icon" title="Reply">
+                          <Reply className="h-4 w-4" />
+                        </JiraButton>
+                        <JiraButton variant="icon" title="Reply All">
+                          <ReplyAll className="h-4 w-4" />
+                        </JiraButton>
+                        <JiraButton variant="icon" title="Forward">
+                          <Forward className="h-4 w-4" />
+                        </JiraButton>
+                        <JiraButton
+                          variant="icon"
                           onClick={() => handleDelete([selectedEmail.id])}
-                        />
+                          title="Delete email"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </JiraButton>
                       </Space>
                     </div>
 
@@ -1319,15 +1316,14 @@ export default function InboxPage() {
                             Use @ to mention users • Rich text editor with full
                             formatting
                           </div>
-                          <Button
-                            type="primary"
-                            size="small"
+                          <JiraButton
+                            variant="create"
                             onClick={handleAddComment}
                             disabled={!editorContent.trim()}
                           >
                             <MessageSquare className="h-4 w-4 mr-1" />
                             Add Comment
-                          </Button>
+                          </JiraButton>
                         </div>
                       </div>
 
@@ -1380,16 +1376,21 @@ export default function InboxPage() {
                 open={composeModalVisible}
                 onCancel={() => setComposeModalVisible(false)}
                 footer={[
-                  <Button
+                  <JiraButton
                     key="cancel"
+                    variant="text"
                     onClick={() => setComposeModalVisible(false)}
                   >
                     Cancel
-                  </Button>,
-                  <Button key="send" type="primary" onClick={handleSendEmail}>
+                  </JiraButton>,
+                  <JiraButton
+                    key="send"
+                    variant="create"
+                    onClick={handleSendEmail}
+                  >
                     <Send className="h-4 w-4 mr-2" />
                     Send
-                  </Button>,
+                  </JiraButton>,
                 ]}
                 width={800}
               >

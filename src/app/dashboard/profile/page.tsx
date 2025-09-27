@@ -14,6 +14,7 @@ import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import {
   Card,
   CardContent,
@@ -69,18 +70,16 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
+                  <JiraButton
+                    variant="text"
                     className="border-blue-600 text-blue-600 hover:bg-blue-50"
                   >
                     Follow
-                  </Button>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    Hire Me
-                  </Button>
-                  <Button variant="ghost" size="sm">
+                  </JiraButton>
+                  <JiraButton variant="create">Hire Me</JiraButton>
+                  <JiraButton variant="icon">
                     <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                  </JiraButton>
                 </div>
               </div>
 
@@ -180,34 +179,34 @@ export default function ProfilePage() {
                       className="w-full border-none outline-none text-sm"
                     />
                     <div className="flex items-center space-x-2 mt-2">
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs font-bold">B</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs italic">I</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs underline">U</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs line-through">S</span>
-                      </Button>
+                      </JiraButton>
                       <Separator orientation="vertical" className="h-4" />
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs">📷</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs">🔗</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs">&lt;/&gt;</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs">📎</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                      </JiraButton>
+                      <JiraButton variant="icon" className="h-6 w-6 p-0">
                         <span className="text-xs">📍</span>
-                      </Button>
+                      </JiraButton>
                     </div>
                   </div>
                 </div>
@@ -292,12 +291,12 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <Button
-                variant="outline"
+              <JiraButton
+                variant="text"
                 className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
               >
                 More Feeds
-              </Button>
+              </JiraButton>
             </CardContent>
           </Card>
 

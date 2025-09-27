@@ -62,6 +62,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import {
   Tooltip,
   TooltipContent,
@@ -1571,14 +1572,14 @@ export default function UserManagementPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" onClick={handleBack}>
+            <JiraButton variant="text" onClick={handleBack}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleHome}>
+            </JiraButton>
+            <JiraButton variant="text" onClick={handleHome}>
               <Home className="h-4 w-4 mr-2" />
               Home
-            </Button>
+            </JiraButton>
             <div className="h-6 w-px bg-gray-300"></div>
             <div className="flex items-center space-x-2">
               <Users className="h-6 w-6 text-blue-600" />
@@ -1588,17 +1589,14 @@ export default function UserManagementPage() {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
+            <JiraButton variant="text">
               <Download className="h-4 w-4 mr-2" />
               Export
-            </Button>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={handleAddUser}
-            >
+            </JiraButton>
+            <JiraButton variant="create" onClick={handleAddUser}>
               <Plus className="h-4 w-4 mr-2" />
               Add User
-            </Button>
+            </JiraButton>
           </div>
         </div>
         <p className="text-gray-600 mt-2">
@@ -1659,15 +1657,10 @@ export default function UserManagementPage() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleResetFilters}
-            className="text-gray-600 hover:text-gray-900"
-          >
+          <JiraButton variant="text" onClick={handleResetFilters}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Reset Filters
-          </Button>
+          </JiraButton>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
@@ -1750,10 +1743,10 @@ export default function UserManagementPage() {
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Users List</h3>
-            <Button variant="outline" size="sm">
+            <JiraButton variant="text">
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
-            </Button>
+            </JiraButton>
           </div>
         </div>
         <div className="p-4">
@@ -1777,13 +1770,13 @@ export default function UserManagementPage() {
         className="user-drawer"
         extra={
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => setAddDrawerOpen(false)}>
+            <JiraButton variant="text" onClick={() => setAddDrawerOpen(false)}>
               Cancel
-            </Button>
-            <Button onClick={() => form.submit()}>
+            </JiraButton>
+            <JiraButton variant="create" onClick={() => form.submit()}>
               <Save className="h-4 w-4 mr-2" />
               Save User
-            </Button>
+            </JiraButton>
           </div>
         }
       >
@@ -2004,13 +1997,13 @@ export default function UserManagementPage() {
         className="user-drawer"
         extra={
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => setEditDrawerOpen(false)}>
+            <JiraButton variant="text" onClick={() => setEditDrawerOpen(false)}>
               Cancel
-            </Button>
-            <Button onClick={() => form.submit()}>
+            </JiraButton>
+            <JiraButton variant="create" onClick={() => form.submit()}>
               <Save className="h-4 w-4 mr-2" />
               Update User
-            </Button>
+            </JiraButton>
           </div>
         }
       >
@@ -2170,13 +2163,16 @@ export default function UserManagementPage() {
         className="user-drawer"
         extra={
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => setViewDrawerOpen(false)}>
+            <JiraButton variant="text" onClick={() => setViewDrawerOpen(false)}>
               Close
-            </Button>
-            <Button onClick={() => handleEditUser(selectedUser?.id)}>
+            </JiraButton>
+            <JiraButton
+              variant="create"
+              onClick={() => handleEditUser(selectedUser?.id)}
+            >
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
-            </Button>
+            </JiraButton>
           </div>
         }
       >
@@ -2281,21 +2277,17 @@ export default function UserManagementPage() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button
-                        size="sm"
+                      <JiraButton
+                        variant="create"
                         className="bg-green-600 hover:bg-green-700 text-white"
                       >
                         Upgrade to Pro
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        Follow
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        Hire Me
-                      </Button>
-                      <Button size="sm" variant="outline">
+                      </JiraButton>
+                      <JiraButton variant="text">Follow</JiraButton>
+                      <JiraButton variant="text">Hire Me</JiraButton>
+                      <JiraButton variant="text">
                         <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                      </JiraButton>
                     </div>
                   </div>
 
@@ -2345,13 +2337,13 @@ export default function UserManagementPage() {
                       Profile Details
                     </h3>
                     <div className="flex items-center space-x-2">
-                      <Button size="sm" variant="outline">
+                      <JiraButton variant="text">
                         <Edit className="h-4 w-4 mr-2" />
                         Edit Profile
-                      </Button>
-                      <Button size="sm" variant="outline">
+                      </JiraButton>
+                      <JiraButton variant="text">
                         <HelpCircle className="h-4 w-4" />
-                      </Button>
+                      </JiraButton>
                     </div>
                   </div>
 
@@ -2448,53 +2440,47 @@ export default function UserManagementPage() {
                     User Actions
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    <JiraButton
+                      variant="text"
                       onClick={() => handleSendResetPassword(selectedUser.id)}
                       className="flex items-center justify-center space-x-2"
                     >
                       <Key className="h-4 w-4" />
                       <span>Reset Password</span>
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    </JiraButton>
+                    <JiraButton
+                      variant="text"
                       onClick={() => handleLoginAsUser(selectedUser.id)}
                       className="flex items-center justify-center space-x-2"
                     >
                       <LogIn className="h-4 w-4" />
                       <span>Login as User</span>
-                    </Button>
+                    </JiraButton>
                     {selectedUser.status === "blocked" ? (
-                      <Button
-                        size="sm"
+                      <JiraButton
                         onClick={() => handleUnblockUser(selectedUser.id)}
-                        className="flex items-center justify-center space-x-2"
+                        className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white"
                       >
                         <CheckCircle className="h-4 w-4" />
                         <span>Unblock</span>
-                      </Button>
+                      </JiraButton>
                     ) : (
-                      <Button
-                        size="sm"
-                        variant="destructive"
+                      <JiraButton
                         onClick={() => handleBlockUser(selectedUser.id)}
-                        className="flex items-center justify-center space-x-2"
+                        className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white"
                       >
                         <XCircle className="h-4 w-4" />
                         <span>Block</span>
-                      </Button>
+                      </JiraButton>
                     )}
-                    <Button
-                      size="sm"
-                      variant="outline"
+                    <JiraButton
+                      variant="text"
                       onClick={() => handleEditUser(selectedUser.id)}
                       className="flex items-center justify-center space-x-2"
                     >
                       <Edit className="h-4 w-4" />
                       <span>Edit User</span>
-                    </Button>
+                    </JiraButton>
                   </div>
                 </div>
               </>

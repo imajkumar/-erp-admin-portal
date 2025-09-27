@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import { Input } from "@/components/ui/input";
 
 interface Message {
@@ -145,12 +146,12 @@ export default function MessengerPage() {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-lg font-semibold text-gray-900">Chats</h1>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <JiraButton variant="icon" className="h-8 w-8 p-0">
                 <Users className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              </JiraButton>
+              <JiraButton variant="icon" className="h-8 w-8 p-0">
                 <Settings className="h-4 w-4" />
-              </Button>
+              </JiraButton>
             </div>
           </div>
 
@@ -233,15 +234,15 @@ export default function MessengerPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <JiraButton variant="icon" className="h-8 w-8 p-0">
                 <Phone className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              </JiraButton>
+              <JiraButton variant="icon" className="h-8 w-8 p-0">
                 <Video className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              </JiraButton>
+              <JiraButton variant="icon" className="h-8 w-8 p-0">
                 <MoreVertical className="h-4 w-4" />
-              </Button>
+              </JiraButton>
             </div>
           </div>
         </div>
@@ -290,9 +291,9 @@ export default function MessengerPage() {
         {/* Message Input */}
         <div className="p-4 border-t border-gray-200 bg-white">
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <JiraButton variant="icon" className="h-8 w-8 p-0">
               <Paperclip className="h-4 w-4" />
-            </Button>
+            </JiraButton>
             <div className="flex-1 relative">
               <Input
                 value={message}
@@ -302,17 +303,16 @@ export default function MessengerPage() {
                 className="pr-20"
               />
               <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                <JiraButton variant="icon" className="h-6 w-6 p-0">
                   <Smile className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                </JiraButton>
+                <JiraButton
+                  variant="icon"
                   className="h-6 w-6 p-0"
                   onClick={handleSendMessage}
                 >
                   <Send className="h-4 w-4" />
-                </Button>
+                </JiraButton>
               </div>
             </div>
           </div>

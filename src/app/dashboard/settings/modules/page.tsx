@@ -31,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import {
   Card,
   CardContent,
@@ -360,24 +361,22 @@ export default function ModulesPage() {
     <div className="p-6 space-y-6">
       {/* Navigation Header */}
       <div className="flex items-center space-x-4 mb-6">
-        <Button
-          variant="outline"
-          size="sm"
+        <JiraButton
+          variant="text"
           onClick={() => router.back()}
           className="flex items-center space-x-2"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back</span>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
+        </JiraButton>
+        <JiraButton
+          variant="text"
           onClick={() => router.push("/dashboard")}
           className="flex items-center space-x-2"
         >
           <Home className="h-4 w-4" />
           <span>Home</span>
-        </Button>
+        </JiraButton>
       </div>
 
       {/* Header */}
@@ -393,10 +392,10 @@ export default function ModulesPage() {
           onOpenChange={setAddModuleDrawerOpen}
         >
           <DrawerTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <JiraButton variant="create">
               <Plus className="h-4 w-4 mr-2" />
               Add Module
-            </Button>
+            </JiraButton>
           </DrawerTrigger>
           <DrawerContent>
             <div className="mx-auto w-full max-w-sm">
@@ -481,16 +480,20 @@ export default function ModulesPage() {
                 </div>
               </div>
               <DrawerFooter>
-                <Button onClick={handleAddModule} className="w-full">
+                <JiraButton
+                  variant="create"
+                  onClick={handleAddModule}
+                  className="w-full"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Module
-                </Button>
-                <Button
-                  variant="outline"
+                </JiraButton>
+                <JiraButton
+                  variant="text"
                   onClick={() => setAddModuleDrawerOpen(false)}
                 >
                   Cancel
-                </Button>
+                </JiraButton>
               </DrawerFooter>
             </div>
           </DrawerContent>
@@ -510,10 +513,10 @@ export default function ModulesPage() {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full sm:w-auto">
+            <JiraButton variant="text" className="w-full sm:w-auto">
               <Filter className="h-4 w-4 mr-2" />
               {selectedCategory}
-            </Button>
+            </JiraButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {categories.map((category) => (
@@ -558,13 +561,12 @@ export default function ModulesPage() {
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <JiraButton
+                        variant="icon"
                         className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-100"
                       >
                         <MoreHorizontal className="h-3.5 w-3.5" />
-                      </Button>
+                      </JiraButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-40">
                       <DropdownMenuItem

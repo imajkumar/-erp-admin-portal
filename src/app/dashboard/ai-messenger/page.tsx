@@ -17,6 +17,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import { Input } from "@/components/ui/input";
 
 interface Message {
@@ -147,10 +148,10 @@ export default function AIMessengerPage() {
             </div>
           </div>
 
-          <Button variant="outline" size="sm" className="w-full">
+          <JiraButton variant="text" className="w-full">
             <RotateCcw className="h-4 w-4 mr-2" />
             New Conversation
-          </Button>
+          </JiraButton>
         </div>
 
         {/* Suggested Prompts */}
@@ -220,9 +221,9 @@ export default function AIMessengerPage() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <JiraButton variant="icon" className="h-8 w-8 p-0">
                 <Settings className="h-4 w-4" />
-              </Button>
+              </JiraButton>
             </div>
           </div>
         </div>
@@ -262,30 +263,18 @@ export default function AIMessengerPage() {
                 </div>
                 {!message.isUser && (
                   <div className="flex items-center space-x-2 mt-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs"
-                    >
+                    <JiraButton variant="text" className="h-6 px-2 text-xs">
                       <Copy className="h-3 w-3 mr-1" />
                       Copy
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs"
-                    >
+                    </JiraButton>
+                    <JiraButton variant="text" className="h-6 px-2 text-xs">
                       <ThumbsUp className="h-3 w-3 mr-1" />
                       Good
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs"
-                    >
+                    </JiraButton>
+                    <JiraButton variant="text" className="h-6 px-2 text-xs">
                       <ThumbsDown className="h-3 w-3 mr-1" />
                       Bad
-                    </Button>
+                    </JiraButton>
                   </div>
                 )}
               </div>
@@ -338,13 +327,14 @@ export default function AIMessengerPage() {
                 disabled={isTyping}
               />
             </div>
-            <Button
+            <JiraButton
+              variant="create"
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isTyping}
               className="h-11 px-4"
             >
               <Send className="h-4 w-4" />
-            </Button>
+            </JiraButton>
           </div>
           <p className="text-xs text-gray-500 mt-2">
             AI can make mistakes. Consider checking important information.

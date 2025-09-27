@@ -23,6 +23,7 @@ import { useState } from "react";
 import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import {
   Card,
   CardContent,
@@ -219,18 +220,18 @@ export default function SettingsPage() {
             Your Shortcuts
           </h2>
           <div className="flex flex-wrap gap-3">
-            <Button variant="outline" className="flex items-center gap-2">
+            <JiraButton variant="text" className="flex items-center gap-2">
               <span>Accounts Settings</span>
               <ArrowUpRight className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
+            </JiraButton>
+            <JiraButton variant="text" className="flex items-center gap-2">
               <span>Stock Settings</span>
               <ArrowUpRight className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
+            </JiraButton>
+            <JiraButton variant="text" className="flex items-center gap-2">
               <span>Buying Settings</span>
               <ArrowUpRight className="h-4 w-4" />
-            </Button>
+            </JiraButton>
           </div>
         </div>
 
@@ -309,34 +310,34 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Button
-                  variant="outline"
+                <JiraButton
+                  variant="text"
                   className="h-auto p-4 flex flex-col items-center space-y-2"
                 >
                   <Settings className="h-6 w-6 text-blue-600" />
                   <span className="text-sm font-medium">System Config</span>
-                </Button>
-                <Button
-                  variant="outline"
+                </JiraButton>
+                <JiraButton
+                  variant="text"
                   className="h-auto p-4 flex flex-col items-center space-y-2"
                 >
                   <Database className="h-6 w-6 text-green-600" />
                   <span className="text-sm font-medium">Database</span>
-                </Button>
-                <Button
-                  variant="outline"
+                </JiraButton>
+                <JiraButton
+                  variant="text"
                   className="h-auto p-4 flex flex-col items-center space-y-2"
                 >
                   <Mail className="h-6 w-6 text-purple-600" />
                   <span className="text-sm font-medium">Email Setup</span>
-                </Button>
-                <Button
-                  variant="outline"
+                </JiraButton>
+                <JiraButton
+                  variant="text"
                   className="h-auto p-4 flex flex-col items-center space-y-2"
                 >
                   <Shield className="h-6 w-6 text-red-600" />
                   <span className="text-sm font-medium">Security</span>
-                </Button>
+                </JiraButton>
               </div>
             </CardContent>
           </Card>

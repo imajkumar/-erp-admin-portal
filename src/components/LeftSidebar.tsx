@@ -45,15 +45,26 @@ const menuItems: MenuItem[] = [
   },
 
   {
-    id: "users",
+    id: "system-users",
+    label: "USERS MANAGEMENT",
+    icon: Package,
+    children: [
+      { id: "system-users", label: "System Users", icon: User },
+      { id: "admin-roles", label: "Admin Roles", icon: Shield },
+      { id: "system-permissions", label: "System Permissions", icon: Shield },
+      { id: "audit-logs", label: "Audit Logs", icon: FileText },
+      { id: "system-settings", label: "System Settings", icon: Settings },
+    ],
+  },
+
+  {
+    id: "users-management",
     label: "Users Management",
     icon: Package,
     children: [
       { id: "users", label: "Users", icon: User },
       { id: "roles", label: "Roles", icon: Shield },
       { id: "permissions", label: "Permissions", icon: Shield },
-      { id: "logs", label: "Logs", icon: FileText },
-      { id: "settings", label: "Settings", icon: Settings },
       { id: "activity", label: "Activity", icon: Activity },
       { id: "reports", label: "Reports", icon: BarChart3 },
       { id: "calendar", label: "Calendar", icon: Calendar },
@@ -84,6 +95,8 @@ export default function LeftSidebar({
     const isExpanded = expandedItems.includes(item.id);
     const hasChildren = item.children && item.children.length > 0;
     const isActive = activeItem === item.id;
+    const isSystemUsers = item.id === "system-users";
+    const isUsersManagement = item.id === "users-management";
 
     return (
       <div key={item.id}>
@@ -109,7 +122,15 @@ export default function LeftSidebar({
             }`}
           />
           <span
-            className={`flex-1 text-sm ${isActive ? "font-semibold" : "font-medium"}`}
+            className={`flex-1 text-sm ${
+              isActive ? "font-semibold" : "font-medium"
+            } ${
+              isSystemUsers
+                ? "uppercase tracking-wider font-bold"
+                : isUsersManagement
+                  ? "capitalize"
+                  : ""
+            }`}
           >
             {item.label}
           </span>
@@ -124,7 +145,9 @@ export default function LeftSidebar({
               {item.badge}
             </Badge>
           )}
+          {/* Show chevron only for the second "Users Management" item */}
           {hasChildren &&
+            isUsersManagement &&
             (isExpanded ? (
               <ChevronDown
                 className={`ml-2 h-3 w-3 ${isActive ? "text-blue-600" : "text-gray-500"}`}
@@ -170,10 +193,27 @@ export default function LeftSidebar({
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2">
                     <item.icon className="h-4 w-4 text-gray-600" />
-                    <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <h3
+                      className={`text-xs font-semibold text-gray-600 ${
+                        item.id === "system-users"
+                          ? "uppercase tracking-wider font-bold"
+                          : item.id === "users-management"
+                            ? "capitalize"
+                            : "uppercase tracking-wider"
+                      }`}
+                    >
                       {item.label}
                     </h3>
                   </div>
+                  {/* Show chevron only for the second "Users Management" item */}
+                  {item.id === "users-management" &&
+                    item.children &&
+                    item.children.length > 0 &&
+                    (expandedItems.includes(item.id) ? (
+                      <ChevronDown className="h-3 w-3 text-gray-500" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3 text-gray-500" />
+                    ))}
                 </div>
 
                 {/* Menu Items */}

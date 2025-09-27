@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 import {
   Card,
   CardContent,
@@ -720,24 +721,22 @@ export default function RolesPermissionsPage() {
     <div className="p-6 space-y-6">
       {/* Navigation Header */}
       <div className="flex items-center space-x-4 mb-6">
-        <Button
-          variant="outline"
-          size="sm"
+        <JiraButton
+          variant="text"
           onClick={() => router.back()}
           className="flex items-center space-x-2"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back</span>
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
+        </JiraButton>
+        <JiraButton
+          variant="text"
           onClick={() => router.push("/dashboard")}
           className="flex items-center space-x-2"
         >
           <Home className="h-4 w-4" />
           <span>Home</span>
-        </Button>
+        </JiraButton>
       </div>
 
       {/* Header */}
@@ -752,10 +751,10 @@ export default function RolesPermissionsPage() {
         </div>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <JiraButton variant="create">
               <Plus className="h-4 w-4 mr-2" />
               Add Role
-            </Button>
+            </JiraButton>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -809,16 +808,16 @@ export default function RolesPermissionsPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button
-                variant="outline"
+              <JiraButton
+                variant="text"
                 onClick={() => setIsAddDialogOpen(false)}
               >
                 Cancel
-              </Button>
-              <Button onClick={handleAddRole}>
+              </JiraButton>
+              <JiraButton variant="create" onClick={handleAddRole}>
                 <Save className="h-4 w-4 mr-2" />
                 Add Role
-              </Button>
+              </JiraButton>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -888,13 +887,13 @@ export default function RolesPermissionsPage() {
         className="permissions-drawer"
         extra={
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => setSelectedRole(null)}>
+            <JiraButton variant="text" onClick={() => setSelectedRole(null)}>
               Close
-            </Button>
-            <Button onClick={() => setSelectedRole(null)}>
+            </JiraButton>
+            <JiraButton variant="create" onClick={() => setSelectedRole(null)}>
               <Save className="h-4 w-4 mr-2" />
               Save Changes
-            </Button>
+            </JiraButton>
           </div>
         }
       >
@@ -1169,13 +1168,13 @@ export default function RolesPermissionsPage() {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingRole(null)}>
+            <JiraButton variant="text" onClick={() => setEditingRole(null)}>
               Cancel
-            </Button>
-            <Button onClick={handleUpdateRole}>
+            </JiraButton>
+            <JiraButton variant="create" onClick={handleUpdateRole}>
               <Save className="h-4 w-4 mr-2" />
               Update Role
-            </Button>
+            </JiraButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1193,10 +1192,13 @@ export default function RolesPermissionsPage() {
               : "Get started by adding a new role."}
           </p>
           {!searchTerm && (
-            <Button onClick={() => setIsAddDialogOpen(true)}>
+            <JiraButton
+              variant="create"
+              onClick={() => setIsAddDialogOpen(true)}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Role
-            </Button>
+            </JiraButton>
           )}
         </div>
       )}

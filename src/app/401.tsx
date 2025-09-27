@@ -4,6 +4,7 @@ import { AlertTriangle, Home, Lock, LogIn, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
+import { JiraButton } from "@/components/ui/jira-button";
 
 export default function Unauthorized() {
   const router = useRouter();
@@ -63,22 +64,22 @@ export default function Unauthorized() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-          <Button
+          <JiraButton
             onClick={() => router.push("/api/auth/login")}
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <LogIn className="h-4 w-4 mr-2" />
             Login
-          </Button>
+          </JiraButton>
 
-          <Button
+          <JiraButton
             onClick={() => router.push("/dashboard")}
-            variant="outline"
+            variant="text"
             className="border-red-600 text-red-600 hover:bg-red-50 px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             <Home className="h-4 w-4 mr-2" />
             Go Home
-          </Button>
+          </JiraButton>
         </div>
 
         {/* Help Section */}
@@ -94,20 +95,12 @@ export default function Unauthorized() {
             contact your system administrator.
           </p>
           <div className="flex flex-wrap gap-2 justify-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-red-600 hover:bg-red-50"
-            >
+            <JiraButton variant="text" className="text-red-600 hover:bg-red-50">
               Contact Admin
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-red-600 hover:bg-red-50"
-            >
+            </JiraButton>
+            <JiraButton variant="text" className="text-red-600 hover:bg-red-50">
               Forgot Password
-            </Button>
+            </JiraButton>
           </div>
         </div>
 
