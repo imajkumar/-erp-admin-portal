@@ -37,7 +37,6 @@ import {
   FolderOpen,
   Layers,
   Zap,
-  Menu,
   ChevronLeft
 } from "lucide-react";
 
@@ -205,25 +204,11 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
         <aside className="fixed left-12 w-64 h-[calc(100vh-45px)] z-30 bg-gray-900 border-r border-gray-700" style={{ top: '45px' }}>
       <div className="flex flex-col h-full">
 
-        {/* Dashboard Toggle Button */}
+        {/* Dashboard Header */}
         <div className="p-4 border-b border-gray-700">
-          <div className="flex items-center w-full h-10 px-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded">
+          <div className="flex items-center w-full h-10 px-3 text-gray-300">
             <Home className="mr-3 h-4 w-4 text-gray-400" />
             <span className="flex-1 text-sm font-medium">Dashboard</span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  onClick={onClose}
-                  className="h-8 w-8 p-0 bg-white hover:bg-gray-100 rounded transition-all duration-200 hover:scale-105"
-                >
-                  <ChevronLeft className="h-4 w-4 text-blue-600" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="animate-in fade-in-0 zoom-in-95 duration-200">
-                <p>Close Sidebar</p>
-              </TooltipContent>
-            </Tooltip>
           </div>
         </div>
 
@@ -239,17 +224,6 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
                     {item.label}
                   </h3>
                 </div>
-                {item.id === 'dashboards' && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-6 px-2 text-blue-400 hover:text-blue-300 hover:bg-gray-800"
-                    onClick={onClose}
-                    title="Toggle sidebar"
-                  >
-                    <Menu className="h-3 w-3" />
-                  </Button>
-                )}
               </div>
               
               {/* Menu Items */}

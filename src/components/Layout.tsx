@@ -6,6 +6,7 @@ import Header from "./Header";
 import LeftSidebar from "./LeftSidebar";
 import LeftQuickSidebar from "./LeftQuickSidebar";
 import RightQuickSidebar from "./RightQuickSidebar";
+import QuickLeftSidebarDrawer from "./QuickLeftSidebarDrawer";
 import Footer from "./Footer";
 import SearchModal from "./Search";
 import LockScreen from "./LockScreen";
@@ -81,6 +82,8 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
           onToggle={() => {}}
           activeItem={activeItem}
           onItemClick={handleItemClick}
+          sidebarOpen={sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
         />
 
         {/* Left Sidebar */}
@@ -123,6 +126,12 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
 
       {/* Scroll to Top Button */}
       <ScrollToTop />
+
+      {/* Quick Left Sidebar Drawer */}
+      <QuickLeftSidebarDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
 
     </div>
   );

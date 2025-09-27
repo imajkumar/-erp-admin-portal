@@ -187,6 +187,29 @@
   scrollbar-color: #0078d4 #f1f5f9;
 }
 
+/* Ant Design Drawer Custom Styles */
+.antd-drawer-custom .ant-drawer-content {
+  background-color: white;
+}
+
+.antd-drawer-custom .ant-drawer-header {
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fafafa;
+  padding: 16px 24px;
+}
+
+.antd-drawer-custom .ant-drawer-body {
+  padding: 0;
+}
+
+.antd-drawer-custom .ant-drawer-close {
+  color: #666;
+}
+
+.antd-drawer-custom .ant-drawer-close:hover {
+  color: #333;
+}
+
 /* Custom animations for lock screen */
 @keyframes fade-in {
   from {

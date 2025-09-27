@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronLeft, ChevronRight, Settings } from "lucide-react";
+import { ChevronLeft, ChevronRight, Settings, Menu, X } from "lucide-react";
 import { 
   MdDashboard,
   MdPeople,
@@ -23,6 +23,8 @@ interface LeftQuickSidebarProps {
   onToggle: () => void;
   activeItem?: string;
   onItemClick: (item: string) => void;
+  sidebarOpen: boolean;
+  onSidebarToggle: () => void;
 }
 
 const quickItems = [
@@ -40,20 +42,34 @@ const quickItems = [
   { id: 'analytics', icon: MdTrendingUp, label: 'Analytics', bgColor: 'bg-emerald-500', iconColor: 'text-white' }
 ];
 
-export default function LeftQuickSidebar({ isOpen, onToggle, activeItem, onItemClick }: LeftQuickSidebarProps) {
+export default function LeftQuickSidebar({ isOpen, onToggle, activeItem, onItemClick, sidebarOpen, onSidebarToggle }: LeftQuickSidebarProps) {
   return (
     <TooltipProvider>
       {/* Left Quick Sidebar - Always Visible and Sticky */}
       <div className="fixed left-0 h-[calc(100vh-45px)] z-40 bg-gray-50 border-r border-emerald-500 flex flex-col items-center py-4 space-y-2 overflow-y-auto w-12" style={{ top: '45px' }}>
-        {/* Dummy Icon - Settings */}
+        {/* Professional Sidebar Toggle Button */}
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="mb-4 w-8 h-8 bg-gray-400 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-500 transition-colors">
-              <Settings className="h-4 w-4 text-white" />
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSidebarToggle}
+              className={`mb-4 w-8 h-8 p-0 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg ${
+                sidebarOpen 
+                  ? 'bg-red-500 hover:bg-red-600 shadow-red-500/25' 
+                  : 'bg-blue-500 hover:bg-blue-600 shadow-blue-500/25'
+              }`}
+              title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+            >
+              {sidebarOpen ? (
+                <X className="h-4 w-4 text-white animate-in fade-in-0 zoom-in-95 duration-200" />
+              ) : (
+                <Menu className="h-4 w-4 text-white animate-in fade-in-0 zoom-in-95 duration-200" />
+              )}
+            </Button>
           </TooltipTrigger>
-          <TooltipContent side="right">
-            <p>Settings</p>
+          <TooltipContent side="right" className="animate-in fade-in-0 zoom-in-95 duration-200">
+            <p>{sidebarOpen ? "Close sidebar" : "Open sidebar"}</p>
           </TooltipContent>
         </Tooltip>
         

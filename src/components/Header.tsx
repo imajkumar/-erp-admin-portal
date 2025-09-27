@@ -20,7 +20,6 @@ import {
   UserPlus,
   HelpCircle,
   LogOut,
-  Menu,
   X,
   ChevronDown,
   Grid3X3,
@@ -55,20 +54,7 @@ export default function Header({
       <div className="flex items-center justify-between h-full">
         {/* Left Side - App Branding */}
         <div className="flex items-center space-x-2">
-          {/* Hamburger Menu Toggle - Only show when sidebar is closed */}
-          {!sidebarOpen && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onSidebarToggle}
-              className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-7 w-7"
-              title="Open sidebar"
-            >
-              <Menu className="h-3 w-3" />
-            </Button>
-          )}
-          
-          <div className={`flex items-center space-x-1 ${!sidebarOpen ? 'ml-1' : ''}`}>
+          <div className="flex items-center space-x-1">
             {/* 12 Dots Grid */}
             <button
               onClick={onDrawerToggle}
