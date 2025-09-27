@@ -28,6 +28,8 @@ import {
   StarOff,
   Trash2,
   X,
+  FileText,
+  ShoppingCart,
 } from "lucide-react";
 import {
   Table,
@@ -590,15 +592,30 @@ export default function InboxPage() {
                   items={[
                     {
                       key: "all",
-                      label: "All",
+                      label: (
+                        <span className="flex items-center space-x-2">
+                          <Inbox className="h-4 w-4" />
+                          <span>All</span>
+                        </span>
+                      ),
                     },
                     {
                       key: "order",
-                      label: "Order",
+                      label: (
+                        <span className="flex items-center space-x-2">
+                          <ShoppingCart className="h-4 w-4" />
+                          <span>Order</span>
+                        </span>
+                      ),
                     },
                     {
                       key: "sample",
-                      label: "Sample",
+                      label: (
+                        <span className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4" />
+                          <span>Sample</span>
+                        </span>
+                      ),
                     },
                   ]}
                 />
