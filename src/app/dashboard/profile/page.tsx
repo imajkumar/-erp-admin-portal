@@ -286,7 +286,7 @@ export default function ProfilePage() {
           </Card>
 
           {/* Activities */}
-          <Card>
+          <Card data-section="activities">
             <CardHeader>
               <CardTitle>Activities</CardTitle>
               <CardDescription>890,344 Sales</CardDescription>

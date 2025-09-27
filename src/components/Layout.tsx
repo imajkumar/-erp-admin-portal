@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Header from "./Header";
 import LeftSidebar from "./LeftSidebar";
 import LeftQuickSidebar from "./LeftQuickSidebar";
@@ -8,6 +9,7 @@ import RightQuickSidebar from "./RightQuickSidebar";
 import Footer from "./Footer";
 import SearchModal from "./Search";
 import LockScreen from "./LockScreen";
+import ScrollToTop from "./ScrollToTop";
 import { useInactivityTimer } from "@/hooks/useInactivityTimer";
 
 interface LayoutProps {
@@ -17,6 +19,7 @@ interface LayoutProps {
 }
 
 export default function AdminLayout({ children, activeItem = "dashboard", onItemClick }: LayoutProps) {
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [leftQuickSidebar, setLeftQuickSidebar] = useState(true);
   const [rightQuickSidebar, setRightQuickSidebar] = useState(true);
@@ -26,9 +29,10 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
   const [user, setUser] = useState<any>(null);
 
   // Inactivity timer for lock screen
-  useInactivityTimer(() => {
-    setIsLocked(true);
-  }, 60000); // 1 minute
+  useInactivityTimer({
+    onTimeout: () => setIsLocked(true),
+    timeout: 60000 // 1 minute
+  });
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
@@ -38,6 +42,12 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
   }, []);
 
   const handleItemClick = (item: string) => {
+    // Handle navigation for specific items
+    if (item === 'erp-settings') {
+      router.push('/dashboard/settings');
+      return;
+    }
+    
     if (onItemClick) {
       onItemClick(item);
     }
@@ -84,7 +94,7 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         {/* Main Content */}
         <div 
           className={`flex-1 transition-all duration-200 ease-in-out ${
-            sidebarOpen ? 'ml-80' : 'ml-12'
+            sidebarOpen ? 'ml-77' : 'ml-12'
           } ${rightQuickSidebar ? 'mr-12' : 'mr-0'}`}
           style={{ paddingTop: '45px' }}
         >
@@ -110,6 +120,9 @@ export default function AdminLayout({ children, activeItem = "dashboard", onItem
         searchQuery=""
         onSearchChange={() => {}}
       />
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
 
     </div>
   );

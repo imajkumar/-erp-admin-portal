@@ -123,40 +123,57 @@
 
 /* Custom Blue Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0.5px;
+  height: 0.5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #0078d4;
-  border-radius: 4px;
+  background: transparent;
+  border-radius: 0.25px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: #0078d4;
+}
+
+/* Show scrollbar only when scrolling */
+*:hover::-webkit-scrollbar-thumb {
+  background: #0078d4;
+}
+
+*:active::-webkit-scrollbar-thumb {
   background: #106ebe;
 }
 
 /* Thin scrollbar for table horizontal scroll */
 .overflow-x-auto::-webkit-scrollbar {
-  height: 6px;
+  height: 0.5px;
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-  background: #f8f9fa;
-  border-radius: 3px;
+  background: transparent;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-  background: #0078d4;
-  border-radius: 3px;
+  background: transparent;
+  border-radius: 0.25px;
+  transition: background 0.2s ease;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #0078d4;
+}
+
+.overflow-x-auto:hover::-webkit-scrollbar-thumb {
+  background: #0078d4;
+}
+
+.overflow-x-auto:active::-webkit-scrollbar-thumb {
   background: #106ebe;
 }
 

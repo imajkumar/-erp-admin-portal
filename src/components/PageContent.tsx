@@ -46,7 +46,7 @@ interface PageContentProps {
 const pageData = {
   dashboard: {
     title: "Dashboard",
-    description: "Overview of your business metrics",
+    description: "Overview of your business metricsKKK",
     stats: [
       { title: "Total Revenue", value: "$45,231.89", change: "+20.1%", trend: "up", icon: MdAttachMoney },
       { title: "Subscriptions", value: "+2,350", change: "+180.1%", trend: "up", icon: MdPeople },

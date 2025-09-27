@@ -55,18 +55,20 @@ export default function Header({
       <div className="flex items-center justify-between h-full">
         {/* Left Side - App Branding */}
         <div className="flex items-center space-x-2">
-          {/* Hamburger Menu Toggle */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onSidebarToggle}
-            className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-7 w-7"
-            title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-          >
-            {sidebarOpen ? <X className="h-3 w-3" /> : <Menu className="h-3 w-3" />}
-          </Button>
+          {/* Hamburger Menu Toggle - Only show when sidebar is closed */}
+          {!sidebarOpen && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onSidebarToggle}
+              className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-7 w-7"
+              title="Open sidebar"
+            >
+              <Menu className="h-3 w-3" />
+            </Button>
+          )}
           
-          <div className="flex items-center space-x-1">
+          <div className={`flex items-center space-x-1 ${!sidebarOpen ? 'ml-1' : ''}`}>
             {/* 12 Dots Grid */}
             <button
               onClick={onDrawerToggle}
@@ -83,9 +85,7 @@ export default function Header({
               </div>
             </button>
             
-           
-            
-            <h1 className="text-xs font-semibold text-white ml-2">ERP Admin</h1>
+            <h1 className="text-xs font-semibold text-white ml-0.5">ERP Admin</h1>
             <p className="text-xs text-blue-100">Next.js + ShadcnUI</p>
           </div>
         </div>

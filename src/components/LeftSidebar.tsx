@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   BarChart3,
   CheckSquare,
@@ -29,7 +30,6 @@ import {
   Activity,
   ShoppingCart,
   DollarSign,
-  Search,
   Plus,
   Grid3X3,
   User,
@@ -37,7 +37,8 @@ import {
   FolderOpen,
   Layers,
   Zap,
-  Menu
+  Menu,
+  ChevronLeft
 } from "lucide-react";
 
 interface LeftSidebarProps {
@@ -56,7 +57,14 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-
+  {
+    id: 'settings',
+    label: 'Settings',
+    icon: Settings,
+    children: [
+      { id: 'erp-settings', label: 'ERP Settings', icon: Settings }
+    ]
+  },
   {
     id: 'pages',
     label: 'Pages',
@@ -131,7 +139,6 @@ const menuItems: MenuItem[] = [
 
 export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }: LeftSidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>(['dashboards']);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleExpanded = (itemId: string) => {
     setExpandedItems(prev => 
@@ -194,19 +201,29 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
   if (!isOpen) return null;
 
   return (
+    <TooltipProvider>
         <aside className="fixed left-12 w-64 h-[calc(100vh-45px)] z-30 bg-gray-900 border-r border-gray-700" style={{ top: '45px' }}>
       <div className="flex flex-col h-full">
 
-        {/* Quick Search */}
+        {/* Dashboard Toggle Button */}
         <div className="p-4 border-b border-gray-700">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Quick Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
-            />
+          <div className="flex items-center w-full h-10 px-3 text-gray-300 hover:bg-gray-700 hover:text-white rounded">
+            <Home className="mr-3 h-4 w-4 text-gray-400" />
+            <span className="flex-1 text-sm font-medium">Dashboard</span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  onClick={onClose}
+                  className="h-8 w-8 p-0 bg-white hover:bg-gray-100 rounded transition-all duration-200 hover:scale-105"
+                >
+                  <ChevronLeft className="h-4 w-4 text-blue-600" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="animate-in fade-in-0 zoom-in-95 duration-200">
+                <p>Close Sidebar</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
@@ -252,5 +269,6 @@ export default function LeftSidebar({ isOpen, onClose, activeItem, onItemClick }
         </div>
       </div>
     </aside>
+    </TooltipProvider>
   );
 }
