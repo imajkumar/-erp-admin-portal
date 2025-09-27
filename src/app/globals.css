@@ -448,6 +448,59 @@
   color: #374151;
 }
 
+/* React Quill Custom Styles */
+.ql-editor {
+  font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.ql-toolbar {
+  border-top: 1px solid #e2e8f0 !important;
+  border-left: 1px solid #e2e8f0 !important;
+  border-right: 1px solid #e2e8f0 !important;
+  border-bottom: none !important;
+  background: #f8fafc !important;
+}
+
+.ql-container {
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-left: 1px solid #e2e8f0 !important;
+  border-right: 1px solid #e2e8f0 !important;
+  border-top: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif !important;
+}
+
+.ql-editor.ql-blank::before {
+  font-style: normal !important;
+  color: #9ca3af !important;
+  font-size: 14px !important;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: #6b7280 !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #6b7280 !important;
+}
+
+.ql-toolbar button:hover .ql-stroke {
+  stroke: #374151 !important;
+}
+
+.ql-toolbar button:hover .ql-fill {
+  fill: #374151 !important;
+}
+
+.ql-toolbar button.ql-active .ql-stroke {
+  stroke: #2563eb !important;
+}
+
+.ql-toolbar button.ql-active .ql-fill {
+  fill: #2563eb !important;
+}
+
 
 /* Checkbox Blue Styling */
 .permissions-drawer [data-state="checked"] {

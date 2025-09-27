@@ -56,7 +56,8 @@ import {
   Tabs,
   Tooltip,
 } from "antd";
-import { Editor } from "@tinymce/tinymce-react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import type { ColumnsType } from "antd/es/table";
 import { RangePickerProps } from "antd/es/date-picker";
 import dayjs from "dayjs";
@@ -577,18 +578,16 @@ export default function InboxPage() {
   const handleEditorChange = (content: string) => {
     setEditorContent(content);
 
-    // Check for @ mentions
-    const cursorPos = content.lastIndexOf("@");
+    // Check for @ mentions in plain text
+    const textContent = content.replace(/<[^>]*>/g, ""); // Strip HTML tags
+    const cursorPos = textContent.lastIndexOf("@");
     if (cursorPos !== -1) {
-      const textAfterAt = content.substring(cursorPos + 1);
+      const textAfterAt = textContent.substring(cursorPos + 1);
       const nextSpace = textAfterAt.indexOf(" ");
-      const nextTag = textAfterAt.indexOf("<");
 
-      if (nextSpace === -1 || (nextTag !== -1 && nextTag < nextSpace)) {
+      if (nextSpace === -1 || nextSpace > 20) {
         const mentionText =
-          nextSpace === -1
-            ? textAfterAt.substring(0, nextTag)
-            : textAfterAt.substring(0, nextSpace);
+          nextSpace === -1 ? textAfterAt : textAfterAt.substring(0, nextSpace);
         if (mentionText.length > 0 && mentionText.length < 20) {
           setCommentMention(mentionText);
           setShowMentionDropdown(true);
@@ -621,6 +620,35 @@ export default function InboxPage() {
       user.email.toLowerCase().includes(commentMention.toLowerCase()) ||
       user.username.toLowerCase().includes(commentMention.toLowerCase()),
   );
+
+  // React Quill configuration
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ color: [] }, { background: [] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ align: [] }],
+      ["link", "blockquote", "code-block"],
+      ["clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "color",
+    "background",
+    "list",
+    "bullet",
+    "align",
+    "link",
+    "blockquote",
+    "code-block",
+  ];
 
   // Render HTML content for comments
   const renderCommentContent = (content: string) => {
@@ -1146,60 +1174,18 @@ export default function InboxPage() {
                       <div className="mb-4">
                         <div className="relative">
                           <div className="border border-gray-200 rounded-md">
-                            <Editor
-                              apiKey="no-api-key" // You can add your TinyMCE API key here
+                            <ReactQuill
+                              theme="snow"
                               value={editorContent}
-                              onEditorChange={handleEditorChange}
-                              init={{
-                                height: 200,
-                                menubar: false,
-                                plugins: [
-                                  "advlist",
-                                  "autolink",
-                                  "lists",
-                                  "link",
-                                  "image",
-                                  "charmap",
-                                  "preview",
-                                  "anchor",
-                                  "searchreplace",
-                                  "visualblocks",
-                                  "code",
-                                  "fullscreen",
-                                  "insertdatetime",
-                                  "media",
-                                  "table",
-                                  "help",
-                                  "wordcount",
-                                  "mentions",
-                                ],
-                                toolbar:
-                                  "undo redo | blocks | " +
-                                  "bold italic forecolor | alignleft aligncenter " +
-                                  "alignright alignjustify | bullist numlist outdent indent | " +
-                                  "removeformat | help | @",
-                                content_style:
-                                  "body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; }",
-                                placeholder:
-                                  "Add a comment... Use @username to mention someone",
-                                mentions: {
-                                  source: filteredMentionUsers.map((user) => ({
-                                    name: user.name,
-                                    value: user.username,
-                                    email: user.email,
-                                  })),
-                                  render: (item: any) => `
-                                    <div class="flex items-center space-x-2 p-2">
-                                      <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
-                                        ${item.name.charAt(0)}
-                                      </div>
-                                      <div>
-                                        <div class="font-medium">${item.name}</div>
-                                        <div class="text-xs text-gray-500">${item.email}</div>
-                                      </div>
-                                    </div>
-                                  `,
-                                },
+                              onChange={handleEditorChange}
+                              modules={quillModules}
+                              formats={quillFormats}
+                              placeholder="Add a comment... Use @username to mention someone"
+                              style={{
+                                height: "200px",
+                                fontFamily:
+                                  "-apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif",
+                                fontSize: "14px",
                               }}
                             />
                           </div>
