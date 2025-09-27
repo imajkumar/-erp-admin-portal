@@ -76,12 +76,13 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
   }, []);
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    const ampm = date.getHours() >= 12 ? "PM" : "AM";
+    const displayHours = date.getHours() % 12 || 12;
+
+    return `${displayHours.toString().padStart(2, "0")}:${minutes}:${seconds} ${ampm}`;
   };
 
   const formatDate = (date: Date) => {
@@ -293,10 +294,13 @@ export default function LockScreen({ onUnlock }: LockScreenProps) {
         <div className="w-1/2 flex flex-col items-center justify-center px-8 border-l border-white/10">
           {/* Professional Digital Clock */}
           <div className="text-center">
-            <div className="text-6xl font-mono font-bold text-white mb-6 tracking-wider">
-              {formatTime(currentTime)}
+            <div className="relative">
+              <div className="absolute inset-0 bg-blue-500/20 rounded-2xl blur-xl scale-110"></div>
+              <div className="relative text-7xl font-mono font-bold text-white mb-6 tracking-wider drop-shadow-2xl animate-pulse bg-white/5 px-8 py-4 rounded-2xl border border-white/10">
+                {formatTime(currentTime)}
+              </div>
             </div>
-            <div className="text-xl text-slate-300 animate-fade-in mb-8 font-medium">
+            <div className="text-2xl text-slate-300 animate-fade-in mb-8 font-medium drop-shadow-lg">
               {formatDate(currentTime)}
             </div>
 
