@@ -1,18 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { AuthService } from "@/lib/api/services/authService";
-import { LoginRequest } from "@/store/types";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { identifier, password, rememberMe } = body;
+    const { refreshToken } = body;
 
     // Validate required fields
-    if (!identifier || !password) {
+    if (!refreshToken) {
       return NextResponse.json(
         {
           success: false,
-          message: "Identifier and password are required",
+          message: "Refresh token is required",
           data: null,
           status: 400,
           timestamp: new Date().toISOString(),
@@ -21,14 +20,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use the proper AuthService instead of direct HTTP calls
-    const loginRequest: LoginRequest = { identifier, password, rememberMe };
-    const response = await AuthService.login(loginRequest);
+    // Use the AuthService to refresh the token
+    const response = await AuthService.refreshToken(refreshToken);
 
     // Return the response from AuthService
     return NextResponse.json(response);
   } catch (error: unknown) {
-    console.error("API Error:", error);
+    console.error("Refresh Token API Error:", error);
 
     // Handle different types of errors
     if (error && typeof error === "object" && "status" in error) {

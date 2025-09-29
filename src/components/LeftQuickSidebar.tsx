@@ -79,7 +79,7 @@ export default function LeftQuickSidebar({
               onClick={onSidebarToggle}
               className={`mb-4 w-8 h-8 p-0 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg ${
                 sidebarOpen
-                  ? "bg-red-500 hover:bg-blue-600 shadow-blue-500/25"
+                  ? "bg-blue-500 hover:bg-blue-600 shadow-blue-500/25"
                   : "bg-blue-500 hover:bg-blue-600 shadow-blue-500/25"
               }`}
               title={

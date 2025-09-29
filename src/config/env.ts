@@ -35,7 +35,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
     local: {
       microservices: {
         auth:
-          process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || "http://localhost:8080",
+          process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || "http://localhost:8061",
         users:
           process.env.NEXT_PUBLIC_USERS_SERVICE_URL || "http://localhost:8081",
         modules:
@@ -104,9 +104,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
     },
     production: {
       microservices: {
-        auth:
-          process.env.NEXT_PUBLIC_AUTH_SERVICE_URL ||
-          "https://auth.erp-admin.com",
+        auth: process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || "http://165.22.212.8",
         users:
           process.env.NEXT_PUBLIC_USERS_SERVICE_URL ||
           "https://users.erp-admin.com",
@@ -165,14 +163,14 @@ export const {
 export const API_ENDPOINTS = {
   AUTH: {
     BASE_URL: authServiceUrl,
-    LOGIN: "/login",
-    LOGOUT: "/logout",
-    REFRESH: "/refresh",
-    PROFILE: "/profile",
-    REGISTER: "/register",
-    FORGOT_PASSWORD: "/forgot-password",
-    RESET_PASSWORD: "/reset-password",
-    VERIFY_EMAIL: "/verify-email",
+    LOGIN: "/api/v1/auth/login",
+    LOGOUT: "/api/v1/auth/logout",
+    REFRESH: "/api/v1/auth/refresh",
+    PROFILE: "/api/v1/auth/profile",
+    REGISTER: "/api/v1/auth/register",
+    FORGOT_PASSWORD: "/api/v1/auth/forgot-password",
+    RESET_PASSWORD: "/api/v1/auth/reset-password",
+    VERIFY_EMAIL: "/api/v1/auth/verify-email",
   },
   USERS: {
     BASE_URL: usersServiceUrl,

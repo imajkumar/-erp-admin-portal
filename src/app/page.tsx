@@ -43,7 +43,10 @@ export default function AuthPage() {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
-      window.location.href = "/dashboard";
+      // Check if there's a redirect URL in the query params
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrl = urlParams.get("redirect") || "/dashboard";
+      window.location.href = redirectUrl;
     }
   }, []);
 
@@ -85,8 +88,10 @@ export default function AuthPage() {
         localStorage.setItem("authToken", mockResponse.token);
         localStorage.setItem("userData", JSON.stringify(mockResponse.user));
 
-        // Redirect to dashboard
-        window.location.href = "/dashboard";
+        // Check for redirect URL and redirect accordingly
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get("redirect") || "/dashboard";
+        window.location.href = redirectUrl;
         return;
       }
 
@@ -94,8 +99,9 @@ export default function AuthPage() {
       const response = await axios.post(
         "/api/auth/login",
         {
-          email: formData.email,
+          identifier: formData.email,
           password: formData.password,
+          rememberMe: formData.rememberMe || false,
         },
         {
           headers: {
@@ -108,18 +114,24 @@ export default function AuthPage() {
       // Login successful
       console.log("Login successful:", response.data);
 
-      // Store token if provided
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
+      // Store tokens if provided
+      if (response.data.data?.accessToken) {
+        localStorage.setItem("authToken", response.data.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.data.refreshToken);
       }
 
       // Store user data if provided
-      if (response.data.user) {
-        localStorage.setItem("userData", JSON.stringify(response.data.user));
+      if (response.data.data?.user) {
+        localStorage.setItem(
+          "userData",
+          JSON.stringify(response.data.data.user),
+        );
       }
 
-      // Redirect to dashboard
-      window.location.href = "/dashboard";
+      // Check for redirect URL and redirect accordingly
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrl = urlParams.get("redirect") || "/dashboard";
+      window.location.href = redirectUrl;
     } catch (error: any) {
       console.error("Login error:", error);
 

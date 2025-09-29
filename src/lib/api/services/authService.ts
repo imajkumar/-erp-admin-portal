@@ -8,28 +8,30 @@ export class AuthService {
   static async login(
     credentials: LoginRequest,
   ): Promise<ApiResponse<LoginResponse>> {
-    return apiClient.post(this.SERVICE, "/login", credentials);
+    return apiClient.post(this.SERVICE, "/api/v1/auth/login", credentials);
   }
 
   static async logout(): Promise<ApiResponse<null>> {
-    return apiClient.post(this.SERVICE, "/logout");
+    return apiClient.post(this.SERVICE, "/api/v1/auth/logout");
   }
 
   static async refreshToken(
     refreshToken: string,
   ): Promise<ApiResponse<{ accessToken: string; refreshToken: string }>> {
-    return apiClient.post(this.SERVICE, "/refresh", { refreshToken });
+    return apiClient.post(this.SERVICE, "/api/v1/auth/refresh", {
+      refreshToken,
+    });
   }
 
   // User profile endpoints
   static async getProfile(): Promise<ApiResponse<User>> {
-    return apiClient.get(this.SERVICE, "/profile");
+    return apiClient.get(this.SERVICE, "/api/v1/auth/profile");
   }
 
   static async updateProfile(
     profileData: Partial<User>,
   ): Promise<ApiResponse<User>> {
-    return apiClient.put(this.SERVICE, "/profile", profileData);
+    return apiClient.put(this.SERVICE, "/api/v1/auth/profile", profileData);
   }
 
   static async updatePassword(data: {

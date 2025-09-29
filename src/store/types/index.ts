@@ -9,6 +9,7 @@ export interface ApiResponse<T = any> {
   message: string;
   success: boolean;
   status: number;
+  timestamp: string;
 }
 
 export interface PaginatedResponse<T = any> {
@@ -29,34 +30,73 @@ export interface ApiError {
   status: number;
   code?: string;
   details?: any;
+  timestamp: string;
 }
 
 // User types
 export interface User {
   id: string;
+  username: string;
   email: string;
+  phone: string | null;
   firstName: string;
   lastName: string;
-  avatar?: string;
-  role: string;
-  permissions: string[];
-  isActive: boolean;
-  lastLogin?: string;
-  createdAt: string;
-  updatedAt: string;
+  fullName: string;
+  profilePictureUrl: string | null;
+  status: string;
+  emailVerified: boolean;
+  lastLoginAt: string;
+  preferences: {
+    language: string;
+    timezone: string;
+    theme: string;
+    notifications: {
+      emailEnabled: boolean;
+      smsEnabled: boolean;
+      pushEnabled: boolean;
+      securityEnabled: boolean;
+    };
+  };
 }
 
 export interface LoginRequest {
-  email: string;
+  identifier: string;
   password: string;
   rememberMe?: boolean;
 }
 
 export interface LoginResponse {
-  user: User;
   accessToken: string;
   refreshToken: string;
+  tokenType: string;
   expiresIn: number;
+  refreshExpiresIn: number;
+  user: User;
+  role: string;
+  session: {
+    sessionId: string;
+    deviceId: string | null;
+    deviceName: string | null;
+    ipAddress: string | null;
+    userAgent: string | null;
+    createdAt: string;
+    expiresAt: string;
+    rememberMe: boolean;
+    timeoutMinutes: number;
+  };
+  security: {
+    twoFactorEnabled: boolean;
+    pinEnabled: boolean;
+    linkedProviders: string[];
+    lastPasswordChange: string;
+    securityScore: number;
+    securityRecommendations: string[];
+    failedLoginAttempts: number;
+    lockedUntil: string | null;
+  };
+  rememberMeSession: boolean;
+  sessionTimeoutMinutes: number;
+  accountLocked: boolean;
 }
 
 // Module types
