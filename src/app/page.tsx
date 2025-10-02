@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import {
   Building2,
   Eye,
@@ -13,6 +12,9 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useLoginMutation } from "@/store/api/authApi";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "@/store/slices/authSlice";
 import QRCodeLogin from "@/components/QRCodeLogin";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +33,6 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showQRLogin, setShowQRLogin] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -39,6 +40,9 @@ export default function AuthPage() {
     password: "",
     confirmPassword: "",
   });
+
+  const dispatch = useDispatch();
+  const [login, { isLoading }] = useLoginMutation();
 
   // Check if user is already logged in
   useEffect(() => {
@@ -89,45 +93,48 @@ export default function AuthPage() {
 
       // Try actual API call first
       try {
-        const response = await axios.post(
-          "/api/auth/login",
-          {
-            email: formData.email,
-            password: formData.password,
-            rememberMe: rememberMe || false,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            timeout: 15000, // 15 second timeout
-          },
-        );
+        const response = await login({
+          email: formData.email,
+          password: formData.password,
+          rememberMe: rememberMe || false,
+        }).unwrap();
 
         // Login successful
-        console.log("API Login successful:", response.data);
+        console.log("API Login successful:", response);
 
-        if (response.data.status === "success" && response.data.data) {
+        if (response.status === "success" && response.data) {
           // Store tokens if provided
-          if (response.data.data.accessToken) {
-            localStorage.setItem("authToken", response.data.data.accessToken);
+          if (response.data.accessToken) {
+            localStorage.setItem("authToken", response.data.accessToken);
             localStorage.setItem(
               "refreshToken",
-              response.data.data.refreshToken || response.data.data.accessToken,
+              response.data.refreshToken || response.data.accessToken,
             );
 
             // Set cookies with proper attributes for middleware
-            document.cookie = `authToken=${response.data.data.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
-            document.cookie = `refreshToken=${response.data.data.refreshToken || response.data.data.accessToken}; path=/; max-age=604800; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
+            document.cookie = `authToken=${response.data.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
+            document.cookie = `refreshToken=${response.data.refreshToken || response.data.accessToken}; path=/; max-age=604800; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
           }
 
           // Store user data if provided
-          if (response.data.data.user) {
+          if (response.data.user) {
             localStorage.setItem(
               "userData",
-              JSON.stringify(response.data.data.user),
+              JSON.stringify(response.data.user),
             );
           }
+
+          // Store login time
+          localStorage.setItem("loginTime", new Date().toISOString());
+
+          // Dispatch to Redux store
+          dispatch(
+            loginSuccess({
+              accessToken: response.data.accessToken,
+              refreshToken: response.data.refreshToken,
+              user: response.data.user,
+            }),
+          );
 
           // Check for redirect URL and redirect accordingly
           const urlParams = new URLSearchParams(window.location.search);
@@ -168,6 +175,7 @@ export default function AuthPage() {
           localStorage.setItem("authToken", mockResponse.accessToken);
           localStorage.setItem("refreshToken", mockResponse.refreshToken);
           localStorage.setItem("userData", JSON.stringify(mockResponse.user));
+          localStorage.setItem("loginTime", new Date().toISOString());
 
           // Set cookies with proper attributes
           document.cookie = `authToken=${mockResponse.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
@@ -215,6 +223,7 @@ export default function AuthPage() {
 
           localStorage.setItem("authToken", mockResponse.token);
           localStorage.setItem("userData", JSON.stringify(mockResponse.user));
+          localStorage.setItem("loginTime", new Date().toISOString());
 
           // Also set cookies for middleware to detect
           document.cookie = `authToken=${mockResponse.token}; path=/; max-age=86400`; // 24 hours

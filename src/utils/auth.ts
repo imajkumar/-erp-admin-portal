@@ -28,6 +28,7 @@ export const logout = async () => {
     localStorage.removeItem("userData");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("loginTime");
 
     // Clear cookies for middleware
     document.cookie =

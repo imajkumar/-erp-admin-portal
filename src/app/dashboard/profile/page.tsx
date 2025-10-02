@@ -20,6 +20,10 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "@/store/api/authApi";
 import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
 import AuthGuard from "@/components/AuthGuard";

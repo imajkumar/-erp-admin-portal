@@ -26,6 +26,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { JiraButton } from "@/components/ui/jira-button";
@@ -68,20 +69,16 @@ export default function Header({
   onLockScreen,
   sidebarOpen,
 }: HeaderProps) {
-  const [currentSession, setCurrentSession] = useState("2025-2026");
-  const [showSessionDialog, setShowSessionDialog] = useState(false);
-  const [selectedSession, setSelectedSession] = useState("");
-
-  const sessions = [
-    { value: "2024-2025", label: "2024-2025" },
-    { value: "2025-2026", label: "2025-2026" },
-    { value: "2026-2027", label: "2026-2027" },
-  ];
+  const router = useRouter();
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
     window.location.href = "/";
+  };
+
+  const handleProfileClick = () => {
+    router.push("/dashboard/profile");
   };
 
   const handleCreateNew = (type: string) => {
@@ -140,26 +137,6 @@ export default function Header({
       default:
         console.log(`Create ${type} clicked`);
     }
-  };
-
-  const handleSessionSelect = (session: string) => {
-    if (session !== currentSession) {
-      setSelectedSession(session);
-      setShowSessionDialog(true);
-    }
-  };
-
-  const confirmSessionChange = () => {
-    setCurrentSession(selectedSession);
-    setShowSessionDialog(false);
-    setSelectedSession("");
-    // Here you can add logic to reload data for the new session
-    console.log(`Session changed to: ${selectedSession}`);
-  };
-
-  const cancelSessionChange = () => {
-    setShowSessionDialog(false);
-    setSelectedSession("");
   };
 
   return (
@@ -380,35 +357,6 @@ export default function Header({
             <Lock className="h-3.5 w-3.5" />
           </JiraButton>
 
-          {/* Session Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <JiraButton variant="text">
-                <Calendar className="h-3.5 w-3.5 mr-1.5" />
-                {currentSession}
-                <ChevronDown className="h-3.5 w-3.5 ml-1.5" />
-              </JiraButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32">
-              <DropdownMenuLabel className="text-xs">
-                Select Session
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {sessions.map((session) => (
-                <DropdownMenuItem
-                  key={session.value}
-                  onClick={() => handleSessionSelect(session.value)}
-                  className="text-xs"
-                >
-                  {session.value === currentSession && (
-                    <Check className="h-3 w-3 mr-2 text-green-600" />
-                  )}
-                  {session.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
           {/* Inbox */}
           <JiraButton title="Inbox" onClick={onInboxClick}>
             <Mail className="h-3.5 w-3.5" />
@@ -499,7 +447,7 @@ export default function Header({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleProfileClick}>
                 <UserPlus className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
@@ -524,43 +472,6 @@ export default function Header({
           </JiraButton>
         </div>
       </div>
-
-      {/* Session Change Confirmation Dialog */}
-      <Dialog open={showSessionDialog} onOpenChange={setShowSessionDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-500" />
-              <span>Change Session</span>
-            </DialogTitle>
-            <DialogDescription>
-              Are you sure you want to change the session from{" "}
-              <strong>{currentSession}</strong> to{" "}
-              <strong>{selectedSession}</strong>?
-              <br />
-              <br />
-              This will reload all data for the new session and may affect your
-              current work.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex space-x-2">
-            <Button
-              variant="outline"
-              onClick={cancelSessionChange}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={confirmSessionChange}
-              className="flex-1 bg-blue-600 hover:bg-blue-700"
-            >
-              <Check className="h-4 w-4 mr-2" />
-              Confirm Change
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </header>
   );
 }
