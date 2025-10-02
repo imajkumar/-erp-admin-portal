@@ -805,6 +805,7 @@ export default function UserManagementPage() {
   const handleSaveUser = async (values: any) => {
     try {
       setLoading(true);
+      console.log("handleSaveUser called with values:", values);
 
       if (selectedUser) {
         // Update existing user
