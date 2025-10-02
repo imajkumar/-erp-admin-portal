@@ -1895,11 +1895,18 @@ export default function UserManagementPage() {
             <JiraButton variant="text" onClick={() => setAddDrawerOpen(false)}>
               Cancel
             </JiraButton>
-            <JiraButton variant="create" onClick={() => {
+            <JiraButton variant="create" onClick={async () => {
               console.log("Save User button clicked");
               console.log("Form values before submit:", form.getFieldsValue());
               console.log("Form validation status:", form.getFieldsError());
-              form.submit();
+              
+              try {
+                const values = await form.validateFields();
+                console.log("Form validation passed, values:", values);
+                form.submit();
+              } catch (error) {
+                console.log("Form validation failed:", error);
+              }
             }}>
               <Save className="h-4 w-4 mr-2" />
               Save User
