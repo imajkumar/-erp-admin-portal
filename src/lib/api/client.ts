@@ -289,6 +289,11 @@ export class ApiClient {
     data?: any,
     config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
+    console.log(
+      `Making POST request to service: ${service}, URL: ${url}, Data:`,
+      data,
+    );
+    console.log(`Base URL for ${service}:`, microservices[service]);
     return this.request<T>(service, { ...config, method: "POST", url, data });
   }
 

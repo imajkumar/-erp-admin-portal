@@ -792,7 +792,9 @@ export default function UserManagementPage() {
           status: values.status || "ACTIVE",
         };
 
+        console.log("Sending user data:", userData);
         const response = await usersApi.createUser(userData);
+        console.log("API response:", response);
 
         if (response) {
           // Add the new user to the local state
@@ -820,9 +822,15 @@ export default function UserManagementPage() {
       }
     } catch (error) {
       console.error("Error saving user:", error);
+      console.error("Error details:", {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+        statusText: error?.response?.statusText,
+      });
       toast({
         title: "Error",
-        description: "Failed to save user",
+        description: `Failed to save user: ${error?.message || "Unknown error"}`,
         variant: "destructive",
       });
     } finally {
