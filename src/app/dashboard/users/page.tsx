@@ -1895,7 +1895,12 @@ export default function UserManagementPage() {
             <JiraButton variant="text" onClick={() => setAddDrawerOpen(false)}>
               Cancel
             </JiraButton>
-            <JiraButton variant="create" onClick={() => form.submit()}>
+            <JiraButton variant="create" onClick={() => {
+              console.log("Save User button clicked");
+              console.log("Form values before submit:", form.getFieldsValue());
+              console.log("Form validation status:", form.getFieldsError());
+              form.submit();
+            }}>
               <Save className="h-4 w-4 mr-2" />
               Save User
             </JiraButton>
@@ -1905,7 +1910,13 @@ export default function UserManagementPage() {
         <Form
           form={form}
           layout="vertical"
-          onFinish={handleSaveUser}
+          onFinish={(values) => {
+            console.log("Form onFinish called with values:", values);
+            handleSaveUser(values);
+          }}
+          onFinishFailed={(errorInfo) => {
+            console.log("Form validation failed:", errorInfo);
+          }}
           className="space-y-6"
         >
           <Tabs
