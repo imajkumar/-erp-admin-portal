@@ -1768,344 +1768,228 @@ export default function UserManagementPage() {
       {/* Add User Drawer */}
       <Drawer
         title={
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <UserPlus className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                Add New User
-              </h2>
-              <p className="text-sm text-gray-600">Create a new user account</p>
-            </div>
+          <div className="flex items-center space-x-2">
+            <UserPlus className="h-5 w-5 text-blue-600" />
+            <span>Add New User</span>
           </div>
         }
         placement="right"
         size="large"
         open={addDrawerOpen}
         onClose={() => setAddDrawerOpen(false)}
-        width="90%"
+        width="100%"
         className="user-drawer"
         extra={
-          <div className="flex space-x-3">
-            <JiraButton
-              variant="text"
-              onClick={() => setAddDrawerOpen(false)}
-              className="text-gray-600 hover:text-gray-900"
-            >
+          <div className="flex space-x-2">
+            <JiraButton variant="text" onClick={() => setAddDrawerOpen(false)}>
               Cancel
             </JiraButton>
-            <JiraButton
-              variant="create"
-              onClick={() => form.submit()}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6"
-            >
+            <JiraButton variant="create" onClick={() => form.submit()}>
               <Save className="h-4 w-4 mr-2" />
               Save User
             </JiraButton>
           </div>
         }
       >
-        <div className="max-w-4xl mx-auto p-6">
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleSaveUser}
-            className="space-y-8"
-          >
-            <Tabs
-              defaultActiveKey="personal"
-              className="user-form-tabs"
-              tabBarStyle={{
-                background: "#f8fafc",
-                padding: "0 24px",
-                margin: "0 -24px 24px -24px",
-                borderBottom: "1px solid #e2e8f0",
-              }}
-              items={[
-                {
-                  key: "personal",
-                  label: "Personal Details",
-                  children: (
-                    <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Form.Item
-                          name="firstName"
-                          label={
-                            <span className="text-sm font-medium text-gray-700">
-                              First Name <span className="text-red-500">*</span>
-                            </span>
-                          }
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter first name",
-                            },
-                          ]}
-                          className="mb-4"
-                        >
-                          <AntInput
-                            placeholder="Enter first name"
-                            size="large"
-                            className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          name="lastName"
-                          label={
-                            <span className="text-sm font-medium text-gray-700">
-                              Last Name <span className="text-red-500">*</span>
-                            </span>
-                          }
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter last name",
-                            },
-                          ]}
-                          className="mb-4"
-                        >
-                          <AntInput
-                            placeholder="Enter last name"
-                            size="large"
-                            className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </Form.Item>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Form.Item
-                          name="email"
-                          label={
-                            <span className="text-sm font-medium text-gray-700">
-                              Email <span className="text-red-500">*</span>
-                            </span>
-                          }
-                          rules={[
-                            {
-                              required: true,
-                              type: "email",
-                              message: "Please enter a valid email",
-                            },
-                          ]}
-                          className="mb-4"
-                        >
-                          <AntInput
-                            placeholder="Enter email address"
-                            size="large"
-                            className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          name="phone"
-                          label={
-                            <span className="text-sm font-medium text-gray-700">
-                              Phone <span className="text-red-500">*</span>
-                            </span>
-                          }
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter phone number",
-                            },
-                          ]}
-                          className="mb-4"
-                        >
-                          <AntInput
-                            placeholder="Enter phone number"
-                            size="large"
-                            className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </Form.Item>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Form.Item
-                          name="gender"
-                          label={
-                            <span className="text-sm font-medium text-gray-700">
-                              Gender <span className="text-red-500">*</span>
-                            </span>
-                          }
-                          rules={[
-                            { required: true, message: "Please select gender" },
-                          ]}
-                          className="mb-4"
-                        >
-                          <Select
-                            placeholder="Select gender"
-                            size="large"
-                            className="rounded-lg"
-                          >
-                            <Option value="Male">Male</Option>
-                            <Option value="Female">Female</Option>
-                            <Option value="Other">Other</Option>
-                          </Select>
-                        </Form.Item>
-                        <Form.Item
-                          name="dateOfBirth"
-                          label={
-                            <span className="text-sm font-medium text-gray-700">
-                              Date of Birth
-                            </span>
-                          }
-                          className="mb-4"
-                        >
-                          <DatePicker
-                            className="w-full rounded-lg"
-                            size="large"
-                            placeholder="Select date"
-                          />
-                        </Form.Item>
-                      </div>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSaveUser}
+          className="space-y-6"
+        >
+          <Tabs
+            defaultActiveKey="personal"
+            items={[
+              {
+                key: "personal",
+                label: "Personal Details",
+                children: (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <Form.Item
-                        name="about"
-                        label={
-                          <span className="text-sm font-medium text-gray-700">
-                            About
-                          </span>
-                        }
-                        className="mb-4"
-                      >
-                        <AntInput.TextArea
-                          rows={4}
-                          placeholder="Tell us about yourself"
-                          className="rounded-lg border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        />
-                      </Form.Item>
-                    </div>
-                  ),
-                },
-                {
-                  key: "education",
-                  label: "Education",
-                  children: (
-                    <div className="space-y-4">
-                      <Form.Item name="university" label="University">
-                        <AntInput placeholder="Enter university name" />
-                      </Form.Item>
-                      <Form.Item name="degree" label="Degree">
-                        <AntInput placeholder="Enter degree" />
-                      </Form.Item>
-                      <Form.Item name="fieldOfStudy" label="Field of Study">
-                        <AntInput placeholder="Enter field of study" />
-                      </Form.Item>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Form.Item
-                          name="graduationYear"
-                          label="Graduation Year"
-                        >
-                          <AntInput placeholder="Enter graduation year" />
-                        </Form.Item>
-                        <Form.Item name="gpa" label="GPA">
-                          <AntInput placeholder="Enter GPA" />
-                        </Form.Item>
-                      </div>
-                    </div>
-                  ),
-                },
-                {
-                  key: "address",
-                  label: "Address",
-                  children: (
-                    <div className="space-y-4">
-                      <Form.Item name="street" label="Street Address">
-                        <AntInput placeholder="Enter street address" />
-                      </Form.Item>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Form.Item name="city" label="City">
-                          <AntInput placeholder="Enter city" />
-                        </Form.Item>
-                        <Form.Item name="state" label="State">
-                          <AntInput placeholder="Enter state" />
-                        </Form.Item>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Form.Item name="zipCode" label="ZIP Code">
-                          <AntInput placeholder="Enter ZIP code" />
-                        </Form.Item>
-                        <Form.Item name="country" label="Country">
-                          <AntInput placeholder="Enter country" />
-                        </Form.Item>
-                      </div>
-                    </div>
-                  ),
-                },
-                {
-                  key: "social",
-                  label: "Social Links",
-                  children: (
-                    <div className="space-y-4">
-                      <Form.Item name="website" label="Website">
-                        <AntInput placeholder="Enter website URL" />
-                      </Form.Item>
-                      <Form.Item name="linkedin" label="LinkedIn">
-                        <AntInput placeholder="Enter LinkedIn URL" />
-                      </Form.Item>
-                      <Form.Item name="twitter" label="Twitter">
-                        <AntInput placeholder="Enter Twitter URL" />
-                      </Form.Item>
-                      <Form.Item name="facebook" label="Facebook">
-                        <AntInput placeholder="Enter Facebook URL" />
-                      </Form.Item>
-                      <Form.Item name="instagram" label="Instagram">
-                        <AntInput placeholder="Enter Instagram URL" />
-                      </Form.Item>
-                      <Form.Item name="github" label="GitHub">
-                        <AntInput placeholder="Enter GitHub URL" />
-                      </Form.Item>
-                    </div>
-                  ),
-                },
-                {
-                  key: "work",
-                  label: "Work Details",
-                  children: (
-                    <div className="space-y-4">
-                      <Form.Item
-                        name="department"
-                        label="Department"
+                        name="firstName"
+                        label="First Name"
                         rules={[{ required: true }]}
                       >
-                        <Select placeholder="Select department">
-                          <Option value="Engineering">Engineering</Option>
-                          <Option value="Marketing">Marketing</Option>
-                          <Option value="Sales">Sales</Option>
-                          <Option value="HR">HR</Option>
-                          <Option value="Finance">Finance</Option>
-                          <Option value="Operations">Operations</Option>
-                        </Select>
+                        <AntInput placeholder="Enter first name" />
                       </Form.Item>
                       <Form.Item
-                        name="role"
-                        label="Role"
+                        name="lastName"
+                        label="Last Name"
                         rules={[{ required: true }]}
                       >
-                        <Select placeholder="Select role">
-                          <Option value="Admin">Admin</Option>
-                          <Option value="Manager">Manager</Option>
-                          <Option value="Employee">Employee</Option>
-                          <Option value="Intern">Intern</Option>
+                        <AntInput placeholder="Enter last name" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[{ required: true, type: "email" }]}
+                      >
+                        <AntInput placeholder="Enter email" />
+                      </Form.Item>
+                      <Form.Item
+                        name="phone"
+                        label="Phone"
+                        rules={[{ required: true }]}
+                      >
+                        <AntInput placeholder="Enter phone number" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        name="gender"
+                        label="Gender"
+                        rules={[{ required: true }]}
+                      >
+                        <Select placeholder="Select gender">
+                          <Option value="Male">Male</Option>
+                          <Option value="Female">Female</Option>
+                          <Option value="Other">Other</Option>
                         </Select>
                       </Form.Item>
-                      <Form.Item name="location" label="Work Location">
-                        <AntInput placeholder="Enter work location" />
-                      </Form.Item>
-                      <Form.Item name="joinDate" label="Join Date">
+                      <Form.Item name="dateOfBirth" label="Date of Birth">
                         <DatePicker className="w-full" />
                       </Form.Item>
-                      <Form.Item name="status" label="Status">
-                        <Select placeholder="Select status">
-                          <Option value="active">Active</Option>
-                          <Option value="inactive">Inactive</Option>
-                          <Option value="blocked">Blocked</Option>
-                        </Select>
+                    </div>
+                    <Form.Item name="about" label="About">
+                      <AntInput.TextArea
+                        rows={4}
+                        placeholder="Tell us about yourself"
+                      />
+                    </Form.Item>
+                  </div>
+                ),
+              },
+              {
+                key: "education",
+                label: "Education",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item name="university" label="University">
+                      <AntInput placeholder="Enter university name" />
+                    </Form.Item>
+                    <Form.Item name="degree" label="Degree">
+                      <AntInput placeholder="Enter degree" />
+                    </Form.Item>
+                    <Form.Item name="fieldOfStudy" label="Field of Study">
+                      <AntInput placeholder="Enter field of study" />
+                    </Form.Item>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item name="graduationYear" label="Graduation Year">
+                        <AntInput placeholder="Enter graduation year" />
+                      </Form.Item>
+                      <Form.Item name="gpa" label="GPA">
+                        <AntInput placeholder="Enter GPA" />
                       </Form.Item>
                     </div>
-                  ),
-                },
-              ]}
-            />
-          </Form>
-        </div>
+                  </div>
+                ),
+              },
+              {
+                key: "address",
+                label: "Address",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item name="street" label="Street Address">
+                      <AntInput placeholder="Enter street address" />
+                    </Form.Item>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item name="city" label="City">
+                        <AntInput placeholder="Enter city" />
+                      </Form.Item>
+                      <Form.Item name="state" label="State">
+                        <AntInput placeholder="Enter state" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item name="zipCode" label="ZIP Code">
+                        <AntInput placeholder="Enter ZIP code" />
+                      </Form.Item>
+                      <Form.Item name="country" label="Country">
+                        <AntInput placeholder="Enter country" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                key: "social",
+                label: "Social Links",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item name="website" label="Website">
+                      <AntInput placeholder="Enter website URL" />
+                    </Form.Item>
+                    <Form.Item name="linkedin" label="LinkedIn">
+                      <AntInput placeholder="Enter LinkedIn URL" />
+                    </Form.Item>
+                    <Form.Item name="twitter" label="Twitter">
+                      <AntInput placeholder="Enter Twitter URL" />
+                    </Form.Item>
+                    <Form.Item name="facebook" label="Facebook">
+                      <AntInput placeholder="Enter Facebook URL" />
+                    </Form.Item>
+                    <Form.Item name="instagram" label="Instagram">
+                      <AntInput placeholder="Enter Instagram URL" />
+                    </Form.Item>
+                    <Form.Item name="github" label="GitHub">
+                      <AntInput placeholder="Enter GitHub URL" />
+                    </Form.Item>
+                  </div>
+                ),
+              },
+              {
+                key: "work",
+                label: "Work Details",
+                children: (
+                  <div className="space-y-4">
+                    <Form.Item
+                      name="department"
+                      label="Department"
+                      rules={[{ required: true }]}
+                    >
+                      <Select placeholder="Select department">
+                        <Option value="Engineering">Engineering</Option>
+                        <Option value="Marketing">Marketing</Option>
+                        <Option value="Sales">Sales</Option>
+                        <Option value="HR">HR</Option>
+                        <Option value="Finance">Finance</Option>
+                        <Option value="Operations">Operations</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name="role"
+                      label="Role"
+                      rules={[{ required: true }]}
+                    >
+                      <Select placeholder="Select role">
+                        <Option value="Admin">Admin</Option>
+                        <Option value="Manager">Manager</Option>
+                        <Option value="Employee">Employee</Option>
+                        <Option value="Intern">Intern</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item name="location" label="Work Location">
+                      <AntInput placeholder="Enter work location" />
+                    </Form.Item>
+                    <Form.Item name="joinDate" label="Join Date">
+                      <DatePicker className="w-full" />
+                    </Form.Item>
+                    <Form.Item name="status" label="Status">
+                      <Select placeholder="Select status">
+                        <Option value="active">Active</Option>
+                        <Option value="inactive">Inactive</Option>
+                        <Option value="blocked">Blocked</Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                ),
+              },
+            ]}
+          />
+        </Form>
       </Drawer>
 
       {/* Edit User Drawer */}
