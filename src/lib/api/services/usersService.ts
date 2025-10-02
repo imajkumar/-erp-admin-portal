@@ -29,7 +29,7 @@ export class UsersService {
   static async createUser(
     userData: Omit<User, "id" | "createdAt" | "updatedAt">,
   ): Promise<ApiResponse<User>> {
-    return apiClient.post(this.SERVICE, "/users", userData);
+    return apiClient.post(this.SERVICE, "/api/v1/users", userData);
   }
 
   static async updateUser(

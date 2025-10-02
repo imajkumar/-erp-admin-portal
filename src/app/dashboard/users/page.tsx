@@ -70,6 +70,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { useApi } from "@/hooks/useApi";
 
 const { Search: AntSearch } = AntInput;
 const { Option } = Select;
@@ -610,6 +611,7 @@ const generateDummyUsers = () => {
 export default function UserManagementPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { users: usersApi } = useApi();
 
   const [users, setUsers] = useState<any[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
@@ -754,19 +756,24 @@ export default function UserManagementPage() {
 
   const handleSaveUser = async (values: any) => {
     try {
-      const newUser = {
-        id: selectedUser ? selectedUser.id : (users.length + 1).toString(),
-        ...values,
-        avatar:
-          values.avatar ||
-          `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.firstName}${values.lastName}`,
-        status: values.status || "offline",
-        lastLogin: values.lastLogin ? values.lastLogin.toDate() : new Date(),
-        joinDate: values.joinDate ? values.joinDate.toDate() : new Date(),
-      };
+      setLoading(true);
 
       if (selectedUser) {
-        setUsers(users.map((u) => (u.id === selectedUser.id ? newUser : u)));
+        // Update existing user
+        const updatedUser = {
+          id: selectedUser.id,
+          ...values,
+          avatar:
+            values.avatar ||
+            `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.firstName}${values.lastName}`,
+          status: values.status || "offline",
+          lastLogin: values.lastLogin ? values.lastLogin.toDate() : new Date(),
+          joinDate: values.joinDate ? values.joinDate.toDate() : new Date(),
+        };
+
+        setUsers(
+          users.map((u) => (u.id === selectedUser.id ? updatedUser : u)),
+        );
         toast({
           title: "User Updated",
           description: "User has been successfully updated",
@@ -774,20 +781,52 @@ export default function UserManagementPage() {
         });
         setEditDrawerOpen(false);
       } else {
-        setUsers([...users, newUser]);
-        toast({
-          title: "User Added",
-          description: "User has been successfully added",
-          variant: "default",
-        });
-        setAddDrawerOpen(false);
+        // Create new user using API
+        const userData = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          password: values.password,
+          role: values.role || "USER",
+          phoneNumber: values.phone,
+          status: values.status || "ACTIVE",
+        };
+
+        const response = await usersApi.createUser(userData);
+
+        if (response) {
+          // Add the new user to the local state
+          const newUser = {
+            id: response.id || (users.length + 1).toString(),
+            ...values,
+            avatar:
+              values.avatar ||
+              `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.firstName}${values.lastName}`,
+            status: values.status || "offline",
+            lastLogin: values.lastLogin
+              ? values.lastLogin.toDate()
+              : new Date(),
+            joinDate: values.joinDate ? values.joinDate.toDate() : new Date(),
+          };
+
+          setUsers([...users, newUser]);
+          toast({
+            title: "User Added",
+            description: "User has been successfully added",
+            variant: "default",
+          });
+          setAddDrawerOpen(false);
+        }
       }
-    } catch (_error) {
+    } catch (error) {
+      console.error("Error saving user:", error);
       toast({
         title: "Error",
         description: "Failed to save user",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1835,6 +1874,26 @@ export default function UserManagementPage() {
                         rules={[{ required: true }]}
                       >
                         <AntInput placeholder="Enter phone number" />
+                      </Form.Item>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Form.Item
+                        name="password"
+                        label="Password"
+                        rules={[{ required: true, min: 6 }]}
+                      >
+                        <AntInput.Password placeholder="Enter password" />
+                      </Form.Item>
+                      <Form.Item
+                        name="role"
+                        label="Role"
+                        rules={[{ required: true }]}
+                      >
+                        <Select placeholder="Select role">
+                          <Option value="USER">User</Option>
+                          <Option value="ADMIN">Admin</Option>
+                          <Option value="MANAGER">Manager</Option>
+                        </Select>
                       </Form.Item>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

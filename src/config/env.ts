@@ -37,7 +37,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
         auth:
           process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || "http://localhost:8060",
         users:
-          process.env.NEXT_PUBLIC_USERS_SERVICE_URL || "http://localhost:8081",
+          process.env.NEXT_PUBLIC_USERS_SERVICE_URL || "http://localhost:8060",
         modules:
           process.env.NEXT_PUBLIC_MODULES_SERVICE_URL ||
           "http://localhost:8082",
