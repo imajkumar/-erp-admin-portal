@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
@@ -9,7 +9,7 @@ interface AuthGuardProps {
   fallback?: React.ReactNode;
 }
 
-export default function AuthGuard({ children, fallback }: AuthGuardProps) {
+function AuthGuardContent({ children, fallback }: AuthGuardProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -172,4 +172,12 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
   }
 
   return <>{children}</>;
+}
+
+export default function AuthGuard({ children, fallback }: AuthGuardProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthGuardContent children={children} fallback={fallback} />
+    </Suspense>
+  );
 }

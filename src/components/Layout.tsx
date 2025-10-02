@@ -114,7 +114,6 @@ export default function AdminLayout({
         onSearchClick={() => setSearchOpen(true)}
         onDrawerToggle={() => setDrawerOpen(!drawerOpen)}
         onNotificationClick={() => setNotificationOpen(!notificationOpen)}
-        onInboxClick={() => handleItemClick("inbox")}
         onLockScreen={() => setIsLocked(true)}
         sidebarOpen={sidebarOpen}
       />

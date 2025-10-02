@@ -2,7 +2,11 @@
 
 import { ArrowLeft, CheckCircle, Loader2, RefreshCw } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
+import {
+  useVerifyOTPMutation,
+  useForgotPasswordMutation,
+} from "@/store/api/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,19 +19,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 
-export default function VerifyOTPPage() {
+function VerifyOTPContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email") || "";
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
   const [canResend, setCanResend] = useState(false);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [verifyOTP, { isLoading }] = useVerifyOTPMutation();
+  const [forgotPassword, { isLoading: isResending }] =
+    useForgotPasswordMutation();
 
   // Timer countdown
   useEffect(() => {
@@ -87,22 +93,13 @@ export default function VerifyOTPPage() {
       return;
     }
 
-    setIsLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/auth/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          otp: otpString,
-        }),
-      });
-
-      const result = await response.json();
+      const result = await verifyOTP({
+        email,
+        otp: otpString,
+      }).unwrap();
 
       if (result.status === "success") {
         setIsSuccess(true);
@@ -118,28 +115,20 @@ export default function VerifyOTPPage() {
         setOtp(["", "", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("OTP verification error:", error);
-      setError("Network error. Please try again.");
-    } finally {
-      setIsLoading(false);
+      setError(error?.data?.message || "Network error. Please try again.");
+      // Clear OTP on error
+      setOtp(["", "", "", "", "", ""]);
+      inputRefs.current[0]?.focus();
     }
   };
 
   const handleResend = async () => {
-    setIsLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const result = await response.json();
+      const result = await forgotPassword({ email }).unwrap();
 
       if (result.status === "success") {
         setTimeLeft(300);
@@ -151,11 +140,9 @@ export default function VerifyOTPPage() {
       } else {
         setError(result.message || "Failed to resend code");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Resend error:", error);
-      setError("Network error. Please try again.");
-    } finally {
-      setIsLoading(false);
+      setError(error?.data?.message || "Network error. Please try again.");
     }
   };
 
@@ -215,7 +202,9 @@ export default function VerifyOTPPage() {
                   {otp.map((digit, index) => (
                     <Input
                       key={index}
-                      ref={(el) => (inputRefs.current[index] = el)}
+                      ref={(el) => {
+                        inputRefs.current[index] = el;
+                      }}
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
@@ -257,7 +246,7 @@ export default function VerifyOTPPage() {
                     type="button"
                     variant="outline"
                     onClick={handleResend}
-                    disabled={isLoading}
+                    disabled={isResending}
                     className="w-full"
                   >
                     <RefreshCw className="mr-2 h-4 w-4" />
@@ -277,5 +266,13 @@ export default function VerifyOTPPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function VerifyOTPPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyOTPContent />
+    </Suspense>
   );
 }

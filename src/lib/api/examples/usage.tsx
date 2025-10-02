@@ -179,7 +179,7 @@ export async function batchUserOperations() {
       // Bulk update users
       const userIds = users.data.map((user) => user.id);
       const updateResult = await UsersService.bulkUpdateUsers(userIds, {
-        lastLogin: new Date().toISOString(),
+        status: "active",
       });
 
       console.log("Bulk update result:", updateResult);

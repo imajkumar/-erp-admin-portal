@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Loader2, Mail } from "lucide-react";
 import { useState } from "react";
+import { useForgotPasswordMutation } from "@/store/api/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,36 +17,26 @@ import Link from "next/link";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const result = await response.json();
+      const result = await forgotPassword({ email }).unwrap();
 
       if (result.status === "success") {
         setIsSuccess(true);
       } else {
         setError(result.message || "Failed to send reset email");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Forgot password error:", error);
-      setError("Network error. Please try again.");
-    } finally {
-      setIsLoading(false);
+      setError(error?.data?.message || "Network error. Please try again.");
     }
   };
 

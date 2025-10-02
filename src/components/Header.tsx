@@ -54,7 +54,6 @@ interface HeaderProps {
   onSearchClick: () => void;
   onDrawerToggle: () => void;
   onNotificationClick: () => void;
-  onInboxClick: () => void;
   onLockScreen: () => void;
   sidebarOpen: boolean;
 }
@@ -65,7 +64,6 @@ export default function Header({
   onSearchClick,
   onDrawerToggle,
   onNotificationClick,
-  onInboxClick,
   onLockScreen,
   sidebarOpen,
 }: HeaderProps) {
@@ -356,47 +354,6 @@ export default function Header({
           <JiraButton onClick={onLockScreen} title="Lock screen (Ctrl+L)">
             <Lock className="h-3.5 w-3.5" />
           </JiraButton>
-
-          {/* Inbox */}
-          <JiraButton title="Inbox" onClick={onInboxClick}>
-            <Mail className="h-3.5 w-3.5" />
-          </JiraButton>
-
-          {/* Separator */}
-          <div className="w-px h-5 bg-gray-300"></div>
-
-          {/* Chat */}
-          <JiraButton
-            variant="text"
-            onClick={() =>
-              window.open(
-                "/dashboard/messenger",
-                "_blank",
-                "width=1200,height=800",
-              )
-            }
-          >
-            <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
-            <span className="text-xs font-medium">Chat</span>
-          </JiraButton>
-
-          {/* AI Assistant */}
-          <JiraButton
-            variant="text"
-            onClick={() =>
-              window.open(
-                "/dashboard/ai-messenger",
-                "_blank",
-                "width=1200,height=800",
-              )
-            }
-          >
-            <Bot className="h-3.5 w-3.5 mr-1.5" />
-            <span className="text-xs font-medium">AI</span>
-          </JiraButton>
-
-          {/* Separator */}
-          <div className="w-px h-5 bg-gray-300"></div>
 
           {/* Teams */}
           <JiraButton>

@@ -169,6 +169,7 @@ export const API_ENDPOINTS = {
     PROFILE: "/api/v1/auth/profile",
     REGISTER: "/api/v1/auth/register",
     FORGOT_PASSWORD: "/api/v1/auth/forgot-password",
+    VERIFY_OTP: "/api/v1/auth/verify-otp",
     RESET_PASSWORD: "/api/v1/auth/reset-password",
     VERIFY_EMAIL: "/api/v1/auth/verify-email",
   },

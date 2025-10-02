@@ -23,6 +23,9 @@ import { useEffect, useState } from "react";
 import {
   useGetProfileQuery,
   useUpdateProfileMutation,
+  useCreatePinMutation,
+  useUpdatePinMutation,
+  useResetPinMutation,
 } from "@/store/api/authApi";
 import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
@@ -69,6 +72,11 @@ export default function ProfilePage() {
   const [isUpdatingPin, setIsUpdatingPin] = useState(false);
   const [pinError, setPinError] = useState("");
   const [pinSuccess, setPinSuccess] = useState("");
+
+  // RTK Query hooks
+  const [createPin, { isLoading: isCreatingPin }] = useCreatePinMutation();
+  const [updatePin, { isLoading: isUpdatingPinRTK }] = useUpdatePinMutation();
+  const [resetPin, { isLoading: isResettingPin }] = useResetPinMutation();
 
   const handleItemClick = (item: string) => {
     // Handle navigation if needed
@@ -274,27 +282,10 @@ export default function ProfilePage() {
       return;
     }
 
-    setIsUpdatingPin(true);
-
     try {
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        setPinError("Authentication required");
-        return;
-      }
-
-      const response = await fetch("/api/auth/create-pin", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          pin: lockPinData.newPin,
-        }),
-      });
-
-      const result = await response.json();
+      const result = await createPin({
+        pin: lockPinData.newPin,
+      }).unwrap();
 
       if (result.status === "success") {
         setPinSuccess("PIN created successfully");
@@ -310,11 +301,11 @@ export default function ProfilePage() {
       } else {
         setPinError(result.message || "Failed to create PIN");
       }
-    } catch (error) {
-      setPinError("An error occurred while creating PIN");
+    } catch (error: any) {
+      setPinError(
+        error?.data?.message || "An error occurred while creating PIN",
+      );
       console.error("Error creating PIN:", error);
-    } finally {
-      setIsUpdatingPin(false);
     }
   };
 
@@ -955,12 +946,12 @@ export default function ProfilePage() {
                                     onClick={handleCreatePin}
                                     variant="create"
                                     disabled={
-                                      isUpdatingPin ||
+                                      isCreatingPin ||
                                       !lockPinData.newPin ||
                                       !lockPinData.confirmPin
                                     }
                                   >
-                                    {isUpdatingPin ? (
+                                    {isCreatingPin ? (
                                       <>
                                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                                         Creating...

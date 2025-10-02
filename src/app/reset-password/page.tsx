@@ -9,7 +9,8 @@ import {
   Lock,
 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useResetPasswordMutation } from "@/store/api/authApi";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +24,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -37,9 +38,10 @@ export default function ResetPasswordPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   // Redirect if email or OTP is missing
   useEffect(() => {
@@ -104,23 +106,13 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          otp,
-          newPassword: formData.newPassword,
-          confirmPassword: formData.confirmPassword,
-        }),
-      });
-
-      const result = await response.json();
+      const result = await resetPassword({
+        email,
+        otp,
+        newPassword: formData.newPassword,
+        confirmPassword: formData.confirmPassword,
+      }).unwrap();
 
       if (result.status === "success") {
         setIsSuccess(true);
@@ -130,7 +122,6 @@ export default function ResetPasswordPage() {
           title: "Password Reset Successful",
           description:
             "Your password has been reset successfully. Please login with your new password.",
-          duration: 5000,
         });
 
         // Redirect to login after 3 seconds
@@ -140,11 +131,9 @@ export default function ResetPasswordPage() {
       } else {
         setError(result.message || "Failed to reset password");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Reset password error:", error);
-      setError("Network error. Please try again.");
-    } finally {
-      setIsLoading(false);
+      setError(error?.data?.message || "Network error. Please try again.");
     }
   };
 
@@ -360,5 +349,13 @@ export default function ResetPasswordPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -84,6 +85,7 @@ export default function LeftSidebar({
   activeItem,
   onItemClick,
 }: LeftSidebarProps) {
+  const router = useRouter();
   const [expandedItems, setExpandedItems] = useState<string[]>(["dashboards"]);
   const [menuDrawerOpen, setMenuDrawerOpen] = useState(false);
 
@@ -97,6 +99,18 @@ export default function LeftSidebar({
 
   const toggleMenuDrawer = () => {
     setMenuDrawerOpen(!menuDrawerOpen);
+  };
+
+  const handleInboxClick = () => {
+    router.push("/dashboard/inbox");
+  };
+
+  const handleChatClick = () => {
+    window.open("/dashboard/messenger", "_blank");
+  };
+
+  const handleAiChatClick = () => {
+    router.push("/dashboard/ai-messenger");
   };
 
   const renderMenuItem = (item: MenuItem, level: number = 0) => {
@@ -234,6 +248,9 @@ export default function LeftSidebar({
           <LeftSidebarFooter
             onMenuToggle={toggleMenuDrawer}
             menuDrawerOpen={menuDrawerOpen}
+            onInboxClick={handleInboxClick}
+            onChatClick={handleChatClick}
+            onAiChatClick={handleAiChatClick}
           />
         </div>
       </aside>

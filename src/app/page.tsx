@@ -82,7 +82,6 @@ export default function AuthPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
 
     try {
@@ -133,6 +132,10 @@ export default function AuthPage() {
               accessToken: response.data.accessToken,
               refreshToken: response.data.refreshToken,
               user: response.data.user,
+              email: response.data.user.email,
+              expiresIn: response.data.expiresIn || 3600,
+              role: response.data.user.role,
+              tokenType: response.data.tokenType || "Bearer",
             }),
           );
 
@@ -246,20 +249,16 @@ export default function AuthPage() {
         // Something else happened
         setError("An unexpected error occurred. Please try again.");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      setIsLoading(false);
       return;
     }
 
@@ -272,8 +271,6 @@ export default function AuthPage() {
     } catch (error) {
       console.error("Registration error:", error);
       setError("Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 

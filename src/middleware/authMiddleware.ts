@@ -68,6 +68,9 @@ export const initializeAuthFromStorage = (store: any) => {
           accessToken,
           refreshToken,
           expiresIn: 3600, // Default 1 hour
+          email: user.email || "",
+          role: user.role || "",
+          tokenType: "Bearer",
         }),
       );
     } catch (error) {

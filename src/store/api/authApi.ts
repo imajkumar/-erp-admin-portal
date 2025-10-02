@@ -5,7 +5,7 @@ import { LoginRequest, LoginResponse, User, ApiResponse } from "../types";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: authServiceUrl,
+    baseUrl: "",
     prepareHeaders: (headers, { getState }) => {
       // Get token from Redux state
       const state = getState() as any;
@@ -24,7 +24,7 @@ export const authApi = createApi({
     // Login
     login: builder.mutation<ApiResponse<LoginResponse>, LoginRequest>({
       query: (credentials) => ({
-        url: API_ENDPOINTS.AUTH.LOGIN,
+        url: `${authServiceUrl}${API_ENDPOINTS.AUTH.LOGIN}`,
         method: "POST",
         body: credentials,
       }),
@@ -34,7 +34,7 @@ export const authApi = createApi({
     // Logout
     logout: builder.mutation<ApiResponse<null>, void>({
       query: () => ({
-        url: API_ENDPOINTS.AUTH.LOGOUT,
+        url: `${authServiceUrl}${API_ENDPOINTS.AUTH.LOGOUT}`,
         method: "POST",
       }),
       invalidatesTags: ["Auth", "User"],
@@ -83,7 +83,19 @@ export const authApi = createApi({
     // Forgot password
     forgotPassword: builder.mutation<ApiResponse<null>, { email: string }>({
       query: (data) => ({
-        url: API_ENDPOINTS.AUTH.FORGOT_PASSWORD,
+        url: "/api/auth/forgot-password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // Verify OTP
+    verifyOTP: builder.mutation<
+      ApiResponse<null>,
+      { email: string; otp: string }
+    >({
+      query: (data) => ({
+        url: "/api/auth/verify-otp",
         method: "POST",
         body: data,
       }),
@@ -92,10 +104,15 @@ export const authApi = createApi({
     // Reset password
     resetPassword: builder.mutation<
       ApiResponse<null>,
-      { token: string; password: string }
+      {
+        email: string;
+        otp: string;
+        newPassword: string;
+        confirmPassword: string;
+      }
     >({
       query: (data) => ({
-        url: API_ENDPOINTS.AUTH.RESET_PASSWORD,
+        url: "/api/auth/reset-password",
         method: "POST",
         body: data,
       }),
@@ -105,6 +122,31 @@ export const authApi = createApi({
     verifyEmail: builder.mutation<ApiResponse<null>, { token: string }>({
       query: (data) => ({
         url: API_ENDPOINTS.AUTH.VERIFY_EMAIL,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // PIN operations
+    createPin: builder.mutation<ApiResponse<null>, { pin: string }>({
+      query: (data) => ({
+        url: "/api/auth/create-pin",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    updatePin: builder.mutation<ApiResponse<null>, { pin: string }>({
+      query: (data) => ({
+        url: "/api/auth/update-pin",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    resetPin: builder.mutation<ApiResponse<null>, { pin: string }>({
+      query: (data) => ({
+        url: "/api/auth/reset-pin",
         method: "POST",
         body: data,
       }),
@@ -120,6 +162,10 @@ export const {
   useUpdateProfileMutation,
   useRegisterMutation,
   useForgotPasswordMutation,
+  useVerifyOTPMutation,
   useResetPasswordMutation,
   useVerifyEmailMutation,
+  useCreatePinMutation,
+  useUpdatePinMutation,
+  useResetPinMutation,
 } = authApi;

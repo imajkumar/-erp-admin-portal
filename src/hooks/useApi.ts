@@ -151,7 +151,12 @@ export function useApi() {
     ),
 
     resetPassword: useCallback(
-      async (data: { token: string; password: string }) => {
+      async (data: {
+        email: string;
+        otp: string;
+        newPassword: string;
+        confirmPassword: string;
+      }) => {
         return apiCall(() => AuthService.resetPassword(data));
       },
       [apiCall],
