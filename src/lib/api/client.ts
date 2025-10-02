@@ -10,8 +10,8 @@ import { microservices } from "@/config/env";
 export interface ApiResponse<T = any> {
   data: T;
   message: string;
-  success: boolean;
-  status: number;
+  status: "success" | "error";
+  statusCode: number;
   timestamp: string;
 }
 

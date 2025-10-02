@@ -68,15 +68,29 @@ export class AuthService {
   }
 
   // Password reset endpoints
-  static async forgotPassword(email: string): Promise<ApiResponse<null>> {
-    return apiClient.post(this.SERVICE, "/forgot-password", { email });
+  static async forgotPassword(email: string): Promise<ApiResponse<string>> {
+    return apiClient.post(this.SERVICE, "/api/v1/auth/forgot-password", {
+      email,
+    });
+  }
+
+  static async verifyOTP(
+    email: string,
+    otp: string,
+  ): Promise<ApiResponse<null>> {
+    return apiClient.post(this.SERVICE, "/api/v1/auth/verify-otp", {
+      email,
+      otp,
+    });
   }
 
   static async resetPassword(data: {
-    token: string;
-    password: string;
+    email: string;
+    otp: string;
+    newPassword: string;
+    confirmPassword: string;
   }): Promise<ApiResponse<null>> {
-    return apiClient.post(this.SERVICE, "/reset-password", data);
+    return apiClient.post(this.SERVICE, "/api/v1/auth/reset-password", data);
   }
 
   // Two-factor authentication endpoints

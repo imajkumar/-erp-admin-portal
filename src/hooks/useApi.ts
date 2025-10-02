@@ -23,7 +23,7 @@ export function useApi() {
       try {
         const response = await apiFunction();
 
-        if (response.success) {
+        if (response.status === "success") {
           onSuccess?.(response.data);
           return response.data;
         } else {

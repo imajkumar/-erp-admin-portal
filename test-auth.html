@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; width: 200px; }
+    </style>
+</head>
+<body>
+    <h1>ERP Admin Portal - Authentication Test</h1>
+    
+    <div class="test-section info">
+        <h3>Test Credentials</h3>
+        <p><strong>Email:</strong> partner@admin.com</p>
+        <p><strong>Password:</strong> Admin@123</p>
+    </div>
+
+    <div class="test-section">
+        <h3>Login Test</h3>
+        <input type="email" id="email" placeholder="Email" value="partner@admin.com">
+        <input type="password" id="password" placeholder="Password" value="Admin@123">
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="clearAuth()">Clear Auth Data</button>
+        <button onclick="checkAuth()">Check Auth Status</button>
+    </div>
+
+    <div class="test-section">
+        <h3>Authentication Status</h3>
+        <div id="auth-status">Not checked</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Cookies</h3>
+        <div id="cookies">Not checked</div>
+    </div>
+
+    <div class="test-section">
+        <h3>Actions</h3>
+        <button onclick="goToDashboard()">Go to Dashboard</button>
+        <button onclick="goToLogin()">Go to Login</button>
+        <button onclick="showLogs()">Show Console Logs</button>
+    </div>
+
+    <script>
+        function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            console.log('Testing login with:', { email, password });
+            
+            // Simulate the same login logic as the app
+            if (email === "partner@admin.com" && password === "Admin@123") {
+                const mockResponse = {
+                    token: `mock-jwt-token-${Date.now()}`,
+                    user: {
+                        id: 1,
+                        name: "Admin User",
+                        email: email,
+                        role: "admin",
+                    },
+                };
+
+                // Store in localStorage
+                localStorage.setItem("authToken", mockResponse.token);
+                localStorage.setItem("userData", JSON.stringify(mockResponse.user));
+                
+                // Set cookies
+                document.cookie = `authToken=${mockResponse.token}; path=/; max-age=86400; SameSite=Lax`;
+                document.cookie = `refreshToken=${mockResponse.token}; path=/; max-age=604800; SameSite=Lax`;
+                
+                console.log('Login successful!', mockResponse);
+                updateAuthStatus('Login successful!', 'success');
+            } else {
+                console.log('Login failed - invalid credentials');
+                updateAuthStatus('Login failed - invalid credentials', 'error');
+            }
+        }
+
+        function clearAuth() {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("userData");
+            
+            document.cookie = "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            
+            console.log('Auth data cleared');
+            updateAuthStatus('Auth data cleared', 'info');
+        }
+
+        function checkAuth() {
+            const authToken = localStorage.getItem("authToken");
+            const userData = localStorage.getItem("userData");
+            const cookies = document.cookie;
+            
+            console.log('Auth check:', { authToken, userData, cookies });
+            
+            let status = '';
+            if (authToken && userData) {
+                status = `Authenticated - Token: ${authToken.substring(0, 20)}...`;
+                updateAuthStatus(status, 'success');
+            } else {
+                status = 'Not authenticated';
+                updateAuthStatus(status, 'error');
+            }
+            
+            document.getElementById('cookies').innerHTML = `<pre>${cookies || 'No cookies'}</pre>`;
+        }
+
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+
+        function goToLogin() {
+            window.location.href = '/';
+        }
+
+        function showLogs() {
+            console.log('Current localStorage:', localStorage);
+            console.log('Current cookies:', document.cookie);
+            alert('Check browser console for detailed logs');
+        }
+
+        function updateAuthStatus(message, type) {
+            const statusDiv = document.getElementById('auth-status');
+            statusDiv.innerHTML = message;
+            statusDiv.className = type;
+        }
+
+        // Check auth status on page load
+        checkAuth();
+    </script>
+</body>
+</html>
+

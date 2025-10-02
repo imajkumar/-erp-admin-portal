@@ -5,16 +5,16 @@ import { LoginRequest } from "@/store/types";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { identifier, password, rememberMe } = body;
+    const { email, password, rememberMe } = body;
 
     // Validate required fields
-    if (!identifier || !password) {
+    if (!email || !password) {
       return NextResponse.json(
         {
-          success: false,
-          message: "Identifier and password are required",
+          status: "error",
+          message: "Email and password are required",
           data: null,
-          status: 400,
+          statusCode: 400,
           timestamp: new Date().toISOString(),
         },
         { status: 400 },
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use the proper AuthService instead of direct HTTP calls
-    const loginRequest: LoginRequest = { identifier, password, rememberMe };
+    const loginRequest: LoginRequest = { email, password, rememberMe };
     const response = await AuthService.login(loginRequest);
 
     // Return the response from AuthService
@@ -42,24 +42,24 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(
         {
-          success: false,
+          status: "error",
           message: apiError.message,
           data: null,
-          status: apiError.status,
+          statusCode: apiError.status || 500,
           code: apiError.code,
           details: apiError.details,
           timestamp: apiError.timestamp,
         },
-        { status: apiError.status },
+        { status: apiError.status || 500 },
       );
     } else {
       // Other error
       return NextResponse.json(
         {
-          success: false,
+          status: "error",
           message: "Internal server error",
           data: null,
-          status: 500,
+          statusCode: 500,
           timestamp: new Date().toISOString(),
         },
         { status: 500 },

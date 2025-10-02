@@ -35,7 +35,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
     local: {
       microservices: {
         auth:
-          process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || "http://localhost:8061",
+          process.env.NEXT_PUBLIC_AUTH_SERVICE_URL || "http://localhost:8060",
         users:
           process.env.NEXT_PUBLIC_USERS_SERVICE_URL || "http://localhost:8081",
         modules:

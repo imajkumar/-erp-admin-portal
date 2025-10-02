@@ -4,11 +4,13 @@ import {
   Activity,
   CheckCircle,
   Edit,
+  Lock,
   Mail,
   MapPin,
   MessageSquare,
   MoreHorizontal,
   Phone,
+  RefreshCw,
   Save,
   Settings,
   Shield,
@@ -53,6 +55,16 @@ export default function ProfilePage() {
     bio: "",
     location: "",
   });
+
+  const [lockPinData, setLockPinData] = useState({
+    currentPin: "",
+    newPin: "",
+    confirmPin: "",
+  });
+
+  const [isUpdatingPin, setIsUpdatingPin] = useState(false);
+  const [pinError, setPinError] = useState("");
+  const [pinSuccess, setPinSuccess] = useState("");
 
   const handleItemClick = (item: string) => {
     // Handle navigation if needed
@@ -109,7 +121,7 @@ export default function ProfilePage() {
 
       const result = await response.json();
 
-      if (result.success) {
+      if (result.status === "success") {
         // Update local user data
         const updatedUser = { ...user, ...formData };
         setUser(updatedUser);
@@ -141,6 +153,221 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleLockPinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLockPinData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error when user starts typing
+    if (pinError) setPinError("");
+  };
+
+  const validatePin = (pin: string): boolean => {
+    // PIN should be 4-6 digits
+    return /^\d{4,6}$/.test(pin);
+  };
+
+  const handleUpdatePin = async () => {
+    setPinError("");
+    setPinSuccess("");
+
+    // Validation
+    if (!lockPinData.currentPin) {
+      setPinError("Current PIN is required");
+      return;
+    }
+
+    if (!validatePin(lockPinData.currentPin)) {
+      setPinError("Current PIN must be 4-6 digits");
+      return;
+    }
+
+    if (!lockPinData.newPin) {
+      setPinError("New PIN is required");
+      return;
+    }
+
+    if (!validatePin(lockPinData.newPin)) {
+      setPinError("New PIN must be 4-6 digits");
+      return;
+    }
+
+    if (lockPinData.newPin !== lockPinData.confirmPin) {
+      setPinError("New PIN and confirmation PIN do not match");
+      return;
+    }
+
+    if (lockPinData.currentPin === lockPinData.newPin) {
+      setPinError("New PIN must be different from current PIN");
+      return;
+    }
+
+    setIsUpdatingPin(true);
+
+    try {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        setPinError("Authentication required");
+        return;
+      }
+
+      const response = await fetch("/api/auth/update-pin", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentPin: lockPinData.currentPin,
+          newPin: lockPinData.newPin,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        setPinSuccess("PIN updated successfully");
+        setLockPinData({
+          currentPin: "",
+          newPin: "",
+          confirmPin: "",
+        });
+        // Update user data to reflect PIN status
+        const updatedUser = { ...user, hasLockPin: true };
+        setUser(updatedUser);
+        localStorage.setItem("userData", JSON.stringify(updatedUser));
+      } else {
+        setPinError(result.message || "Failed to update PIN");
+      }
+    } catch (error) {
+      setPinError("An error occurred while updating PIN");
+      console.error("Error updating PIN:", error);
+    } finally {
+      setIsUpdatingPin(false);
+    }
+  };
+
+  const handleCreatePin = async () => {
+    setPinError("");
+    setPinSuccess("");
+
+    // Validation for creating new PIN
+    if (!lockPinData.newPin) {
+      setPinError("PIN is required");
+      return;
+    }
+
+    if (!validatePin(lockPinData.newPin)) {
+      setPinError("PIN must be 4-6 digits");
+      return;
+    }
+
+    if (lockPinData.newPin !== lockPinData.confirmPin) {
+      setPinError("PIN and confirmation do not match");
+      return;
+    }
+
+    setIsUpdatingPin(true);
+
+    try {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        setPinError("Authentication required");
+        return;
+      }
+
+      const response = await fetch("/api/auth/create-pin", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pin: lockPinData.newPin,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        setPinSuccess("PIN created successfully");
+        setLockPinData({
+          currentPin: "",
+          newPin: "",
+          confirmPin: "",
+        });
+        // Update user data to reflect PIN status
+        const updatedUser = { ...user, hasLockPin: true };
+        setUser(updatedUser);
+        localStorage.setItem("userData", JSON.stringify(updatedUser));
+      } else {
+        setPinError(result.message || "Failed to create PIN");
+      }
+    } catch (error) {
+      setPinError("An error occurred while creating PIN");
+      console.error("Error creating PIN:", error);
+    } finally {
+      setIsUpdatingPin(false);
+    }
+  };
+
+  const handleResetPin = async () => {
+    if (
+      !window.confirm(
+        "Are you sure you want to reset your lock PIN? This action cannot be undone.",
+      )
+    ) {
+      return;
+    }
+
+    setPinError("");
+    setPinSuccess("");
+    setIsUpdatingPin(true);
+
+    try {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        setPinError("Authentication required");
+        return;
+      }
+
+      const response = await fetch("/api/auth/reset-pin", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        setPinSuccess("PIN reset successfully");
+        setLockPinData({
+          currentPin: "",
+          newPin: "",
+          confirmPin: "",
+        });
+        // Update user data to reflect PIN status
+        const updatedUser = { ...user, hasLockPin: false };
+        setUser(updatedUser);
+        localStorage.setItem("userData", JSON.stringify(updatedUser));
+      } else {
+        setPinError(result.message || "Failed to reset PIN");
+      }
+    } catch (error) {
+      setPinError("An error occurred while resetting PIN");
+      console.error("Error resetting PIN:", error);
+    } finally {
+      setIsUpdatingPin(false);
+    }
+  };
+
+  const clearPinMessages = () => {
+    setPinError("");
+    setPinSuccess("");
   };
 
   if (isLoading) {
@@ -311,10 +538,11 @@ export default function ProfilePage() {
                   onValueChange={setActiveTab}
                   className="mt-6"
                 >
-                  <TabsList className="grid w-full grid-cols-5">
+                  <TabsList className="grid w-full grid-cols-6">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="edit">Edit Profile</TabsTrigger>
                     <TabsTrigger value="security">Security</TabsTrigger>
+                    <TabsTrigger value="lockpin">Lock PIN</TabsTrigger>
                     <TabsTrigger value="preferences">Preferences</TabsTrigger>
                     <TabsTrigger value="activity">Activity</TabsTrigger>
                   </TabsList>
@@ -521,6 +749,244 @@ export default function ProfilePage() {
                             <Button variant="outline" size="sm">
                               View Sessions
                             </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="lockpin" className="mt-6">
+                    <div className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="flex items-center space-x-2">
+                            <Lock className="h-5 w-5" />
+                            <span>Lock PIN Management</span>
+                          </CardTitle>
+                          <CardDescription>
+                            Create or update your lock PIN for secure access to
+                            your account
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          {/* PIN Status */}
+                          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center space-x-3">
+                              <div
+                                className={`w-3 h-3 rounded-full ${user?.hasLockPin ? "bg-green-500" : "bg-red-500"}`}
+                              ></div>
+                              <div>
+                                <h4 className="font-medium">Lock PIN Status</h4>
+                                <p className="text-sm text-gray-600">
+                                  {user?.hasLockPin
+                                    ? "Your account is protected with a lock PIN"
+                                    : "No lock PIN set up for your account"}
+                                </p>
+                              </div>
+                            </div>
+                            {user?.hasLockPin && (
+                              <JiraButton
+                                onClick={handleResetPin}
+                                variant="text"
+                                className="border-red-600 text-red-600 hover:bg-red-50"
+                                disabled={isUpdatingPin}
+                              >
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                Reset PIN
+                              </JiraButton>
+                            )}
+                          </div>
+
+                          {/* Success/Error Messages */}
+                          {pinSuccess && (
+                            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                              <div className="flex items-center space-x-2">
+                                <CheckCircle className="h-5 w-5 text-green-600" />
+                                <p className="text-green-800">{pinSuccess}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={clearPinMessages}
+                                  className="ml-auto text-green-600 hover:text-green-700"
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+
+                          {pinError && (
+                            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                              <div className="flex items-center space-x-2">
+                                <X className="h-5 w-5 text-red-600" />
+                                <p className="text-red-800">{pinError}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={clearPinMessages}
+                                  className="ml-auto text-red-600 hover:text-red-700"
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* PIN Form */}
+                          <div className="space-y-4">
+                            {user?.hasLockPin ? (
+                              // Update PIN Form
+                              <>
+                                <h4 className="font-medium text-lg">
+                                  Update Lock PIN
+                                </h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <Label htmlFor="currentPin">
+                                      Current PIN
+                                    </Label>
+                                    <Input
+                                      id="currentPin"
+                                      name="currentPin"
+                                      type="password"
+                                      value={lockPinData.currentPin}
+                                      onChange={handleLockPinChange}
+                                      placeholder="Enter current PIN"
+                                      maxLength={6}
+                                      disabled={isUpdatingPin}
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="newPin">New PIN</Label>
+                                    <Input
+                                      id="newPin"
+                                      name="newPin"
+                                      type="password"
+                                      value={lockPinData.newPin}
+                                      onChange={handleLockPinChange}
+                                      placeholder="Enter new PIN (4-6 digits)"
+                                      maxLength={6}
+                                      disabled={isUpdatingPin}
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <Label htmlFor="confirmPin">
+                                    Confirm New PIN
+                                  </Label>
+                                  <Input
+                                    id="confirmPin"
+                                    name="confirmPin"
+                                    type="password"
+                                    value={lockPinData.confirmPin}
+                                    onChange={handleLockPinChange}
+                                    placeholder="Confirm new PIN"
+                                    maxLength={6}
+                                    disabled={isUpdatingPin}
+                                  />
+                                </div>
+                                <div className="flex justify-end">
+                                  <JiraButton
+                                    onClick={handleUpdatePin}
+                                    variant="create"
+                                    disabled={
+                                      isUpdatingPin ||
+                                      !lockPinData.currentPin ||
+                                      !lockPinData.newPin ||
+                                      !lockPinData.confirmPin
+                                    }
+                                  >
+                                    {isUpdatingPin ? (
+                                      <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                        Updating...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Save className="h-4 w-4 mr-2" />
+                                        Update PIN
+                                      </>
+                                    )}
+                                  </JiraButton>
+                                </div>
+                              </>
+                            ) : (
+                              // Create PIN Form
+                              <>
+                                <h4 className="font-medium text-lg">
+                                  Create Lock PIN
+                                </h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <Label htmlFor="newPin">PIN</Label>
+                                    <Input
+                                      id="newPin"
+                                      name="newPin"
+                                      type="password"
+                                      value={lockPinData.newPin}
+                                      onChange={handleLockPinChange}
+                                      placeholder="Enter PIN (4-6 digits)"
+                                      maxLength={6}
+                                      disabled={isUpdatingPin}
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="confirmPin">
+                                      Confirm PIN
+                                    </Label>
+                                    <Input
+                                      id="confirmPin"
+                                      name="confirmPin"
+                                      type="password"
+                                      value={lockPinData.confirmPin}
+                                      onChange={handleLockPinChange}
+                                      placeholder="Confirm PIN"
+                                      maxLength={6}
+                                      disabled={isUpdatingPin}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex justify-end">
+                                  <JiraButton
+                                    onClick={handleCreatePin}
+                                    variant="create"
+                                    disabled={
+                                      isUpdatingPin ||
+                                      !lockPinData.newPin ||
+                                      !lockPinData.confirmPin
+                                    }
+                                  >
+                                    {isUpdatingPin ? (
+                                      <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                        Creating...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Lock className="h-4 w-4 mr-2" />
+                                        Create PIN
+                                      </>
+                                    )}
+                                  </JiraButton>
+                                </div>
+                              </>
+                            )}
+                          </div>
+
+                          {/* PIN Guidelines */}
+                          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <h5 className="font-medium text-blue-900 mb-2">
+                              PIN Guidelines
+                            </h5>
+                            <ul className="text-sm text-blue-800 space-y-1">
+                              <li>• PIN must be 4-6 digits long</li>
+                              <li>• Use only numbers (0-9)</li>
+                              <li>• Choose a PIN you can remember easily</li>
+                              <li>
+                                • Don't use obvious patterns like 1234 or 0000
+                              </li>
+                              <li>• Keep your PIN secure and don't share it</li>
+                            </ul>
                           </div>
                         </CardContent>
                       </Card>

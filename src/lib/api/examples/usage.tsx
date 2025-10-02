@@ -85,7 +85,7 @@ export class ExampleService {
     try {
       const response = await AuthService.login({ email, password });
 
-      if (response.success) {
+      if (response.status === "success") {
         // Store tokens
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -175,7 +175,7 @@ export async function batchUserOperations() {
     // Get users
     const users = await UsersService.getUsers({ limit: 100 });
 
-    if (users.success && users.data.length > 0) {
+    if (users.status === "success" && users.data.length > 0) {
       // Bulk update users
       const userIds = users.data.map((user) => user.id);
       const updateResult = await UsersService.bulkUpdateUsers(userIds, {

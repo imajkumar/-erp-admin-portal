@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import QRCodeLogin from "@/components/QRCodeLogin";
 import { Button } from "@/components/ui/button";
 import {
@@ -91,7 +92,7 @@ export default function AuthPage() {
         const response = await axios.post(
           "/api/auth/login",
           {
-            identifier: formData.email,
+            email: formData.email,
             password: formData.password,
             rememberMe: rememberMe || false,
           },
@@ -106,7 +107,7 @@ export default function AuthPage() {
         // Login successful
         console.log("API Login successful:", response.data);
 
-        if (response.data.success && response.data.data) {
+        if (response.data.status === "success" && response.data.data) {
           // Store tokens if provided
           if (response.data.data.accessToken) {
             localStorage.setItem("authToken", response.data.data.accessToken);
@@ -421,9 +422,10 @@ export default function AuthPage() {
                       </div>
                       <Button
                         variant="link"
+                        asChild
                         className="p-0 h-auto text-blue-600 hover:text-blue-800"
                       >
-                        Forgot password?
+                        <Link href="/forgot-password">Forgot password?</Link>
                       </Button>
                     </div>
                   )}
