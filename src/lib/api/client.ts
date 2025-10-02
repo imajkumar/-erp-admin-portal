@@ -255,8 +255,15 @@ export class ApiClient {
     config: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
     const instance = this.getInstance(service);
-    const response = await instance.request<ApiResponse<T>>(config);
-    return response.data;
+    console.log("Request config:", config);
+    try {
+      const response = await instance.request<ApiResponse<T>>(config);
+      console.log("Request response:", response);
+      return response.data;
+    } catch (error) {
+      console.error("Request error:", error);
+      throw error;
+    }
   }
 
   // HTTP methods

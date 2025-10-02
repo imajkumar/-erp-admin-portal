@@ -844,6 +844,7 @@ export default function UserManagementPage() {
         };
 
         console.log("Sending user data:", userData);
+        console.log("UserData JSON stringify:", JSON.stringify(userData, null, 2));
         const response = await UsersService.createUser(userData);
         console.log("API response:", response);
 
