@@ -639,47 +639,89 @@ export default function UserManagementPage() {
   }>({});
 
   useEffect(() => {
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      const dummyUsers = generateDummyUsers();
-      setUsers(dummyUsers);
-      setFilteredUsers(dummyUsers);
-      setLoading(false);
-    }, 1000);
+    loadUsers();
   }, []);
 
+  const loadUsers = async (filters: any = {}) => {
+    try {
+      setLoading(true);
+      console.log("Loading users with filters:", filters);
+      const response = await usersApi.getUsers({
+        page: 0,
+        limit: 50,
+        sortBy: "firstName",
+        sortDirection: "asc",
+        ...filters,
+      });
+      console.log("Users API response:", response);
+      
+      if (response && response.data && response.data.content) {
+        // Transform API data to match the expected format
+        const transformedUsers = response.data.content.map((user: any) => ({
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phoneNumber,
+          role: user.role,
+          status: user.status?.toLowerCase() || "offline",
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.firstName}${user.lastName}`,
+          lastLogin: user.lastLogin ? new Date(user.lastLogin) : new Date(),
+          joinDate: user.createdAt ? new Date(user.createdAt) : new Date(),
+          gender: user.gender || "Male",
+          department: "IT", // Default department since API doesn't provide this
+          location: "New York", // Default location since API doesn't provide this
+          permissions: [], // Default empty permissions
+          roles: [], // Default empty roles
+        }));
+        
+        setUsers(transformedUsers);
+        setFilteredUsers(transformedUsers);
+      }
+    } catch (error) {
+      console.error("Error loading users:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load users",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Debounce search to avoid too many API calls
+    const timeoutId = setTimeout(() => {
+      loadUsers({
+        search: searchTerm || undefined,
+        status: statusFilter !== "all" ? statusFilter : undefined,
+        // Note: gender and department filters would need to be added to the API
+        // For now, we'll filter locally for these
+      });
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, statusFilter]);
+
+  // Local filtering for fields not supported by API
   useEffect(() => {
     let filtered = users;
 
-    // Search filter
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (user) =>
-          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.phone.includes(searchTerm),
-      );
-    }
-
-    // Status filter
-    if (statusFilter !== "all") {
-      filtered = filtered.filter((user) => user.status === statusFilter);
-    }
-
-    // Gender filter
+    // Gender filter (local filtering since API doesn't support this)
     if (genderFilter !== "all") {
       filtered = filtered.filter((user) => user.gender === genderFilter);
     }
 
-    // Department filter
+    // Department filter (local filtering since API doesn't support this)
     if (departmentFilter !== "all") {
       filtered = filtered.filter(
         (user) => user.department === departmentFilter,
       );
     }
 
-    // Date range filter
+    // Date range filter (local filtering since API doesn't support this)
     if (dateRange && dateRange.length === 2) {
       filtered = filtered.filter((user) => {
         const userDate = dayjs(user.joinDate);
@@ -690,14 +732,7 @@ export default function UserManagementPage() {
     }
 
     setFilteredUsers(filtered);
-  }, [
-    users,
-    searchTerm,
-    statusFilter,
-    genderFilter,
-    departmentFilter,
-    dateRange,
-  ]);
+  }, [users, genderFilter, departmentFilter, dateRange]);
 
   const handleBack = () => {
     router.back();
@@ -1047,9 +1082,23 @@ export default function UserManagementPage() {
     setGenderFilter("all");
     setDepartmentFilter("all");
     setDateRange(null);
+    // Reload users with cleared filters
+    loadUsers();
     toast({
       title: "Filters Reset",
       description: "All filters have been cleared",
+      variant: "default",
+    });
+  };
+
+  const handleRefresh = () => {
+    loadUsers({
+      search: searchTerm || undefined,
+      status: statusFilter !== "all" ? statusFilter : undefined,
+    });
+    toast({
+      title: "Refreshed",
+      description: "User list has been refreshed",
       variant: "default",
     });
   };
@@ -1803,7 +1852,7 @@ export default function UserManagementPage() {
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">Users List</h3>
-            <JiraButton variant="text">
+            <JiraButton variant="text" onClick={handleRefresh}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </JiraButton>

@@ -13,16 +13,21 @@ export interface ApiResponse<T = any> {
 }
 
 export interface PaginatedResponse<T = any> {
-  data: T[];
-  pagination: {
+  data: {
+    content: T[];
+    first: boolean;
+    hasNext: boolean;
+    hasPrevious: boolean;
+    last: boolean;
     page: number;
-    limit: number;
-    total: number;
+    size: number;
+    totalElements: number;
     totalPages: number;
   };
   message: string;
-  success: boolean;
-  status: number;
+  status: "success" | "error";
+  statusCode: number;
+  timestamp: string;
 }
 
 export interface ApiError {
@@ -142,6 +147,8 @@ export interface UserFilters {
   dateTo?: string;
   page?: number;
   limit?: number;
+  sortBy?: string;
+  sortDirection?: "asc" | "desc";
 }
 
 export interface ModuleFilters {

@@ -10,16 +10,23 @@ export class UsersService {
   ): Promise<PaginatedResponse<User>> {
     const params = new URLSearchParams();
 
+    // Pagination parameters
+    params.append("page", (filters.page || 0).toString());
+    params.append("size", (filters.limit || 10).toString());
+    
+    // Sorting parameters
+    params.append("sortBy", filters.sortBy || "firstName");
+    params.append("sortDirection", filters.sortDirection || "asc");
+
+    // Filter parameters
     if (filters.search) params.append("search", filters.search);
     if (filters.role) params.append("role", filters.role);
     if (filters.status) params.append("status", filters.status);
     if (filters.department) params.append("department", filters.department);
     if (filters.dateFrom) params.append("dateFrom", filters.dateFrom);
     if (filters.dateTo) params.append("dateTo", filters.dateTo);
-    if (filters.page) params.append("page", filters.page.toString());
-    if (filters.limit) params.append("limit", filters.limit.toString());
 
-    return apiClient.getPaginated(this.SERVICE, `/users?${params.toString()}`);
+    return apiClient.getPaginated(this.SERVICE, `/api/v1/users/paginated?${params.toString()}`);
   }
 
   static async getUserById(id: string): Promise<ApiResponse<User>> {
