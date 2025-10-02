@@ -22,7 +22,7 @@ export default function LeftSidebarFooter({
   };
 
   return (
-    <div className="px-3 py-2 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
+    <div className="px-3 py-2 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50 font-sans">
       <div className="flex items-center justify-center space-x-2">
         {/* Inbox */}
         <button

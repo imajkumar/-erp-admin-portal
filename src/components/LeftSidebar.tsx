@@ -130,8 +130,8 @@ export default function LeftSidebar({
           variant="ghost"
           className={`w-full justify-start text-left h-10 px-3 transition-all duration-200 rounded-md ${
             isActive
-              ? "bg-blue-100 text-blue-800 hover:bg-blue-150 border-r-3 border-blue-600 shadow-sm font-semibold"
-              : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+              ? "bg-blue-100 text-blue-800 hover:bg-blue-150 border-r-3 border-blue-600 shadow-sm font-medium"
+              : "text-gray-700 hover:bg-gray-50 hover:text-gray-900 font-normal"
           }`}
           style={{ marginLeft: level > 0 ? `${level * 16}px` : "0" }}
           onClick={() => {
@@ -149,7 +149,7 @@ export default function LeftSidebar({
           />
           <span
             className={`flex-1 text-sm ${
-              isActive ? "font-semibold" : "font-medium"
+              isActive ? "font-medium" : "font-normal"
             }`}
           >
             {item.label}
@@ -192,7 +192,7 @@ export default function LeftSidebar({
   return (
     <TooltipProvider>
       <aside
-        className="fixed left-12 w-64 h-[calc(100vh-45px-32px)] z-30 bg-white border-r border-gray-200 shadow-sm"
+        className="fixed left-12 w-64 h-[calc(100vh-45px-32px)] z-30 bg-white border-r border-gray-200 shadow-sm font-sans"
         style={{ top: "45px" }}
       >
         <div className="flex flex-col h-full">
@@ -200,7 +200,9 @@ export default function LeftSidebar({
           <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
             <div className="flex items-center w-full h-10 px-3 text-gray-800">
               <Home className="mr-3 h-5 w-5 text-blue-600" />
-              <span className="flex-1 text-sm font-bold">Dashboard</span>
+              <span className="flex-1 text-sm font-semibold tracking-wide">
+                Dashboard
+              </span>
             </div>
           </div>
 
@@ -209,7 +211,7 @@ export default function LeftSidebar({
             {menuItems.map((item) => (
               <div key={item.id} className="mb-6">
                 {/* Section Header */}
-                <div className="flex items-center justify-between mb-3 px-2 py-1 bg-gray-50 rounded-md">
+                <div className="flex items-center justify-between mb-3 px-3 py-2 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-2">
                     <item.icon className="h-4 w-4 text-blue-600" />
                     <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
