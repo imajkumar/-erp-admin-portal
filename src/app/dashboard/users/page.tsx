@@ -1578,447 +1578,278 @@ export default function UserManagementPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <JiraButton variant="text" onClick={handleBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </JiraButton>
-            <JiraButton variant="text" onClick={handleHome}>
-              <Home className="h-4 w-4 mr-2" />
-              Home
-            </JiraButton>
-            <div className="h-6 w-px bg-gray-300"></div>
-            <div className="flex items-center space-x-2">
-              <Users className="h-6 w-6 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">
-                User Management
-              </h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <JiraButton
+                variant="text"
+                onClick={handleBack}
+                className="text-gray-600 hover:text-gray-900"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </JiraButton>
+              <JiraButton
+                variant="text"
+                onClick={handleHome}
+                className="text-gray-600 hover:text-gray-900"
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Home
+              </JiraButton>
+              <div className="h-6 w-px bg-gray-300"></div>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    User Management
+                  </h1>
+                  <p className="text-gray-600 mt-1">
+                    Manage system users and their permissions
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <JiraButton
+                variant="text"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </JiraButton>
+              <JiraButton
+                variant="create"
+                onClick={handleAddUser}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add User
+              </JiraButton>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <JiraButton variant="text">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </JiraButton>
-            <JiraButton variant="create" onClick={handleAddUser}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add User
-            </JiraButton>
-          </div>
         </div>
-        <p className="text-gray-600 mt-2">
-          Manage system users and their permissions
-        </p>
-      </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Users</p>
-              <p className="text-2xl font-bold text-gray-900">{users.length}</p>
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">
+                  Total Users
+                </p>
+                <p className="text-3xl font-bold text-gray-900">
+                  {users.length}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  All registered users
+                </p>
+              </div>
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Users className="h-8 w-8 text-blue-600" />
+              </div>
             </div>
-            <Users className="h-8 w-8 text-blue-600" />
           </div>
-        </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Online</p>
-              <p className="text-2xl font-bold text-green-600">
-                {users.filter((u) => u.status === "online").length}
-              </p>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Online</p>
+                <p className="text-3xl font-bold text-green-600">
+                  {users.filter((u) => u.status === "online").length}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">Currently active</p>
+              </div>
+              <div className="p-3 bg-green-100 rounded-lg">
+                <UserCheck className="h-8 w-8 text-green-600" />
+              </div>
             </div>
-            <UserCheck className="h-8 w-8 text-green-600" />
           </div>
-        </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Offline</p>
-              <p className="text-2xl font-bold text-red-600">
-                {users.filter((u) => u.status === "offline").length}
-              </p>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">
+                  Offline
+                </p>
+                <p className="text-3xl font-bold text-red-600">
+                  {users.filter((u) => u.status === "offline").length}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Not currently active
+                </p>
+              </div>
+              <div className="p-3 bg-red-100 rounded-lg">
+                <UserX className="h-8 w-8 text-red-600" />
+              </div>
             </div>
-            <UserX className="h-8 w-8 text-red-600" />
           </div>
-        </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Filtered</p>
-              <p className="text-2xl font-bold text-blue-600">
-                {filteredUsers.length}
-              </p>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">
+                  Filtered
+                </p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {filteredUsers.length}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">Search results</p>
+              </div>
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <Filter className="h-8 w-8 text-blue-600" />
+              </div>
             </div>
-            <Filter className="h-8 w-8 text-blue-600" />
           </div>
         </div>
-      </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-          <JiraButton variant="text" onClick={handleResetFilters}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Reset Filters
-          </JiraButton>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Search
-            </label>
-            <AntSearch
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              allowClear
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <Select
-              value={statusFilter}
-              onChange={setStatusFilter}
-              className="w-full"
-            >
-              <Option value="all">All Status</Option>
-              <Option value="online">Online</Option>
-              <Option value="offline">Offline</Option>
-            </Select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Gender
-            </label>
-            <Select
-              value={genderFilter}
-              onChange={setGenderFilter}
-              className="w-full"
-            >
-              <Option value="all">All Genders</Option>
-              <Option value="Male">Male</Option>
-              <Option value="Female">Female</Option>
-              <Option value="Other">Other</Option>
-            </Select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Department
-            </label>
-            <Select
-              value={departmentFilter}
-              onChange={setDepartmentFilter}
-              className="w-full"
-            >
-              <Option value="all">All Departments</Option>
-              <Option value="Engineering">Engineering</Option>
-              <Option value="Marketing">Marketing</Option>
-              <Option value="Sales">Sales</Option>
-              <Option value="HR">HR</Option>
-              <Option value="Finance">Finance</Option>
-              <Option value="Operations">Operations</Option>
-            </Select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Join Date
-            </label>
-            <RangePicker
-              value={dateRange}
-              onChange={setDateRange}
-              className="w-full"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Users List</h3>
-            <JiraButton variant="text">
+        {/* Filters */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Filters & Search
+            </h3>
+            <JiraButton variant="text" onClick={handleResetFilters}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              Reset Filters
             </JiraButton>
           </div>
-        </div>
-        <div className="p-4">
-          <Table {...tableProps} />
-        </div>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Search
+              </label>
+              <AntSearch
+                placeholder="Search users..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                allowClear
+              />
+            </div>
 
-      {/* Add User Drawer */}
-      <Drawer
-        title={
-          <div className="flex items-center space-x-2">
-            <UserPlus className="h-5 w-5 text-blue-600" />
-            <span>Add New User</span>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <Select
+                value={statusFilter}
+                onChange={setStatusFilter}
+                className="w-full"
+              >
+                <Option value="all">All Status</Option>
+                <Option value="online">Online</Option>
+                <Option value="offline">Offline</Option>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Gender
+              </label>
+              <Select
+                value={genderFilter}
+                onChange={setGenderFilter}
+                className="w-full"
+              >
+                <Option value="all">All Genders</Option>
+                <Option value="Male">Male</Option>
+                <Option value="Female">Female</Option>
+                <Option value="Other">Other</Option>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Department
+              </label>
+              <Select
+                value={departmentFilter}
+                onChange={setDepartmentFilter}
+                className="w-full"
+              >
+                <Option value="all">All Departments</Option>
+                <Option value="Engineering">Engineering</Option>
+                <Option value="Marketing">Marketing</Option>
+                <Option value="Sales">Sales</Option>
+                <Option value="HR">HR</Option>
+                <Option value="Finance">Finance</Option>
+                <Option value="Operations">Operations</Option>
+              </Select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Join Date
+              </label>
+              <RangePicker
+                value={dateRange}
+                onChange={setDateRange}
+                className="w-full"
+              />
+            </div>
           </div>
-        }
-        placement="right"
-        size="large"
-        open={addDrawerOpen}
-        onClose={() => setAddDrawerOpen(false)}
-        width="100%"
-        className="user-drawer"
-        extra={
-          <div className="flex space-x-2">
-            <JiraButton variant="text" onClick={() => setAddDrawerOpen(false)}>
-              Cancel
-            </JiraButton>
-            <JiraButton variant="create" onClick={() => form.submit()}>
-              <Save className="h-4 w-4 mr-2" />
-              Save User
-            </JiraButton>
+        </div>
+
+        {/* Table */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Users</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {filteredUsers.length} of {users.length} users
+                </p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <JiraButton
+                  variant="text"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Refresh
+                </JiraButton>
+              </div>
+            </div>
           </div>
-        }
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSaveUser}
-          className="space-y-6"
+          <div className="p-0">
+            <Table {...tableProps} />
+          </div>
+        </div>
+
+        {/* Add User Drawer */}
+        <Drawer
+          title={
+            <div className="flex items-center space-x-2">
+              <UserPlus className="h-5 w-5 text-blue-600" />
+              <span>Add New User</span>
+            </div>
+          }
+          placement="right"
+          size="large"
+          open={addDrawerOpen}
+          onClose={() => setAddDrawerOpen(false)}
+          width="100%"
+          className="user-drawer"
+          extra={
+            <div className="flex space-x-2">
+              <JiraButton
+                variant="text"
+                onClick={() => setAddDrawerOpen(false)}
+              >
+                Cancel
+              </JiraButton>
+              <JiraButton variant="create" onClick={() => form.submit()}>
+                <Save className="h-4 w-4 mr-2" />
+                Save User
+              </JiraButton>
+            </div>
+          }
         >
-          <Tabs
-            defaultActiveKey="personal"
-            items={[
-              {
-                key: "personal",
-                label: "Personal Details",
-                children: (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item
-                        name="firstName"
-                        label="First Name"
-                        rules={[{ required: true }]}
-                      >
-                        <AntInput placeholder="Enter first name" />
-                      </Form.Item>
-                      <Form.Item
-                        name="lastName"
-                        label="Last Name"
-                        rules={[{ required: true }]}
-                      >
-                        <AntInput placeholder="Enter last name" />
-                      </Form.Item>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item
-                        name="email"
-                        label="Email"
-                        rules={[{ required: true, type: "email" }]}
-                      >
-                        <AntInput placeholder="Enter email" />
-                      </Form.Item>
-                      <Form.Item
-                        name="phone"
-                        label="Phone"
-                        rules={[{ required: true }]}
-                      >
-                        <AntInput placeholder="Enter phone number" />
-                      </Form.Item>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item
-                        name="gender"
-                        label="Gender"
-                        rules={[{ required: true }]}
-                      >
-                        <Select placeholder="Select gender">
-                          <Option value="Male">Male</Option>
-                          <Option value="Female">Female</Option>
-                          <Option value="Other">Other</Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item name="dateOfBirth" label="Date of Birth">
-                        <DatePicker className="w-full" />
-                      </Form.Item>
-                    </div>
-                    <Form.Item name="about" label="About">
-                      <AntInput.TextArea
-                        rows={4}
-                        placeholder="Tell us about yourself"
-                      />
-                    </Form.Item>
-                  </div>
-                ),
-              },
-              {
-                key: "education",
-                label: "Education",
-                children: (
-                  <div className="space-y-4">
-                    <Form.Item name="university" label="University">
-                      <AntInput placeholder="Enter university name" />
-                    </Form.Item>
-                    <Form.Item name="degree" label="Degree">
-                      <AntInput placeholder="Enter degree" />
-                    </Form.Item>
-                    <Form.Item name="fieldOfStudy" label="Field of Study">
-                      <AntInput placeholder="Enter field of study" />
-                    </Form.Item>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item name="graduationYear" label="Graduation Year">
-                        <AntInput placeholder="Enter graduation year" />
-                      </Form.Item>
-                      <Form.Item name="gpa" label="GPA">
-                        <AntInput placeholder="Enter GPA" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                ),
-              },
-              {
-                key: "address",
-                label: "Address",
-                children: (
-                  <div className="space-y-4">
-                    <Form.Item name="street" label="Street Address">
-                      <AntInput placeholder="Enter street address" />
-                    </Form.Item>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item name="city" label="City">
-                        <AntInput placeholder="Enter city" />
-                      </Form.Item>
-                      <Form.Item name="state" label="State">
-                        <AntInput placeholder="Enter state" />
-                      </Form.Item>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Form.Item name="zipCode" label="ZIP Code">
-                        <AntInput placeholder="Enter ZIP code" />
-                      </Form.Item>
-                      <Form.Item name="country" label="Country">
-                        <AntInput placeholder="Enter country" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                ),
-              },
-              {
-                key: "social",
-                label: "Social Links",
-                children: (
-                  <div className="space-y-4">
-                    <Form.Item name="website" label="Website">
-                      <AntInput placeholder="Enter website URL" />
-                    </Form.Item>
-                    <Form.Item name="linkedin" label="LinkedIn">
-                      <AntInput placeholder="Enter LinkedIn URL" />
-                    </Form.Item>
-                    <Form.Item name="twitter" label="Twitter">
-                      <AntInput placeholder="Enter Twitter URL" />
-                    </Form.Item>
-                    <Form.Item name="facebook" label="Facebook">
-                      <AntInput placeholder="Enter Facebook URL" />
-                    </Form.Item>
-                    <Form.Item name="instagram" label="Instagram">
-                      <AntInput placeholder="Enter Instagram URL" />
-                    </Form.Item>
-                    <Form.Item name="github" label="GitHub">
-                      <AntInput placeholder="Enter GitHub URL" />
-                    </Form.Item>
-                  </div>
-                ),
-              },
-              {
-                key: "work",
-                label: "Work Details",
-                children: (
-                  <div className="space-y-4">
-                    <Form.Item
-                      name="department"
-                      label="Department"
-                      rules={[{ required: true }]}
-                    >
-                      <Select placeholder="Select department">
-                        <Option value="Engineering">Engineering</Option>
-                        <Option value="Marketing">Marketing</Option>
-                        <Option value="Sales">Sales</Option>
-                        <Option value="HR">HR</Option>
-                        <Option value="Finance">Finance</Option>
-                        <Option value="Operations">Operations</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      name="role"
-                      label="Role"
-                      rules={[{ required: true }]}
-                    >
-                      <Select placeholder="Select role">
-                        <Option value="Admin">Admin</Option>
-                        <Option value="Manager">Manager</Option>
-                        <Option value="Employee">Employee</Option>
-                        <Option value="Intern">Intern</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item name="location" label="Work Location">
-                      <AntInput placeholder="Enter work location" />
-                    </Form.Item>
-                    <Form.Item name="joinDate" label="Join Date">
-                      <DatePicker className="w-full" />
-                    </Form.Item>
-                    <Form.Item name="status" label="Status">
-                      <Select placeholder="Select status">
-                        <Option value="active">Active</Option>
-                        <Option value="inactive">Inactive</Option>
-                        <Option value="blocked">Blocked</Option>
-                      </Select>
-                    </Form.Item>
-                  </div>
-                ),
-              },
-            ]}
-          />
-        </Form>
-      </Drawer>
-
-      {/* Edit User Drawer */}
-      <Drawer
-        title={
-          <div className="flex items-center space-x-2">
-            <Edit className="h-5 w-5 text-blue-600" />
-            <span>Edit User</span>
-          </div>
-        }
-        placement="right"
-        size="large"
-        open={editDrawerOpen}
-        onClose={() => setEditDrawerOpen(false)}
-        width="100%"
-        className="user-drawer"
-        extra={
-          <div className="flex space-x-2">
-            <JiraButton variant="text" onClick={() => setEditDrawerOpen(false)}>
-              Cancel
-            </JiraButton>
-            <JiraButton variant="create" onClick={() => form.submit()}>
-              <Save className="h-4 w-4 mr-2" />
-              Update User
-            </JiraButton>
-          </div>
-        }
-      >
-        {selectedUser && (
           <Form
             form={form}
             layout="vertical"
@@ -2033,24 +1864,6 @@ export default function UserManagementPage() {
                   label: "Personal Details",
                   children: (
                     <div className="space-y-4">
-                      <div className="flex items-center space-x-4 mb-6">
-                        <AntAvatar size={80} src={selectedUser.avatar} />
-                        <div>
-                          <Upload
-                            {...{
-                              name: "avatar",
-                              listType: "picture-card",
-                              showUploadList: false,
-                              beforeUpload: () => false,
-                            }}
-                          >
-                            <Button>
-                              <UploadIcon className="h-4 w-4 mr-2" />
-                              Change Avatar
-                            </Button>
-                          </Upload>
-                        </div>
-                      </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Form.Item
                           name="firstName"
@@ -2109,6 +1922,87 @@ export default function UserManagementPage() {
                   ),
                 },
                 {
+                  key: "education",
+                  label: "Education",
+                  children: (
+                    <div className="space-y-4">
+                      <Form.Item name="university" label="University">
+                        <AntInput placeholder="Enter university name" />
+                      </Form.Item>
+                      <Form.Item name="degree" label="Degree">
+                        <AntInput placeholder="Enter degree" />
+                      </Form.Item>
+                      <Form.Item name="fieldOfStudy" label="Field of Study">
+                        <AntInput placeholder="Enter field of study" />
+                      </Form.Item>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item
+                          name="graduationYear"
+                          label="Graduation Year"
+                        >
+                          <AntInput placeholder="Enter graduation year" />
+                        </Form.Item>
+                        <Form.Item name="gpa" label="GPA">
+                          <AntInput placeholder="Enter GPA" />
+                        </Form.Item>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "address",
+                  label: "Address",
+                  children: (
+                    <div className="space-y-4">
+                      <Form.Item name="street" label="Street Address">
+                        <AntInput placeholder="Enter street address" />
+                      </Form.Item>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item name="city" label="City">
+                          <AntInput placeholder="Enter city" />
+                        </Form.Item>
+                        <Form.Item name="state" label="State">
+                          <AntInput placeholder="Enter state" />
+                        </Form.Item>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Form.Item name="zipCode" label="ZIP Code">
+                          <AntInput placeholder="Enter ZIP code" />
+                        </Form.Item>
+                        <Form.Item name="country" label="Country">
+                          <AntInput placeholder="Enter country" />
+                        </Form.Item>
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  key: "social",
+                  label: "Social Links",
+                  children: (
+                    <div className="space-y-4">
+                      <Form.Item name="website" label="Website">
+                        <AntInput placeholder="Enter website URL" />
+                      </Form.Item>
+                      <Form.Item name="linkedin" label="LinkedIn">
+                        <AntInput placeholder="Enter LinkedIn URL" />
+                      </Form.Item>
+                      <Form.Item name="twitter" label="Twitter">
+                        <AntInput placeholder="Enter Twitter URL" />
+                      </Form.Item>
+                      <Form.Item name="facebook" label="Facebook">
+                        <AntInput placeholder="Enter Facebook URL" />
+                      </Form.Item>
+                      <Form.Item name="instagram" label="Instagram">
+                        <AntInput placeholder="Enter Instagram URL" />
+                      </Form.Item>
+                      <Form.Item name="github" label="GitHub">
+                        <AntInput placeholder="Enter GitHub URL" />
+                      </Form.Item>
+                    </div>
+                  ),
+                },
+                {
                   key: "work",
                   label: "Work Details",
                   children: (
@@ -2158,1007 +2052,1249 @@ export default function UserManagementPage() {
               ]}
             />
           </Form>
-        )}
-      </Drawer>
+        </Drawer>
 
-      {/* View User Drawer */}
-      <Drawer
-        title={
-          <div className="flex items-center space-x-2">
-            <Eye className="h-5 w-5 text-blue-600" />
-            <span>User Profile</span>
-          </div>
-        }
-        placement="right"
-        size="large"
-        open={viewDrawerOpen}
-        onClose={() => setViewDrawerOpen(false)}
-        width="100%"
-        className="user-drawer"
-        extra={
-          <div className="flex space-x-2">
-            <JiraButton variant="text" onClick={() => setViewDrawerOpen(false)}>
-              Close
-            </JiraButton>
-            <JiraButton
-              variant="create"
-              onClick={() => handleEditUser(selectedUser?.id)}
-            >
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Profile
-            </JiraButton>
-          </div>
-        }
-      >
-        {selectedUser && (
-          <div className="space-y-6">
-            {/* Navigation Tabs */}
-            <div className="border-b border-gray-200">
-              <nav className="flex space-x-8">
-                <button
-                  onClick={() => setActiveTab("overview")}
-                  className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === "overview"
-                      ? "border-b-2 border-blue-600 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  Overview
-                </button>
-                <button
-                  onClick={() => setActiveTab("settings")}
-                  className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === "settings"
-                      ? "border-b-2 border-blue-600 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  Settings
-                </button>
-                <button
-                  onClick={() => setActiveTab("security")}
-                  className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === "security"
-                      ? "border-b-2 border-blue-600 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  Security
-                </button>
-                <button
-                  onClick={() => setActiveTab("activity")}
-                  className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === "activity"
-                      ? "border-b-2 border-blue-600 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  Activity
-                </button>
-                <button
-                  onClick={() => setActiveTab("reports")}
-                  className={`font-medium py-2 px-1 text-sm ${
-                    activeTab === "reports"
-                      ? "border-b-2 border-blue-600 text-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  Reports
-                </button>
-              </nav>
+        {/* Edit User Drawer */}
+        <Drawer
+          title={
+            <div className="flex items-center space-x-2">
+              <Edit className="h-5 w-5 text-blue-600" />
+              <span>Edit User</span>
             </div>
+          }
+          placement="right"
+          size="large"
+          open={editDrawerOpen}
+          onClose={() => setEditDrawerOpen(false)}
+          width="100%"
+          className="user-drawer"
+          extra={
+            <div className="flex space-x-2">
+              <JiraButton
+                variant="text"
+                onClick={() => setEditDrawerOpen(false)}
+              >
+                Cancel
+              </JiraButton>
+              <JiraButton variant="create" onClick={() => form.submit()}>
+                <Save className="h-4 w-4 mr-2" />
+                Update User
+              </JiraButton>
+            </div>
+          }
+        >
+          {selectedUser && (
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={handleSaveUser}
+              className="space-y-6"
+            >
+              <Tabs
+                defaultActiveKey="personal"
+                items={[
+                  {
+                    key: "personal",
+                    label: "Personal Details",
+                    children: (
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-4 mb-6">
+                          <AntAvatar size={80} src={selectedUser.avatar} />
+                          <div>
+                            <Upload
+                              {...{
+                                name: "avatar",
+                                listType: "picture-card",
+                                showUploadList: false,
+                                beforeUpload: () => false,
+                              }}
+                            >
+                              <Button>
+                                <UploadIcon className="h-4 w-4 mr-2" />
+                                Change Avatar
+                              </Button>
+                            </Upload>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Form.Item
+                            name="firstName"
+                            label="First Name"
+                            rules={[{ required: true }]}
+                          >
+                            <AntInput placeholder="Enter first name" />
+                          </Form.Item>
+                          <Form.Item
+                            name="lastName"
+                            label="Last Name"
+                            rules={[{ required: true }]}
+                          >
+                            <AntInput placeholder="Enter last name" />
+                          </Form.Item>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Form.Item
+                            name="email"
+                            label="Email"
+                            rules={[{ required: true, type: "email" }]}
+                          >
+                            <AntInput placeholder="Enter email" />
+                          </Form.Item>
+                          <Form.Item
+                            name="phone"
+                            label="Phone"
+                            rules={[{ required: true }]}
+                          >
+                            <AntInput placeholder="Enter phone number" />
+                          </Form.Item>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Form.Item
+                            name="gender"
+                            label="Gender"
+                            rules={[{ required: true }]}
+                          >
+                            <Select placeholder="Select gender">
+                              <Option value="Male">Male</Option>
+                              <Option value="Female">Female</Option>
+                              <Option value="Other">Other</Option>
+                            </Select>
+                          </Form.Item>
+                          <Form.Item name="dateOfBirth" label="Date of Birth">
+                            <DatePicker className="w-full" />
+                          </Form.Item>
+                        </div>
+                        <Form.Item name="about" label="About">
+                          <AntInput.TextArea
+                            rows={4}
+                            placeholder="Tell us about yourself"
+                          />
+                        </Form.Item>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "work",
+                    label: "Work Details",
+                    children: (
+                      <div className="space-y-4">
+                        <Form.Item
+                          name="department"
+                          label="Department"
+                          rules={[{ required: true }]}
+                        >
+                          <Select placeholder="Select department">
+                            <Option value="Engineering">Engineering</Option>
+                            <Option value="Marketing">Marketing</Option>
+                            <Option value="Sales">Sales</Option>
+                            <Option value="HR">HR</Option>
+                            <Option value="Finance">Finance</Option>
+                            <Option value="Operations">Operations</Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          name="role"
+                          label="Role"
+                          rules={[{ required: true }]}
+                        >
+                          <Select placeholder="Select role">
+                            <Option value="Admin">Admin</Option>
+                            <Option value="Manager">Manager</Option>
+                            <Option value="Employee">Employee</Option>
+                            <Option value="Intern">Intern</Option>
+                          </Select>
+                        </Form.Item>
+                        <Form.Item name="location" label="Work Location">
+                          <AntInput placeholder="Enter work location" />
+                        </Form.Item>
+                        <Form.Item name="joinDate" label="Join Date">
+                          <DatePicker className="w-full" />
+                        </Form.Item>
+                        <Form.Item name="status" label="Status">
+                          <Select placeholder="Select status">
+                            <Option value="active">Active</Option>
+                            <Option value="inactive">Inactive</Option>
+                            <Option value="blocked">Blocked</Option>
+                          </Select>
+                        </Form.Item>
+                      </div>
+                    ),
+                  },
+                ]}
+              />
+            </Form>
+          )}
+        </Drawer>
 
-            {/* Tab Content */}
-            {activeTab === "overview" && (
-              <>
-                {/* User Profile Summary */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="relative">
-                        <AntAvatar size={80} src={selectedUser.avatar} />
+        {/* View User Drawer */}
+        <Drawer
+          title={
+            <div className="flex items-center space-x-2">
+              <Eye className="h-5 w-5 text-blue-600" />
+              <span>User Profile</span>
+            </div>
+          }
+          placement="right"
+          size="large"
+          open={viewDrawerOpen}
+          onClose={() => setViewDrawerOpen(false)}
+          width="100%"
+          className="user-drawer"
+          extra={
+            <div className="flex space-x-2">
+              <JiraButton
+                variant="text"
+                onClick={() => setViewDrawerOpen(false)}
+              >
+                Close
+              </JiraButton>
+              <JiraButton
+                variant="create"
+                onClick={() => handleEditUser(selectedUser?.id)}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit Profile
+              </JiraButton>
+            </div>
+          }
+        >
+          {selectedUser && (
+            <div className="space-y-6">
+              {/* Navigation Tabs */}
+              <div className="border-b border-gray-200">
+                <nav className="flex space-x-8">
+                  <button
+                    onClick={() => setActiveTab("overview")}
+                    className={`font-medium py-2 px-1 text-sm ${
+                      activeTab === "overview"
+                        ? "border-b-2 border-blue-600 text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Overview
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("settings")}
+                    className={`font-medium py-2 px-1 text-sm ${
+                      activeTab === "settings"
+                        ? "border-b-2 border-blue-600 text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Settings
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("security")}
+                    className={`font-medium py-2 px-1 text-sm ${
+                      activeTab === "security"
+                        ? "border-b-2 border-blue-600 text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Security
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("activity")}
+                    className={`font-medium py-2 px-1 text-sm ${
+                      activeTab === "activity"
+                        ? "border-b-2 border-blue-600 text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Activity
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("reports")}
+                    className={`font-medium py-2 px-1 text-sm ${
+                      activeTab === "reports"
+                        ? "border-b-2 border-blue-600 text-blue-600"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Reports
+                  </button>
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              {activeTab === "overview" && (
+                <>
+                  {/* User Profile Summary */}
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="relative">
+                          <AntAvatar size={80} src={selectedUser.avatar} />
+                          <div
+                            className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${
+                              selectedUser.status === "online"
+                                ? "bg-green-500"
+                                : selectedUser.status === "blocked"
+                                  ? "bg-red-500"
+                                  : "bg-gray-400"
+                            }`}
+                          ></div>
+                        </div>
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <h2 className="text-xl font-bold text-gray-900">
+                              {selectedUser.name}
+                            </h2>
+                            <CheckCircle className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
+                            <div className="flex items-center space-x-1">
+                              <User className="h-4 w-4" />
+                              <span>{selectedUser.role}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <MapPin className="h-4 w-4" />
+                              <span>{selectedUser.location}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <MailIcon className="h-4 w-4" />
+                              <span>{selectedUser.email}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <JiraButton
+                          variant="create"
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          Upgrade to Pro
+                        </JiraButton>
+                        <JiraButton variant="text">Follow</JiraButton>
+                        <JiraButton variant="text">Hire Me</JiraButton>
+                        <JiraButton variant="text">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </JiraButton>
+                      </div>
+                    </div>
+
+                    {/* Metrics Cards */}
+                    <div className="grid grid-cols-3 gap-4 mt-6">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">
+                          ↑ $4,500
+                        </div>
+                        <div className="text-sm text-gray-600">Earnings</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-red-600">
+                          ↓ 75
+                        </div>
+                        <div className="text-sm text-gray-600">Projects</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">
+                          ↑ 60%
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Success Rate
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Profile Completion */}
+                    <div className="mt-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700">
+                          Profile Completion
+                        </span>
+                        <span className="text-sm text-gray-500">50%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white ${
-                            selectedUser.status === "online"
-                              ? "bg-green-500"
-                              : selectedUser.status === "blocked"
-                                ? "bg-red-500"
-                                : "bg-gray-400"
-                          }`}
+                          className="bg-green-500 h-2 rounded-full"
+                          style={{ width: "50%" }}
                         ></div>
                       </div>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <h2 className="text-xl font-bold text-gray-900">
-                            {selectedUser.name}
-                          </h2>
-                          <CheckCircle className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
-                          <div className="flex items-center space-x-1">
-                            <User className="h-4 w-4" />
-                            <span>{selectedUser.role}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <MapPin className="h-4 w-4" />
-                            <span>{selectedUser.location}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <MailIcon className="h-4 w-4" />
-                            <span>{selectedUser.email}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <JiraButton
-                        variant="create"
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                      >
-                        Upgrade to Pro
-                      </JiraButton>
-                      <JiraButton variant="text">Follow</JiraButton>
-                      <JiraButton variant="text">Hire Me</JiraButton>
-                      <JiraButton variant="text">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </JiraButton>
                     </div>
                   </div>
 
-                  {/* Metrics Cards */}
-                  <div className="grid grid-cols-3 gap-4 mt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
-                        ↑ $4,500
+                  {/* Profile Details */}
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Profile Details
+                      </h3>
+                      <div className="flex items-center space-x-2">
+                        <JiraButton variant="text">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Profile
+                        </JiraButton>
+                        <JiraButton variant="text">
+                          <HelpCircle className="h-4 w-4" />
+                        </JiraButton>
                       </div>
-                      <div className="text-sm text-gray-600">Earnings</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-red-600">
-                        ↓ 75
-                      </div>
-                      <div className="text-sm text-gray-600">Projects</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
-                        ↑ 60%
-                      </div>
-                      <div className="text-sm text-gray-600">Success Rate</div>
-                    </div>
-                  </div>
 
-                  {/* Profile Completion */}
-                  <div className="mt-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">
-                        Profile Completion
-                      </span>
-                      <span className="text-sm text-gray-500">50%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-green-500 h-2 rounded-full"
-                        style={{ width: "50%" }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Profile Details */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Profile Details
-                    </h3>
-                    <div className="flex items-center space-x-2">
-                      <JiraButton variant="text">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit Profile
-                      </JiraButton>
-                      <JiraButton variant="text">
-                        <HelpCircle className="h-4 w-4" />
-                      </JiraButton>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">
-                          Full Name:
-                        </span>
-                        <span className="text-sm font-medium text-gray-900">
-                          {selectedUser.name}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Company:</span>
-                        <span className="text-sm font-medium text-gray-900">
-                          ERP Solutions
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">
-                          Contact Phone:
-                        </span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-900">
-                            {selectedUser.phone}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Full Name:
                           </span>
-                          <Badge color="green" className="text-xs">
-                            Verified
-                          </Badge>
+                          <span className="text-sm font-medium text-gray-900">
+                            {selectedUser.name}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Company:
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            ERP Solutions
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Contact Phone:
+                          </span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-sm font-medium text-gray-900">
+                              {selectedUser.phone}
+                            </span>
+                            <Badge color="green" className="text-xs">
+                              Verified
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Company Site:
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            erp-solutions.com
+                          </span>
                         </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">
-                          Company Site:
-                        </span>
-                        <span className="text-sm font-medium text-gray-900">
-                          erp-solutions.com
-                        </span>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Country:
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            United States
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Communication:
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            Email, Phone
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Allow Changes:
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            Yes
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">
+                            Last Login:
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            {dayjs(selectedUser.lastLogin).format(
+                              "MMM DD, YYYY",
+                            )}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Country:</span>
-                        <span className="text-sm font-medium text-gray-900">
-                          United States
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">
-                          Communication:
-                        </span>
-                        <span className="text-sm font-medium text-gray-900">
-                          Email, Phone
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">
-                          Allow Changes:
-                        </span>
-                        <span className="text-sm font-medium text-gray-900">
-                          Yes
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">
-                          Last Login:
-                        </span>
-                        <span className="text-sm font-medium text-gray-900">
-                          {dayjs(selectedUser.lastLogin).format("MMM DD, YYYY")}
-                        </span>
+
+                    {/* Alert Box */}
+                    <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div className="flex items-start space-x-3">
+                        <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="text-sm text-yellow-800">
+                            <strong>We need your attention!</strong> Your
+                            account status is {selectedUser.status}. To ensure
+                            full access, please verify your account details.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Alert Box */}
-                  <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-sm text-yellow-800">
-                          <strong>We need your attention!</strong> Your account
-                          status is {selectedUser.status}. To ensure full
-                          access, please verify your account details.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    User Actions
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <JiraButton
-                      variant="text"
-                      onClick={() => handleSendResetPassword(selectedUser.id)}
-                      className="flex items-center justify-center space-x-2"
-                    >
-                      <Key className="h-4 w-4" />
-                      <span>Reset Password</span>
-                    </JiraButton>
-                    <JiraButton
-                      variant="text"
-                      onClick={() => handleLoginAsUser(selectedUser.id)}
-                      className="flex items-center justify-center space-x-2"
-                    >
-                      <LogIn className="h-4 w-4" />
-                      <span>Login as User</span>
-                    </JiraButton>
-                    {selectedUser.status === "blocked" ? (
+                  {/* Action Buttons */}
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      User Actions
+                    </h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <JiraButton
-                        onClick={() => handleUnblockUser(selectedUser.id)}
-                        className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white"
+                        variant="text"
+                        onClick={() => handleSendResetPassword(selectedUser.id)}
+                        className="flex items-center justify-center space-x-2"
                       >
-                        <CheckCircle className="h-4 w-4" />
-                        <span>Unblock</span>
+                        <Key className="h-4 w-4" />
+                        <span>Reset Password</span>
                       </JiraButton>
-                    ) : (
                       <JiraButton
-                        onClick={() => handleBlockUser(selectedUser.id)}
-                        className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white"
+                        variant="text"
+                        onClick={() => handleLoginAsUser(selectedUser.id)}
+                        className="flex items-center justify-center space-x-2"
                       >
-                        <XCircle className="h-4 w-4" />
-                        <span>Block</span>
+                        <LogIn className="h-4 w-4" />
+                        <span>Login as User</span>
                       </JiraButton>
-                    )}
-                    <JiraButton
-                      variant="text"
-                      onClick={() => handleEditUser(selectedUser.id)}
-                      className="flex items-center justify-center space-x-2"
-                    >
-                      <Edit className="h-4 w-4" />
-                      <span>Edit User</span>
-                    </JiraButton>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {activeTab === "settings" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Notification Settings
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Email Notifications</p>
-                        <p className="text-sm text-gray-600">
-                          Receive notifications via email
-                        </p>
-                      </div>
-                      <Switch defaultChecked />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Push Notifications</p>
-                        <p className="text-sm text-gray-600">
-                          Receive push notifications
-                        </p>
-                      </div>
-                      <Switch />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">SMS Notifications</p>
-                        <p className="text-sm text-gray-600">
-                          Receive notifications via SMS
-                        </p>
-                      </div>
-                      <Switch defaultChecked />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Privacy Settings
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Profile Visibility
-                      </label>
-                      <Select defaultValue="public" className="w-full">
-                        <Option value="public">Public</Option>
-                        <Option value="private">Private</Option>
-                        <Option value="friends">Friends Only</Option>
-                      </Select>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Show Email</p>
-                        <p className="text-sm text-gray-600">
-                          Display email address on profile
-                        </p>
-                      </div>
-                      <Switch />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Show Phone</p>
-                        <p className="text-sm text-gray-600">
-                          Display phone number on profile
-                        </p>
-                      </div>
-                      <Switch defaultChecked />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Preferences
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Language
-                      </label>
-                      <Select defaultValue="english" className="w-full">
-                        <Option value="english">English</Option>
-                        <Option value="spanish">Spanish</Option>
-                        <Option value="french">French</Option>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Timezone
-                      </label>
-                      <Select defaultValue="utc-8" className="w-full">
-                        <Option value="utc-8">UTC-8 (PST)</Option>
-                        <Option value="utc-5">UTC-5 (EST)</Option>
-                        <Option value="utc+0">UTC+0 (GMT)</Option>
-                      </Select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Date Format
-                      </label>
-                      <Select defaultValue="mm/dd/yyyy" className="w-full">
-                        <Option value="mm/dd/yyyy">MM/DD/YYYY</Option>
-                        <Option value="dd/mm/yyyy">DD/MM/YYYY</Option>
-                        <Option value="yyyy-mm-dd">YYYY-MM-DD</Option>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "security" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Security Settings
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Two-Factor Authentication</p>
-                        <p className="text-sm text-gray-600">
-                          Add an extra layer of security to your account
-                        </p>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        Enable
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Last Password Change</p>
-                        <p className="text-sm text-gray-600">30 days ago</p>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        Change Password
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Active Sessions</p>
-                        <p className="text-sm text-gray-600">
-                          2 active sessions
-                        </p>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        Manage Sessions
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Login History
-                  </h3>
-                  <div className="space-y-3">
-                    {generateTabData("security")?.loginHistory?.map(
-                      (login: any) => (
-                        <div
-                          key={login.id}
-                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      {selectedUser.status === "blocked" ? (
+                        <JiraButton
+                          onClick={() => handleUnblockUser(selectedUser.id)}
+                          className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white"
                         >
-                          <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <div>
-                              <p className="font-medium text-sm">
-                                {login.location}
-                              </p>
+                          <CheckCircle className="h-4 w-4" />
+                          <span>Unblock</span>
+                        </JiraButton>
+                      ) : (
+                        <JiraButton
+                          onClick={() => handleBlockUser(selectedUser.id)}
+                          className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          <XCircle className="h-4 w-4" />
+                          <span>Block</span>
+                        </JiraButton>
+                      )}
+                      <JiraButton
+                        variant="text"
+                        onClick={() => handleEditUser(selectedUser.id)}
+                        className="flex items-center justify-center space-x-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        <span>Edit User</span>
+                      </JiraButton>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeTab === "settings" && (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Notification Settings
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Email Notifications</p>
+                          <p className="text-sm text-gray-600">
+                            Receive notifications via email
+                          </p>
+                        </div>
+                        <Switch defaultChecked />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Push Notifications</p>
+                          <p className="text-sm text-gray-600">
+                            Receive push notifications
+                          </p>
+                        </div>
+                        <Switch />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">SMS Notifications</p>
+                          <p className="text-sm text-gray-600">
+                            Receive notifications via SMS
+                          </p>
+                        </div>
+                        <Switch defaultChecked />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Privacy Settings
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Profile Visibility
+                        </label>
+                        <Select defaultValue="public" className="w-full">
+                          <Option value="public">Public</Option>
+                          <Option value="private">Private</Option>
+                          <Option value="friends">Friends Only</Option>
+                        </Select>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Show Email</p>
+                          <p className="text-sm text-gray-600">
+                            Display email address on profile
+                          </p>
+                        </div>
+                        <Switch />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Show Phone</p>
+                          <p className="text-sm text-gray-600">
+                            Display phone number on profile
+                          </p>
+                        </div>
+                        <Switch defaultChecked />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Preferences
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Language
+                        </label>
+                        <Select defaultValue="english" className="w-full">
+                          <Option value="english">English</Option>
+                          <Option value="spanish">Spanish</Option>
+                          <Option value="french">French</Option>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Timezone
+                        </label>
+                        <Select defaultValue="utc-8" className="w-full">
+                          <Option value="utc-8">UTC-8 (PST)</Option>
+                          <Option value="utc-5">UTC-5 (EST)</Option>
+                          <Option value="utc+0">UTC+0 (GMT)</Option>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Date Format
+                        </label>
+                        <Select defaultValue="mm/dd/yyyy" className="w-full">
+                          <Option value="mm/dd/yyyy">MM/DD/YYYY</Option>
+                          <Option value="dd/mm/yyyy">DD/MM/YYYY</Option>
+                          <Option value="yyyy-mm-dd">YYYY-MM-DD</Option>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "security" && (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Security Settings
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">
+                            Two-Factor Authentication
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Add an extra layer of security to your account
+                          </p>
+                        </div>
+                        <Button size="sm" variant="outline">
+                          Enable
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Last Password Change</p>
+                          <p className="text-sm text-gray-600">30 days ago</p>
+                        </div>
+                        <Button size="sm" variant="outline">
+                          Change Password
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium">Active Sessions</p>
+                          <p className="text-sm text-gray-600">
+                            2 active sessions
+                          </p>
+                        </div>
+                        <Button size="sm" variant="outline">
+                          Manage Sessions
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Login History
+                    </h3>
+                    <div className="space-y-3">
+                      {generateTabData("security")?.loginHistory?.map(
+                        (login: any) => (
+                          <div
+                            key={login.id}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <div>
+                                <p className="font-medium text-sm">
+                                  {login.location}
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  {login.device}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-medium">{login.ip}</p>
                               <p className="text-xs text-gray-600">
-                                {login.device}
+                                {login.timestamp.format("MMM DD, HH:mm")}
                               </p>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium">{login.ip}</p>
-                            <p className="text-xs text-gray-600">
-                              {login.timestamp.format("MMM DD, HH:mm")}
-                            </p>
-                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "activity" && (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Login Statistics
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">
+                          156
                         </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "activity" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Login Statistics
-                  </h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">
-                        156
+                        <div className="text-sm text-gray-600">
+                          Total Logins
+                        </div>
                       </div>
-                      <div className="text-sm text-gray-600">Total Logins</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
-                        23
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">
+                          23
+                        </div>
+                        <div className="text-sm text-gray-600">This Month</div>
                       </div>
-                      <div className="text-sm text-gray-600">This Month</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">
-                        1h
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-orange-600">
+                          1h
+                        </div>
+                        <div className="text-sm text-gray-600">Last Login</div>
                       </div>
-                      <div className="text-sm text-gray-600">Last Login</div>
                     </div>
                   </div>
-                </div>
 
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Recent Activity
-                  </h3>
-                  <Timeline
-                    items={generateTabData("activity")?.actions?.map(
-                      (action: any) => ({
-                        dot:
-                          action.type === "create" ? (
-                            <Plus className="h-4 w-4 text-green-500" />
-                          ) : action.type === "update" ? (
-                            <Edit className="h-4 w-4 text-blue-500" />
-                          ) : action.type === "share" ? (
-                            <User className="h-4 w-4 text-purple-500" />
-                          ) : (
-                            <MessageSquareIcon className="h-4 w-4 text-orange-500" />
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Recent Activity
+                    </h3>
+                    <Timeline
+                      items={generateTabData("activity")?.actions?.map(
+                        (action: any) => ({
+                          dot:
+                            action.type === "create" ? (
+                              <Plus className="h-4 w-4 text-green-500" />
+                            ) : action.type === "update" ? (
+                              <Edit className="h-4 w-4 text-blue-500" />
+                            ) : action.type === "share" ? (
+                              <User className="h-4 w-4 text-purple-500" />
+                            ) : (
+                              <MessageSquareIcon className="h-4 w-4 text-orange-500" />
+                            ),
+                          children: (
+                            <div>
+                              <p className="font-medium">{action.action}</p>
+                              <p className="text-sm text-gray-500">
+                                {action.timestamp.format("MMM DD, YYYY HH:mm")}
+                              </p>
+                            </div>
                           ),
-                        children: (
-                          <div>
-                            <p className="font-medium">{action.action}</p>
-                            <p className="text-sm text-gray-500">
-                              {action.timestamp.format("MMM DD, YYYY HH:mm")}
-                            </p>
+                        }),
+                      )}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "reports" && (
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Performance Metrics
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">
+                          45
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Tasks Completed
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">
+                          3
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Active Projects
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-600">
+                          87%
+                        </div>
+                        <div className="text-sm text-gray-600">Efficiency</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Time Tracking
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-indigo-600">
+                          168h
+                        </div>
+                        <div className="text-sm text-gray-600">Total Hours</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-teal-600">
+                          42h
+                        </div>
+                        <div className="text-sm text-gray-600">This Week</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-pink-600">
+                          8.4h
+                        </div>
+                        <div className="text-sm text-gray-600">Avg/Day</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Achievements
+                    </h3>
+                    <div className="space-y-3">
+                      {generateTabData("reports")?.achievements?.map(
+                        (achievement: any) => (
+                          <div
+                            key={achievement.id}
+                            className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg"
+                          >
+                            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                              <Star className="h-4 w-4 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium">{achievement.title}</p>
+                              <p className="text-sm text-gray-600">
+                                {achievement.description}
+                              </p>
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {achievement.date.format("MMM DD")}
+                            </div>
                           </div>
                         ),
-                      }),
-                    )}
-                  />
-                </div>
-              </div>
-            )}
-
-            {activeTab === "reports" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Performance Metrics
-                  </h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">
-                        45
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Tasks Completed
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">3</div>
-                      <div className="text-sm text-gray-600">
-                        Active Projects
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">
-                        87%
-                      </div>
-                      <div className="text-sm text-gray-600">Efficiency</div>
+                      )}
                     </div>
                   </div>
                 </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Time Tracking
-                  </h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-indigo-600">
-                        168h
-                      </div>
-                      <div className="text-sm text-gray-600">Total Hours</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-teal-600">
-                        42h
-                      </div>
-                      <div className="text-sm text-gray-600">This Week</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-pink-600">
-                        8.4h
-                      </div>
-                      <div className="text-sm text-gray-600">Avg/Day</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Achievements
-                  </h3>
-                  <div className="space-y-3">
-                    {generateTabData("reports")?.achievements?.map(
-                      (achievement: any) => (
-                        <div
-                          key={achievement.id}
-                          className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg"
-                        >
-                          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                            <Star className="h-4 w-4 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium">{achievement.title}</p>
-                            <p className="text-sm text-gray-600">
-                              {achievement.description}
-                            </p>
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {achievement.date.format("MMM DD")}
-                          </div>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </Drawer>
-
-      {/* Role & Permission Management Drawer */}
-      <Drawer
-        title={
-          <div className="flex items-center space-x-2">
-            <UserCog className="h-5 w-5 text-blue-600" />
-            <span>Manage Roles & Permissions</span>
-          </div>
-        }
-        placement="right"
-        size="large"
-        open={rolePermissionDrawerOpen}
-        onClose={() => setRolePermissionDrawerOpen(false)}
-        width="100%"
-        className="user-drawer"
-        extra={
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => setRolePermissionDrawerOpen(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        }
-      >
-        {selectedUser && (
-          <div className="space-y-6">
-            {/* User Info */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <div className="flex items-center space-x-4">
-                <AntAvatar size={60} src={selectedUser.avatar} />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {selectedUser.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">{selectedUser.email}</p>
-                  <p className="text-sm text-gray-500">
-                    {selectedUser.department} • {selectedUser.role}
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
+          )}
+        </Drawer>
 
-            <Tabs
-              defaultActiveKey="roles"
-              items={[
-                {
-                  key: "roles",
-                  label: "Roles",
-                  children: (
-                    <div className="space-y-4">
-                      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <h4 className="text-md font-semibold text-gray-900 mb-4">
-                          Assign Roles
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {mockRoles.map((role) => (
-                            <div
-                              key={role.id}
-                              className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
-                            >
-                              <div className="flex items-center space-x-3">
-                                <input
-                                  type="checkbox"
-                                  id={`role-${role.id}`}
-                                  checked={selectedRoles.includes(role.id)}
-                                  onChange={(e) =>
-                                    handleRoleChange(role.id, e.target.checked)
-                                  }
-                                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                                />
-                                <div className="flex-1">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-2">
-                                      <Tag color={role.color}>{role.name}</Tag>
-                                      {role.name === "Super Admin" && (
-                                        <Crown className="h-4 w-4 text-yellow-500" />
-                                      )}
-                                      {role.name === "Admin" && (
-                                        <Star className="h-4 w-4 text-orange-500" />
-                                      )}
+        {/* Role & Permission Management Drawer */}
+        <Drawer
+          title={
+            <div className="flex items-center space-x-2">
+              <UserCog className="h-5 w-5 text-blue-600" />
+              <span>Manage Roles & Permissions</span>
+            </div>
+          }
+          placement="right"
+          size="large"
+          open={rolePermissionDrawerOpen}
+          onClose={() => setRolePermissionDrawerOpen(false)}
+          width="100%"
+          className="user-drawer"
+          extra={
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                onClick={() => setRolePermissionDrawerOpen(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          }
+        >
+          {selectedUser && (
+            <div className="space-y-6">
+              {/* User Info */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <div className="flex items-center space-x-4">
+                  <AntAvatar size={60} src={selectedUser.avatar} />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {selectedUser.name}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {selectedUser.email}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {selectedUser.department} • {selectedUser.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Tabs
+                defaultActiveKey="roles"
+                items={[
+                  {
+                    key: "roles",
+                    label: "Roles",
+                    children: (
+                      <div className="space-y-4">
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                          <h4 className="text-md font-semibold text-gray-900 mb-4">
+                            Assign Roles
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {mockRoles.map((role) => (
+                              <div
+                                key={role.id}
+                                className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <input
+                                    type="checkbox"
+                                    id={`role-${role.id}`}
+                                    checked={selectedRoles.includes(role.id)}
+                                    onChange={(e) =>
+                                      handleRoleChange(
+                                        role.id,
+                                        e.target.checked,
+                                      )
+                                    }
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                  />
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-2">
+                                        <Tag color={role.color}>
+                                          {role.name}
+                                        </Tag>
+                                        {role.name === "Super Admin" && (
+                                          <Crown className="h-4 w-4 text-yellow-500" />
+                                        )}
+                                        {role.name === "Admin" && (
+                                          <Star className="h-4 w-4 text-orange-500" />
+                                        )}
+                                      </div>
+                                      <button
+                                        onClick={() =>
+                                          setShowRolePermissions(
+                                            showRolePermissions === role.id
+                                              ? null
+                                              : role.id,
+                                          )
+                                        }
+                                        className="p-1 hover:bg-gray-200 rounded"
+                                      >
+                                        <MoreHorizontal className="h-4 w-4 text-gray-500" />
+                                      </button>
                                     </div>
-                                    <button
-                                      onClick={() =>
-                                        setShowRolePermissions(
-                                          showRolePermissions === role.id
-                                            ? null
-                                            : role.id,
-                                        )
-                                      }
-                                      className="p-1 hover:bg-gray-200 rounded"
-                                    >
-                                      <MoreHorizontal className="h-4 w-4 text-gray-500" />
-                                    </button>
+                                    <p className="text-sm text-gray-600 mt-1">
+                                      {role.description}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                      {role.permissions.length} permissions
+                                      included
+                                    </p>
                                   </div>
-                                  <p className="text-sm text-gray-600 mt-1">
-                                    {role.description}
-                                  </p>
-                                  <p className="text-xs text-gray-500 mt-1">
-                                    {role.permissions.length} permissions
-                                    included
-                                  </p>
                                 </div>
-                              </div>
 
-                              {/* Role Permissions Table */}
-                              {showRolePermissions === role.id && (
-                                <div className="mt-3">
-                                  <div className="flex items-center justify-between mb-3">
-                                    <h5 className="text-sm font-medium text-gray-700">
-                                      Role Permissions:
-                                    </h5>
-                                    <AntButton
+                                {/* Role Permissions Table */}
+                                {showRolePermissions === role.id && (
+                                  <div className="mt-3">
+                                    <div className="flex items-center justify-between mb-3">
+                                      <h5 className="text-sm font-medium text-gray-700">
+                                        Role Permissions:
+                                      </h5>
+                                      <AntButton
+                                        size="small"
+                                        type="primary"
+                                        onClick={() => {
+                                          toast({
+                                            title: "Role Permissions Updated",
+                                            description: `Permissions for ${role.name} role have been saved successfully`,
+                                            variant: "default",
+                                          });
+                                        }}
+                                        className="text-xs px-3"
+                                      >
+                                        <Save className="h-3 w-3 mr-1" />
+                                        Save Changes
+                                      </AntButton>
+                                    </div>
+                                    <Table
                                       size="small"
-                                      type="primary"
-                                      onClick={() => {
-                                        toast({
-                                          title: "Role Permissions Updated",
-                                          description: `Permissions for ${role.name} role have been saved successfully`,
-                                          variant: "default",
-                                        });
-                                      }}
-                                      className="text-xs px-3"
-                                    >
-                                      <Save className="h-3 w-3 mr-1" />
-                                      Save Changes
-                                    </AntButton>
-                                  </div>
-                                  <Table
-                                    size="small"
-                                    dataSource={role.permissions.map(
-                                      (permId) => {
-                                        const permission = mockPermissions.find(
-                                          (p) => p.id === permId,
-                                        );
-                                        return {
-                                          key: permId,
-                                          id: permId,
-                                          name: permission?.name || "",
-                                          description:
-                                            permission?.description || "",
-                                          module: permission?.module || "",
-                                          selected:
-                                            selectedPermissions.includes(
-                                              permId,
-                                            ),
-                                          active:
-                                            permissionStatus[permId] || false,
-                                        };
-                                      },
-                                    )}
-                                    columns={[
-                                      {
-                                        title: "Select",
-                                        dataIndex: "selected",
-                                        width: 60,
-                                        render: (selected, record) =>
-                                          selected ? (
-                                            <Popconfirm
-                                              title="Remove Permission"
-                                              description={`Are you sure you want to remove "${record.name}" permission?`}
-                                              onConfirm={() =>
-                                                handlePermissionChange(
-                                                  record.id,
-                                                  false,
-                                                )
-                                              }
-                                              okText="Yes"
-                                              cancelText="No"
-                                            >
+                                      dataSource={role.permissions.map(
+                                        (permId) => {
+                                          const permission =
+                                            mockPermissions.find(
+                                              (p) => p.id === permId,
+                                            );
+                                          return {
+                                            key: permId,
+                                            id: permId,
+                                            name: permission?.name || "",
+                                            description:
+                                              permission?.description || "",
+                                            module: permission?.module || "",
+                                            selected:
+                                              selectedPermissions.includes(
+                                                permId,
+                                              ),
+                                            active:
+                                              permissionStatus[permId] || false,
+                                          };
+                                        },
+                                      )}
+                                      columns={[
+                                        {
+                                          title: "Select",
+                                          dataIndex: "selected",
+                                          width: 60,
+                                          render: (selected, record) =>
+                                            selected ? (
+                                              <Popconfirm
+                                                title="Remove Permission"
+                                                description={`Are you sure you want to remove "${record.name}" permission?`}
+                                                onConfirm={() =>
+                                                  handlePermissionChange(
+                                                    record.id,
+                                                    false,
+                                                  )
+                                                }
+                                                okText="Yes"
+                                                cancelText="No"
+                                              >
+                                                <Checkbox
+                                                  checked={selected}
+                                                  onChange={(e) => {
+                                                    if (!e.target.checked) {
+                                                      // The Popconfirm will handle the actual removal
+                                                      return;
+                                                    }
+                                                    handlePermissionChange(
+                                                      record.id,
+                                                      e.target.checked,
+                                                    );
+                                                  }}
+                                                />
+                                              </Popconfirm>
+                                            ) : (
                                               <Checkbox
                                                 checked={selected}
-                                                onChange={(e) => {
-                                                  if (!e.target.checked) {
-                                                    // The Popconfirm will handle the actual removal
-                                                    return;
-                                                  }
+                                                onChange={(e) =>
                                                   handlePermissionChange(
                                                     record.id,
                                                     e.target.checked,
-                                                  );
-                                                }}
+                                                  )
+                                                }
                                               />
-                                            </Popconfirm>
-                                          ) : (
-                                            <Checkbox
-                                              checked={selected}
-                                              onChange={(e) =>
+                                            ),
+                                        },
+                                        {
+                                          title: "Description",
+                                          dataIndex: "description",
+                                          render: (description) => (
+                                            <span className="text-xs text-gray-600">
+                                              {description}
+                                            </span>
+                                          ),
+                                        },
+                                        {
+                                          title: "Permission Name",
+                                          dataIndex: "name",
+                                          render: (name, record) => (
+                                            <div>
+                                              <div className="font-medium text-sm">
+                                                {name}
+                                              </div>
+                                              <div className="text-xs text-gray-500">
+                                                {record.id}
+                                              </div>
+                                            </div>
+                                          ),
+                                        },
+                                        {
+                                          title: "Module Name",
+                                          dataIndex: "module",
+                                          render: (module) => (
+                                            <Tag color="blue">{module}</Tag>
+                                          ),
+                                        },
+                                      ]}
+                                      pagination={{
+                                        pageSize: 20,
+                                        showSizeChanger: true,
+                                        showQuickJumper: true,
+                                        showTotal: (total, range) =>
+                                          `${range[0]}-${range[1]} of ${total} permissions`,
+                                        pageSizeOptions: [
+                                          "10",
+                                          "20",
+                                          "50",
+                                          "100",
+                                        ],
+                                      }}
+                                      className="role-permissions-table"
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Current Roles Summary */}
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                          <h4 className="text-md font-semibold text-gray-900 mb-4">
+                            Current Roles ({selectedRoles.length})
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedRoles.map((roleId) => {
+                              const role = mockRoles.find(
+                                (r) => r.id === roleId,
+                              );
+                              return role ? (
+                                <Tag
+                                  key={role.id}
+                                  color={role.color}
+                                  className="flex items-center space-x-1"
+                                >
+                                  <span>{role.name}</span>
+                                  <X
+                                    className="h-3 w-3 cursor-pointer hover:text-red-500"
+                                    onClick={() =>
+                                      handleRoleChange(role.id, false)
+                                    }
+                                  />
+                                </Tag>
+                              ) : null;
+                            })}
+                            {selectedRoles.length === 0 && (
+                              <p className="text-sm text-gray-500">
+                                No roles assigned
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ),
+                  },
+                  {
+                    key: "permissions",
+                    label: "Permissions",
+                    children: (
+                      <div className="space-y-4">
+                        {/* Role-based Permissions */}
+                        {(() => {
+                          const { rolePermissions, extraPermissions } =
+                            getPermissionsByRole();
+                          return (
+                            <>
+                              {Object.keys(rolePermissions).map((roleName) => {
+                                const role = mockRoles.find(
+                                  (r) => r.name === roleName,
+                                );
+                                const permissions = rolePermissions[roleName];
+                                return (
+                                  <div
+                                    key={roleName}
+                                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
+                                  >
+                                    <div className="flex items-center space-x-2 mb-4">
+                                      <Tag color={role?.color}>{roleName}</Tag>
+                                      <span className="text-sm text-gray-600">
+                                        ({permissions.length} permissions)
+                                      </span>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                      {permissions.map((permissionId) => {
+                                        const permission = mockPermissions.find(
+                                          (p) => p.id === permissionId,
+                                        );
+                                        return permission ? (
+                                          <div
+                                            key={permission.id}
+                                            className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                                          >
+                                            <div>
+                                              <p className="text-sm font-medium">
+                                                {permission.name}
+                                              </p>
+                                              <p className="text-xs text-gray-500">
+                                                {permission.id}
+                                              </p>
+                                            </div>
+                                            <X
+                                              className="h-4 w-4 cursor-pointer hover:text-red-500"
+                                              onClick={() =>
                                                 handlePermissionChange(
-                                                  record.id,
-                                                  e.target.checked,
+                                                  permission.id,
+                                                  false,
                                                 )
                                               }
                                             />
-                                          ),
-                                      },
-                                      {
-                                        title: "Description",
-                                        dataIndex: "description",
-                                        render: (description) => (
-                                          <span className="text-xs text-gray-600">
-                                            {description}
-                                          </span>
-                                        ),
-                                      },
-                                      {
-                                        title: "Permission Name",
-                                        dataIndex: "name",
-                                        render: (name, record) => (
-                                          <div>
-                                            <div className="font-medium text-sm">
-                                              {name}
-                                            </div>
-                                            <div className="text-xs text-gray-500">
-                                              {record.id}
-                                            </div>
                                           </div>
-                                        ),
-                                      },
-                                      {
-                                        title: "Module Name",
-                                        dataIndex: "module",
-                                        render: (module) => (
-                                          <Tag color="blue">{module}</Tag>
-                                        ),
-                                      },
-                                    ]}
-                                    pagination={{
-                                      pageSize: 20,
-                                      showSizeChanger: true,
-                                      showQuickJumper: true,
-                                      showTotal: (total, range) =>
-                                        `${range[0]}-${range[1]} of ${total} permissions`,
-                                      pageSizeOptions: [
-                                        "10",
-                                        "20",
-                                        "50",
-                                        "100",
-                                      ],
-                                    }}
-                                    className="role-permissions-table"
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                                        ) : null;
+                                      })}
+                                    </div>
+                                  </div>
+                                );
+                              })}
 
-                      {/* Current Roles Summary */}
-                      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <h4 className="text-md font-semibold text-gray-900 mb-4">
-                          Current Roles ({selectedRoles.length})
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedRoles.map((roleId) => {
-                            const role = mockRoles.find((r) => r.id === roleId);
-                            return role ? (
-                              <Tag
-                                key={role.id}
-                                color={role.color}
-                                className="flex items-center space-x-1"
-                              >
-                                <span>{role.name}</span>
-                                <X
-                                  className="h-3 w-3 cursor-pointer hover:text-red-500"
-                                  onClick={() =>
-                                    handleRoleChange(role.id, false)
-                                  }
-                                />
-                              </Tag>
-                            ) : null;
-                          })}
-                          {selectedRoles.length === 0 && (
-                            <p className="text-sm text-gray-500">
-                              No roles assigned
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ),
-                },
-                {
-                  key: "permissions",
-                  label: "Permissions",
-                  children: (
-                    <div className="space-y-4">
-                      {/* Role-based Permissions */}
-                      {(() => {
-                        const { rolePermissions, extraPermissions } =
-                          getPermissionsByRole();
-                        return (
-                          <>
-                            {Object.keys(rolePermissions).map((roleName) => {
-                              const role = mockRoles.find(
-                                (r) => r.name === roleName,
-                              );
-                              const permissions = rolePermissions[roleName];
-                              return (
-                                <div
-                                  key={roleName}
-                                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
-                                >
+                              {/* Extra Permissions */}
+                              {extraPermissions.length > 0 && (
+                                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                                   <div className="flex items-center space-x-2 mb-4">
-                                    <Tag color={role?.color}>{roleName}</Tag>
+                                    <Tag color="purple">Extra Permissions</Tag>
                                     <span className="text-sm text-gray-600">
-                                      ({permissions.length} permissions)
+                                      ({extraPermissions.length} permissions)
                                     </span>
                                   </div>
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    {permissions.map((permissionId) => {
+                                    {extraPermissions.map((permissionId) => {
                                       const permission = mockPermissions.find(
                                         (p) => p.id === permissionId,
                                       );
                                       return permission ? (
                                         <div
                                           key={permission.id}
-                                          className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                                          className="flex items-center justify-between p-2 bg-purple-50 rounded border border-purple-200"
                                         >
                                           <div>
                                             <p className="text-sm font-medium">
@@ -3182,117 +3318,74 @@ export default function UserManagementPage() {
                                     })}
                                   </div>
                                 </div>
-                              );
-                            })}
+                              )}
 
-                            {/* Extra Permissions */}
-                            {extraPermissions.length > 0 && (
-                              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                                <div className="flex items-center space-x-2 mb-4">
-                                  <Tag color="purple">Extra Permissions</Tag>
-                                  <span className="text-sm text-gray-600">
-                                    ({extraPermissions.length} permissions)
-                                  </span>
+                              {selectedPermissions.length === 0 && (
+                                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                                  <p className="text-gray-500">
+                                    No permissions assigned
+                                  </p>
+                                  <p className="text-sm text-gray-400 mt-1">
+                                    Select roles to automatically assign
+                                    permissions
+                                  </p>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                  {extraPermissions.map((permissionId) => {
-                                    const permission = mockPermissions.find(
-                                      (p) => p.id === permissionId,
-                                    );
-                                    return permission ? (
-                                      <div
-                                        key={permission.id}
-                                        className="flex items-center justify-between p-2 bg-purple-50 rounded border border-purple-200"
-                                      >
-                                        <div>
-                                          <p className="text-sm font-medium">
-                                            {permission.name}
-                                          </p>
-                                          <p className="text-xs text-gray-500">
-                                            {permission.id}
-                                          </p>
-                                        </div>
-                                        <X
-                                          className="h-4 w-4 cursor-pointer hover:text-red-500"
-                                          onClick={() =>
-                                            handlePermissionChange(
-                                              permission.id,
-                                              false,
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    ) : null;
-                                  })}
-                                </div>
-                              </div>
-                            )}
+                              )}
+                            </>
+                          );
+                        })()}
 
-                            {selectedPermissions.length === 0 && (
-                              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                                <p className="text-gray-500">
-                                  No permissions assigned
-                                </p>
-                                <p className="text-sm text-gray-400 mt-1">
-                                  Select roles to automatically assign
-                                  permissions
-                                </p>
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
-
-                      {/* All Available Permissions */}
-                      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                        <h4 className="text-md font-semibold text-gray-900 mb-4">
-                          All Available Permissions
-                        </h4>
-                        <div className="space-y-3">
-                          {mockPermissions.map((permission) => (
-                            <div
-                              key={permission.id}
-                              className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
-                            >
-                              <input
-                                type="checkbox"
-                                id={`permission-${permission.id}`}
-                                checked={selectedPermissions.includes(
-                                  permission.id,
-                                )}
-                                onChange={(e) =>
-                                  handlePermissionChange(
+                        {/* All Available Permissions */}
+                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                          <h4 className="text-md font-semibold text-gray-900 mb-4">
+                            All Available Permissions
+                          </h4>
+                          <div className="space-y-3">
+                            {mockPermissions.map((permission) => (
+                              <div
+                                key={permission.id}
+                                className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50"
+                              >
+                                <input
+                                  type="checkbox"
+                                  id={`permission-${permission.id}`}
+                                  checked={selectedPermissions.includes(
                                     permission.id,
-                                    e.target.checked,
-                                  )
-                                }
-                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                              />
-                              <div className="flex-1">
-                                <div className="flex items-center justify-between">
-                                  <div>
-                                    <p className="font-medium text-gray-900">
-                                      {permission.name}
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                      {permission.description}
-                                    </p>
+                                  )}
+                                  onChange={(e) =>
+                                    handlePermissionChange(
+                                      permission.id,
+                                      e.target.checked,
+                                    )
+                                  }
+                                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <p className="font-medium text-gray-900">
+                                        {permission.name}
+                                      </p>
+                                      <p className="text-sm text-gray-600">
+                                        {permission.description}
+                                      </p>
+                                    </div>
+                                    <Tag color="blue">{permission.id}</Tag>
                                   </div>
-                                  <Tag color="blue">{permission.id}</Tag>
                                 </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ),
-                },
-              ]}
-            />
-          </div>
-        )}
-      </Drawer>
+                    ),
+                  },
+                ]}
+              />
+            </div>
+          )}
+        </Drawer>
+      </div>
     </div>
   );
 }
