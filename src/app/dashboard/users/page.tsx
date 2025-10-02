@@ -837,10 +837,10 @@ export default function UserManagementPage() {
           email: values.email,
           password: values.password,
           role: values.role || "USER",
-          phoneNumber: values.phone,
+          phoneNumber: values.phone, // Form field is "phone"
           status: values.status || "ACTIVE",
           gender: values.gender || null,
-          birthDate: values.dateOfBirth ? values.dateOfBirth.toISOString() : null,
+          birthDate: values.dateOfBirth ? values.dateOfBirth.toISOString() : null, // Form field is "dateOfBirth"
         };
 
         console.log("Sending user data:", userData);
