@@ -23,45 +23,90 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
         const refreshToken = localStorage.getItem("refreshToken");
         const userData = localStorage.getItem("userData");
 
-        if (!authToken || !refreshToken || !userData) {
+        if (!authToken || authToken.length < 10) {
+          console.log("No valid auth token found");
           setIsAuthenticated(false);
           setIsLoading(false);
           return;
         }
 
-        // Validate token by checking if it's not expired
+        // Check if this is a demo token
+        if (
+          authToken.includes("demo-signature") ||
+          authToken.includes("mock-jwt-token")
+        ) {
+          // Demo token - just check if we have user data
+          if (userData) {
+            try {
+              const parsedUserData = JSON.parse(userData);
+              if (parsedUserData && parsedUserData.email) {
+                console.log("Demo authentication valid");
+                setIsAuthenticated(true);
+                setIsLoading(false);
+                return;
+              }
+            } catch (e) {
+              console.log("Invalid user data in demo mode");
+            }
+          }
+          setIsAuthenticated(false);
+          setIsLoading(false);
+          return;
+        }
+
+        // For real JWT tokens, validate expiration
         try {
-          const tokenPayload = JSON.parse(atob(authToken.split(".")[1]));
-          const currentTime = Math.floor(Date.now() / 1000);
+          const tokenParts = authToken.split(".");
+          if (tokenParts.length === 3) {
+            const tokenPayload = JSON.parse(atob(tokenParts[1]));
+            const currentTime = Math.floor(Date.now() / 1000);
 
-          if (tokenPayload.exp && tokenPayload.exp < currentTime) {
-            // Token is expired, try to refresh
-            const refreshResponse = await fetch("/api/auth/refresh", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ refreshToken }),
-            });
+            if (tokenPayload.exp && tokenPayload.exp < currentTime) {
+              console.log("Token expired, attempting refresh");
+              // Token is expired, try to refresh
+              if (refreshToken) {
+                const refreshResponse = await fetch("/api/auth/refresh", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ refreshToken }),
+                });
 
-            if (refreshResponse.ok) {
-              const refreshData = await refreshResponse.json();
-              localStorage.setItem("authToken", refreshData.data.accessToken);
-              localStorage.setItem(
-                "refreshToken",
-                refreshData.data.refreshToken,
-              );
-              setIsAuthenticated(true);
+                if (refreshResponse.ok) {
+                  const refreshData = await refreshResponse.json();
+                  localStorage.setItem(
+                    "authToken",
+                    refreshData.data.accessToken,
+                  );
+                  localStorage.setItem(
+                    "refreshToken",
+                    refreshData.data.refreshToken,
+                  );
+                  setIsAuthenticated(true);
+                } else {
+                  // Refresh failed, clear tokens and redirect to login
+                  localStorage.removeItem("authToken");
+                  localStorage.removeItem("refreshToken");
+                  localStorage.removeItem("userData");
+                  setIsAuthenticated(false);
+                }
+              } else {
+                // No refresh token, clear and redirect
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("userData");
+                setIsAuthenticated(false);
+              }
             } else {
-              // Refresh failed, clear tokens and redirect to login
-              localStorage.removeItem("authToken");
-              localStorage.removeItem("refreshToken");
-              localStorage.removeItem("userData");
-              setIsAuthenticated(false);
+              // Token is valid
+              console.log("Token is valid");
+              setIsAuthenticated(true);
             }
           } else {
-            // Token is valid
-            setIsAuthenticated(true);
+            // Invalid JWT format
+            console.log("Invalid JWT format");
+            setIsAuthenticated(false);
           }
         } catch (error) {
           console.error("Token validation error:", error);
@@ -84,8 +129,11 @@ export default function AuthGuard({ children, fallback }: AuthGuardProps) {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      const redirectUrl = searchParams.get("redirect") || "/dashboard";
-      router.push(`/?redirect=${encodeURIComponent(redirectUrl)}`);
+      // Don't redirect if we're already on the login page to prevent loops
+      if (window.location.pathname !== "/") {
+        const redirectUrl = searchParams.get("redirect") || "/dashboard";
+        router.push(`/?redirect=${encodeURIComponent(redirectUrl)}`);
+      }
     }
   }, [isAuthenticated, isLoading, router, searchParams]);
 

@@ -50,8 +50,23 @@ export function middleware(request: NextRequest) {
 
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
+  // Check if we have a valid auth token (basic validation)
+  const hasValidToken =
+    authToken && authToken.length > 10 && !authToken.includes("undefined");
+
+  // Debug logging for development
+  if (process.env.NODE_ENV === "development") {
+    console.log("Middleware Debug:", {
+      pathname,
+      authToken: authToken ? `${authToken.substring(0, 10)}...` : "none",
+      hasValidToken,
+      isProtectedRoute,
+      isPublicRoute,
+    });
+  }
+
   // If accessing a protected route without authentication
-  if (isProtectedRoute && !authToken) {
+  if (isProtectedRoute && !hasValidToken) {
     // Redirect to login page with return URL
     const loginUrl = new URL("/", request.url);
     loginUrl.searchParams.set("redirect", pathname);
@@ -61,7 +76,7 @@ export function middleware(request: NextRequest) {
   // If accessing login/register while already authenticated
   if (
     (pathname === "/" || pathname === "/login" || pathname === "/register") &&
-    authToken
+    hasValidToken
   ) {
     // Check if we have a valid redirect URL
     const redirectUrl = request.nextUrl.searchParams.get("redirect");
@@ -81,7 +96,7 @@ export function middleware(request: NextRequest) {
   }
 
   // For any other routes, check authentication
-  if (!authToken) {
+  if (!hasValidToken) {
     const loginUrl = new URL("/", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
