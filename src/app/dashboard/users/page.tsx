@@ -71,6 +71,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { useApi } from "@/hooks/useApi";
+import { UsersService } from "@/lib/api/services/usersService";
 
 const { Search: AntSearch } = AntInput;
 const { Option } = Select;
@@ -650,10 +651,8 @@ export default function UserManagementPage() {
     try {
       setLoading(true);
       console.log("Loading users with filters:", filters);
-      console.log("usersApi object:", usersApi);
-      console.log("usersApi.getUsers method:", usersApi.getUsers);
       
-      const response = await usersApi.getUsers({
+      const response = await UsersService.getUsers({
         page: 0,
         limit: 50,
         sortBy: "firstName",
@@ -844,7 +843,7 @@ export default function UserManagementPage() {
         };
 
         console.log("Sending user data:", userData);
-        const response = await usersApi.createUser(userData);
+        const response = await UsersService.createUser(userData);
         console.log("API response:", response);
 
         if (response && response.data) {
