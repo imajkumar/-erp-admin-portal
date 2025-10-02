@@ -615,6 +615,10 @@ export default function UserManagementPage() {
 
   const [users, setUsers] = useState<any[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
+  
+  // Debug users state
+  console.log("Current users state:", users);
+  console.log("Current filteredUsers state:", filteredUsers);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -646,6 +650,9 @@ export default function UserManagementPage() {
     try {
       setLoading(true);
       console.log("Loading users with filters:", filters);
+      console.log("usersApi object:", usersApi);
+      console.log("usersApi.getUsers method:", usersApi.getUsers);
+      
       const response = await usersApi.getUsers({
         page: 0,
         limit: 50,
@@ -674,11 +681,20 @@ export default function UserManagementPage() {
           roles: [], // Default empty roles
         }));
         
+        console.log("Transformed users:", transformedUsers);
         setUsers(transformedUsers);
         setFilteredUsers(transformedUsers);
+        console.log("Users state updated, count:", transformedUsers.length);
+      } else {
+        console.log("No data in response or unexpected response structure:", response);
       }
     } catch (error) {
       console.error("Error loading users:", error);
+      console.error("Error details:", {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+      });
       toast({
         title: "Error",
         description: "Failed to load users",
