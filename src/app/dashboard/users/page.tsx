@@ -665,13 +665,11 @@ export default function UserManagementPage() {
           email: user.email,
           phone: user.phoneNumber,
           role: user.role,
-          status: user.status?.toLowerCase() || "offline",
+          status: user.status || "INACTIVE", // Keep original API status
           avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.firstName}${user.lastName}`,
-          lastLogin: user.lastLogin ? new Date(user.lastLogin) : new Date(),
+          lastLogin: user.lastLogin ? new Date(user.lastLogin) : null, // Keep null if no last login
           joinDate: user.createdAt ? new Date(user.createdAt) : new Date(),
-          gender: user.gender || "Male",
-          department: "IT", // Default department since API doesn't provide this
-          location: "New York", // Default location since API doesn't provide this
+          gender: user.gender || null, // Keep null if no gender
           permissions: [], // Default empty permissions
           roles: [], // Default empty roles
         }));
@@ -1261,6 +1259,30 @@ export default function UserManagementPage() {
       ),
     },
     {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      width: 120,
+      filters: [
+        { text: "ADMIN", value: "ADMIN" },
+        { text: "USER", value: "USER" },
+        { text: "MANAGER", value: "MANAGER" },
+      ],
+      onFilter: (value, record) => record.role === value,
+      filterIcon: (filtered) => (
+        <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
+      ),
+      render: (role) => (
+        <Tag
+          color={
+            role === "ADMIN" ? "red" : role === "USER" ? "blue" : "green"
+          }
+        >
+          {role}
+        </Tag>
+      ),
+    },
+    {
       title: "Gender",
       dataIndex: "gender",
       key: "gender",
@@ -1280,54 +1302,23 @@ export default function UserManagementPage() {
             gender === "Male" ? "blue" : gender === "Female" ? "pink" : "purple"
           }
         >
-          {gender}
+          {gender || "N/A"}
         </Tag>
       ),
     },
     {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
+      title: "Join Date",
+      dataIndex: "joinDate",
+      key: "joinDate",
       width: 120,
-      filters: [
-        { text: "Engineering", value: "Engineering" },
-        { text: "Marketing", value: "Marketing" },
-        { text: "Sales", value: "Sales" },
-        { text: "HR", value: "HR" },
-        { text: "Finance", value: "Finance" },
-        { text: "Operations", value: "Operations" },
-      ],
-      onFilter: (value, record) => record.department === value,
+      sorter: (a, b) => dayjs(a.joinDate).unix() - dayjs(b.joinDate).unix(),
       filterIcon: (filtered) => (
         <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
       ),
-      render: (department) => (
-        <Badge variant="secondary" className="text-xs">
-          {department}
-        </Badge>
-      ),
-    },
-    {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
-      width: 120,
-      filters: [
-        { text: "New York", value: "New York" },
-        { text: "Los Angeles", value: "Los Angeles" },
-        { text: "Chicago", value: "Chicago" },
-        { text: "Houston", value: "Houston" },
-        { text: "Phoenix", value: "Phoenix" },
-        { text: "Philadelphia", value: "Philadelphia" },
-      ],
-      onFilter: (value, record) => record.location === value,
-      filterIcon: (filtered) => (
-        <Filter className={`h-4 w-4 ${filtered ? "text-blue-500" : ""}`} />
-      ),
-      render: (location) => (
+      render: (date) => (
         <div className="flex items-center space-x-1 text-sm text-gray-600">
-          <Globe className="h-3 w-3" />
-          <span>{location}</span>
+          <Clock className="h-3 w-3" />
+          <span>{dayjs(date).format("MMM DD, YYYY")}</span>
         </div>
       ),
     },
@@ -1336,7 +1327,12 @@ export default function UserManagementPage() {
       dataIndex: "lastLogin",
       key: "lastLogin",
       width: 150,
-      sorter: (a, b) => dayjs(a.lastLogin).unix() - dayjs(b.lastLogin).unix(),
+      sorter: (a, b) => {
+        if (!a.lastLogin && !b.lastLogin) return 0;
+        if (!a.lastLogin) return 1;
+        if (!b.lastLogin) return -1;
+        return dayjs(a.lastLogin).unix() - dayjs(b.lastLogin).unix();
+      },
       filterDropdown: ({
         setSelectedKeys,
         selectedKeys,
@@ -1379,6 +1375,7 @@ export default function UserManagementPage() {
       onFilter: (value, record) => {
         const searchValue =
           typeof value === "string" ? value.toLowerCase() : "";
+        if (!record.lastLogin) return searchValue === "never";
         return dayjs(record.lastLogin)
           .format("MMM DD, YYYY")
           .toLowerCase()
@@ -1387,7 +1384,7 @@ export default function UserManagementPage() {
       render: (date) => (
         <div className="flex items-center space-x-1 text-sm text-gray-600">
           <Clock className="h-3 w-3" />
-          <span>{dayjs(date).format("MMM DD, YYYY")}</span>
+          <span>{date ? dayjs(date).format("MMM DD, YYYY") : "Never"}</span>
         </div>
       ),
     },
@@ -1397,8 +1394,8 @@ export default function UserManagementPage() {
       key: "status",
       width: 100,
       filters: [
-        { text: "Online", value: "online" },
-        { text: "Offline", value: "offline" },
+        { text: "ACTIVE", value: "ACTIVE" },
+        { text: "INACTIVE", value: "INACTIVE" },
       ],
       onFilter: (value, record) => record.status === value,
       filterIcon: (filtered) => (
@@ -1407,12 +1404,12 @@ export default function UserManagementPage() {
       render: (status, _record) => (
         <div className="flex items-center space-x-2">
           <div
-            className={`w-2 h-2 rounded-full ${status === "online" ? "bg-green-500" : "bg-red-500"}`}
+            className={`w-2 h-2 rounded-full ${status === "ACTIVE" ? "bg-green-500" : "bg-red-500"}`}
           ></div>
           <span
-            className={`text-sm font-medium ${status === "online" ? "text-green-600" : "text-red-600"}`}
+            className={`text-sm font-medium ${status === "ACTIVE" ? "text-green-600" : "text-red-600"}`}
           >
-            {status === "online" ? "Online" : "Offline"}
+            {status === "ACTIVE" ? "Active" : "Inactive"}
           </span>
         </div>
       ),
@@ -1728,9 +1725,9 @@ export default function UserManagementPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Online</p>
+              <p className="text-sm font-medium text-gray-600">Active</p>
               <p className="text-2xl font-bold text-green-600">
-                {users.filter((u) => u.status === "online").length}
+                {users.filter((u) => u.status === "ACTIVE").length}
               </p>
             </div>
             <UserCheck className="h-8 w-8 text-green-600" />
@@ -1740,9 +1737,9 @@ export default function UserManagementPage() {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Offline</p>
+              <p className="text-sm font-medium text-gray-600">Inactive</p>
               <p className="text-2xl font-bold text-red-600">
-                {users.filter((u) => u.status === "offline").length}
+                {users.filter((u) => u.status === "INACTIVE").length}
               </p>
             </div>
             <UserX className="h-8 w-8 text-red-600" />
