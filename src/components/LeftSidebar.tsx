@@ -42,16 +42,9 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    id: "settings",
-    label: "Settings",
+    id: "system-management",
+    label: "System Management",
     icon: Settings,
-    children: [{ id: "erp-settings", label: "ERP Settings", icon: Settings }],
-  },
-
-  {
-    id: "system-users",
-    label: "USERS MANAGEMENT",
-    icon: Package,
     children: [
       { id: "system-users", label: "System Users", icon: User },
       { id: "admin-roles", label: "Admin Roles", icon: Shield },
@@ -62,15 +55,23 @@ const menuItems: MenuItem[] = [
   },
 
   {
-    id: "users-management",
-    label: "Users Management",
-    icon: Package,
+    id: "user-management",
+    label: "User Management",
+    icon: Users,
     children: [
       { id: "users", label: "Users", icon: User },
       { id: "roles", label: "Roles", icon: Shield },
       { id: "permissions", label: "Permissions", icon: Shield },
       { id: "activity", label: "Activity", icon: Activity },
       { id: "reports", label: "Reports", icon: BarChart3 },
+    ],
+  },
+
+  {
+    id: "tools",
+    label: "Tools & Utilities",
+    icon: Package,
+    children: [
       { id: "calendar", label: "Calendar", icon: Calendar },
       { id: "file-manager", label: "File Manager", icon: FolderOpen },
       { id: "inbox", label: "Inbox", icon: MessageSquare },
@@ -86,7 +87,9 @@ export default function LeftSidebar({
   onItemClick,
 }: LeftSidebarProps) {
   const router = useRouter();
-  const [expandedItems, setExpandedItems] = useState<string[]>(["dashboards"]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([
+    "system-management",
+  ]);
   const [menuDrawerOpen, setMenuDrawerOpen] = useState(false);
 
   const toggleExpanded = (itemId: string) => {
@@ -117,14 +120,15 @@ export default function LeftSidebar({
     const isExpanded = expandedItems.includes(item.id);
     const hasChildren = item.children && item.children.length > 0;
     const isActive = activeItem === item.id;
-    const isSystemUsers = item.id === "system-users";
-    const isUsersManagement = item.id === "users-management";
+    const isSystemManagement = item.id === "system-management";
+    const isUserManagement = item.id === "user-management";
+    const isTools = item.id === "tools";
 
     return (
       <div key={item.id}>
         <Button
           variant="ghost"
-          className={`w-full justify-start text-left h-9 px-3 transition-all duration-200 ${
+          className={`w-full justify-start text-left h-10 px-3 transition-all duration-200 rounded-md ${
             isActive
               ? "bg-blue-100 text-blue-800 hover:bg-blue-150 border-r-3 border-blue-600 shadow-sm font-semibold"
               : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
@@ -140,18 +144,12 @@ export default function LeftSidebar({
         >
           <item.icon
             className={`mr-3 h-4 w-4 ${
-              isActive ? "text-blue-700" : "text-gray-500"
+              isActive ? "text-blue-700" : "text-gray-600"
             }`}
           />
           <span
             className={`flex-1 text-sm ${
               isActive ? "font-semibold" : "font-medium"
-            } ${
-              isSystemUsers
-                ? "uppercase tracking-wider font-bold"
-                : isUsersManagement
-                  ? "capitalize"
-                  : ""
             }`}
           >
             {item.label}
@@ -167,9 +165,8 @@ export default function LeftSidebar({
               {item.badge}
             </Badge>
           )}
-          {/* Show chevron only for the second "Users Management" item */}
+          {/* Show chevron for all expandable items */}
           {hasChildren &&
-            isUsersManagement &&
             (isExpanded ? (
               <ChevronDown
                 className={`ml-2 h-3 w-3 ${isActive ? "text-blue-600" : "text-gray-500"}`}
@@ -200,10 +197,10 @@ export default function LeftSidebar({
       >
         <div className="flex flex-col h-full">
           {/* Dashboard Header */}
-          <div className="p-4 border-b border-gray-200 bg-gray-50">
-            <div className="flex items-center w-full h-10 px-3 text-gray-700">
-              <Home className="mr-3 h-4 w-4 text-blue-600" />
-              <span className="flex-1 text-sm font-semibold">Dashboard</span>
+          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="flex items-center w-full h-10 px-3 text-gray-800">
+              <Home className="mr-3 h-5 w-5 text-blue-600" />
+              <span className="flex-1 text-sm font-bold">Dashboard</span>
             </div>
           </div>
 
@@ -212,24 +209,15 @@ export default function LeftSidebar({
             {menuItems.map((item) => (
               <div key={item.id} className="mb-6">
                 {/* Section Header */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-3 px-2 py-1 bg-gray-50 rounded-md">
                   <div className="flex items-center space-x-2">
-                    <item.icon className="h-4 w-4 text-gray-600" />
-                    <h3
-                      className={`text-xs font-semibold text-gray-600 ${
-                        item.id === "system-users"
-                          ? "uppercase tracking-wider font-bold"
-                          : item.id === "users-management"
-                            ? "capitalize"
-                            : "uppercase tracking-wider"
-                      }`}
-                    >
+                    <item.icon className="h-4 w-4 text-blue-600" />
+                    <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
                       {item.label}
                     </h3>
                   </div>
-                  {/* Show chevron only for the second "Users Management" item */}
-                  {item.id === "users-management" &&
-                    item.children &&
+                  {/* Show chevron for all expandable sections */}
+                  {item.children &&
                     item.children.length > 0 &&
                     (expandedItems.includes(item.id) ? (
                       <ChevronDown className="h-3 w-3 text-gray-500" />
