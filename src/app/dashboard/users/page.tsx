@@ -832,15 +832,15 @@ export default function UserManagementPage() {
       } else {
         // Create new user using API
         const userData = {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
+          firstName: values.firstName?.trim(),
+          lastName: values.lastName?.trim(),
+          email: values.email?.trim().toLowerCase(),
           password: values.password,
           role: values.role || "USER",
-          phoneNumber: values.phone, // Form field is "phone"
+          phoneNumber: values.phone?.replace(/\s/g, ''), // Remove spaces from phone number
           status: values.status || "ACTIVE",
           gender: values.gender || null,
-          birthDate: values.dateOfBirth ? values.dateOfBirth.toISOString() : null, // Form field is "dateOfBirth"
+          birthDate: values.dateOfBirth ? values.dateOfBirth.toISOString() : null,
         };
 
         console.log("Sending user data:", userData);
