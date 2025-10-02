@@ -790,25 +790,27 @@ export default function UserManagementPage() {
           role: values.role || "USER",
           phoneNumber: values.phone,
           status: values.status || "ACTIVE",
+          gender: values.gender || null,
+          birthDate: values.dateOfBirth ? values.dateOfBirth.toISOString() : null,
         };
 
         console.log("Sending user data:", userData);
         const response = await usersApi.createUser(userData);
         console.log("API response:", response);
 
-        if (response) {
+        if (response && response.data) {
           // Add the new user to the local state
           const newUser = {
-            id: response.id || (users.length + 1).toString(),
+            id: response.data.id || (users.length + 1).toString(),
             ...values,
             avatar:
               values.avatar ||
               `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.firstName}${values.lastName}`,
-            status: values.status || "offline",
+            status: response.data.status || "offline",
             lastLogin: values.lastLogin
               ? values.lastLogin.toDate()
               : new Date(),
-            joinDate: values.joinDate ? values.joinDate.toDate() : new Date(),
+            joinDate: response.data.createdAt ? new Date(response.data.createdAt) : new Date(),
           };
 
           setUsers([...users, newUser]);
