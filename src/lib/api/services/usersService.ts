@@ -26,7 +26,10 @@ export class UsersService {
     if (filters.dateFrom) params.append("dateFrom", filters.dateFrom);
     if (filters.dateTo) params.append("dateTo", filters.dateTo);
 
-    return apiClient.getPaginated(this.SERVICE, `/api/v1/users/paginated?${params.toString()}`);
+    const url = `/api/v1/users/paginated?${params.toString()}`;
+    console.log("UsersService.getUsers - Constructed URL:", url);
+    console.log("UsersService.getUsers - Params:", params.toString());
+    return apiClient.getPaginated(this.SERVICE, url);
   }
 
   static async getUserById(id: string): Promise<ApiResponse<User>> {

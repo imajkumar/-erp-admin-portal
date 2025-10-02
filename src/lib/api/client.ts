@@ -274,13 +274,23 @@ export class ApiClient {
     url: string,
     config?: AxiosRequestConfig,
   ): Promise<PaginatedResponse<T>> {
+    console.log(`getPaginated - service: ${service}, url: ${url}`);
+    console.log(`getPaginated - base URL: ${microservices[service]}`);
     const instance = this.getInstance(service);
-    const response = await instance.request<PaginatedResponse<T>>({
-      ...config,
-      method: "GET",
-      url,
-    });
-    return response.data;
+    console.log(`getPaginated - full URL: ${instance.defaults.baseURL}${url}`);
+    
+    try {
+      const response = await instance.request<PaginatedResponse<T>>({
+        ...config,
+        method: "GET",
+        url,
+      });
+      console.log("getPaginated - response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("getPaginated - error:", error);
+      throw error;
+    }
   }
 
   public async post<T = any>(
