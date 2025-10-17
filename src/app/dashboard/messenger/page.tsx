@@ -455,7 +455,7 @@ export default function MessengerPage() {
     );
   };
 
-  // Load all users for display
+  // Load all users for display (excluding current user)
   const loadAllUsers = useCallback(async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -465,74 +465,86 @@ export default function MessengerPage() {
 
       if (response.ok) {
         const data = await response.json();
+        // Filter out current user from results
+        const filteredUsers = (data.data || []).filter(
+          (user: User) => user.email !== currentUser?.email,
+        );
         setSearchResults({
           messages: [],
-          users: data.data || [],
+          users: filteredUsers,
         });
         setShowSearchResults(true);
       }
     } catch (error) {
       console.error("Failed to load users:", error);
     }
-  }, []);
+  }, [currentUser?.email]);
 
   // Search functionality with debounce
-  const handleSearch = useCallback(async (query: string) => {
-    setSearchQuery(query);
+  const handleSearch = useCallback(
+    async (query: string) => {
+      setSearchQuery(query);
 
-    // Show all users when search is focused or has minimal input
-    if (!query.trim()) {
-      setSearchResults({ messages: [], users: [] });
-      setShowSearchResults(false);
-      return;
-    }
+      // Show all users when search is focused or has minimal input
+      if (!query.trim()) {
+        setSearchResults({ messages: [], users: [] });
+        setShowSearchResults(false);
+        return;
+      }
 
-    setIsSearching(true);
-    setShowSearchResults(true);
+      setIsSearching(true);
+      setShowSearchResults(true);
 
-    // Clear previous timeout
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
+      // Clear previous timeout
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
 
-    // Debounce search
-    searchTimeoutRef.current = setTimeout(async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
+      // Debounce search
+      searchTimeoutRef.current = setTimeout(async () => {
+        try {
+          const token = localStorage.getItem("accessToken");
 
-        // Search messages (only if query is 2+ characters)
-        let messagesData = { data: [] };
-        if (query.trim().length >= 2) {
-          const messagesResponse = await fetch(
-            `http://localhost:8089/api/v1/chat/search/messages?q=${encodeURIComponent(query)}`,
+          // Search messages (only if query is 2+ characters)
+          let messagesData = { data: [] };
+          if (query.trim().length >= 2) {
+            const messagesResponse = await fetch(
+              `http://localhost:8089/api/v1/chat/search/messages?q=${encodeURIComponent(query)}`,
+              { headers: { Authorization: `Bearer ${token}` } },
+            );
+            messagesData = messagesResponse.ok
+              ? await messagesResponse.json()
+              : { data: [] };
+          }
+
+          // Search users (always search, even with 1 character)
+          const usersResponse = await fetch(
+            `http://localhost:8060/api/v1/users/search?name=${encodeURIComponent(query)}`,
             { headers: { Authorization: `Bearer ${token}` } },
           );
-          messagesData = messagesResponse.ok
-            ? await messagesResponse.json()
+
+          const usersData = usersResponse.ok
+            ? await usersResponse.json()
             : { data: [] };
+
+          // Filter out current user from search results
+          const filteredUsers = (usersData.data || []).filter(
+            (user: User) => user.email !== currentUser?.email,
+          );
+
+          setSearchResults({
+            messages: messagesData.data || [],
+            users: filteredUsers,
+          });
+        } catch (error) {
+          console.error("Search failed:", error);
+        } finally {
+          setIsSearching(false);
         }
-
-        // Search users (always search, even with 1 character)
-        const usersResponse = await fetch(
-          `http://localhost:8060/api/v1/users/search?name=${encodeURIComponent(query)}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-
-        const usersData = usersResponse.ok
-          ? await usersResponse.json()
-          : { data: [] };
-
-        setSearchResults({
-          messages: messagesData.data || [],
-          users: usersData.data || [],
-        });
-      } catch (error) {
-        console.error("Search failed:", error);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 300);
-  }, []);
+      }, 300);
+    },
+    [currentUser?.email],
+  );
 
   const handleUserClick = async (user: User) => {
     try {
