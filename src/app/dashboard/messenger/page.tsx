@@ -455,11 +455,33 @@ export default function MessengerPage() {
     );
   };
 
+  // Load all users for display
+  const loadAllUsers = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch("http://localhost:8060/api/v1/users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults({
+          messages: [],
+          users: data.data || [],
+        });
+        setShowSearchResults(true);
+      }
+    } catch (error) {
+      console.error("Failed to load users:", error);
+    }
+  }, []);
+
   // Search functionality with debounce
   const handleSearch = useCallback(async (query: string) => {
     setSearchQuery(query);
 
-    if (!query.trim() || query.trim().length < 2) {
+    // Show all users when search is focused or has minimal input
+    if (!query.trim()) {
       setSearchResults({ messages: [], users: [] });
       setShowSearchResults(false);
       return;
@@ -478,21 +500,24 @@ export default function MessengerPage() {
       try {
         const token = localStorage.getItem("accessToken");
 
-        // Search messages
-        const messagesResponse = await fetch(
-          `http://localhost:8089/api/v1/chat/search/messages?q=${encodeURIComponent(query)}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
+        // Search messages (only if query is 2+ characters)
+        let messagesData = { data: [] };
+        if (query.trim().length >= 2) {
+          const messagesResponse = await fetch(
+            `http://localhost:8089/api/v1/chat/search/messages?q=${encodeURIComponent(query)}`,
+            { headers: { Authorization: `Bearer ${token}` } },
+          );
+          messagesData = messagesResponse.ok
+            ? await messagesResponse.json()
+            : { data: [] };
+        }
 
-        // Search users
+        // Search users (always search, even with 1 character)
         const usersResponse = await fetch(
           `http://localhost:8060/api/v1/users/search?name=${encodeURIComponent(query)}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
-        const messagesData = messagesResponse.ok
-          ? await messagesResponse.json()
-          : { data: [] };
         const usersData = usersResponse.ok
           ? await usersResponse.json()
           : { data: [] };
@@ -1030,84 +1055,108 @@ export default function MessengerPage() {
               className="pl-10"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              onFocus={() => searchQuery && setShowSearchResults(true)}
+              onFocus={() => {
+                if (searchQuery) {
+                  setShowSearchResults(true);
+                } else {
+                  // Show all users when focused
+                  loadAllUsers();
+                }
+              }}
             />
 
             {/* Search Results Dropdown */}
-            {showSearchResults &&
-              (searchResults.messages.length > 0 ||
-                searchResults.users.length > 0) && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
-                  {/* Users */}
-                  {searchResults.users.length > 0 && (
-                    <div className="p-2">
-                      <div className="text-xs font-semibold text-gray-500 px-2 py-1">
-                        People
-                      </div>
-                      {searchResults.users.map((user: User) => (
-                        <button
-                          key={user.id}
-                          className="w-full flex items-center space-x-3 px-2 py-2 hover:bg-gray-100 rounded"
-                          onClick={() => handleUserClick(user)}
-                        >
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="bg-blue-500 text-white text-xs">
-                              {user.firstName.charAt(0)}
-                              {user.lastName.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 text-left">
-                            <div className="text-sm font-medium">
-                              {user.firstName} {user.lastName}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {user.email}
-                            </div>
-                          </div>
-                        </button>
-                      ))}
+            {showSearchResults && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
+                {/* Users */}
+                {searchResults.users.length > 0 && (
+                  <div className="p-2">
+                    <div className="text-xs font-semibold text-gray-500 px-2 py-1">
+                      People
                     </div>
-                  )}
+                    {searchResults.users.map((user: User) => (
+                      <button
+                        key={user.id}
+                        className="w-full flex items-center space-x-3 px-2 py-2 hover:bg-gray-100 rounded"
+                        onClick={() => handleUserClick(user)}
+                      >
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-blue-500 text-white text-xs">
+                            {user.firstName.charAt(0)}
+                            {user.lastName.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 text-left">
+                          <div className="text-sm font-medium">
+                            {user.firstName} {user.lastName}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {user.email}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
 
-                  {/* Messages */}
-                  {searchResults.messages.length > 0 && (
-                    <div className="p-2 border-t border-gray-200">
-                      <div className="text-xs font-semibold text-gray-500 px-2 py-1">
-                        Messages
-                      </div>
-                      {searchResults.messages.map((msg: any) => (
-                        <button
-                          key={msg.id}
-                          className="w-full flex items-start space-x-3 px-2 py-2 hover:bg-gray-100 rounded text-left"
-                          onClick={() => {
-                            const channel = channels.find(
-                              (c) => c.id === msg.channelId,
-                            );
-                            if (channel) {
-                              setCurrentChannel(channel);
-                              setShowSearchResults(false);
-                              setSearchQuery("");
-                            }
-                          }}
-                        >
-                          <MessageSquare className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-xs font-medium text-gray-500">
-                              {msg.channel?.name}
-                            </div>
-                            <div className="text-sm truncate">
-                              {msg.content}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              {msg.senderName} • {formatTime(msg.createdAt)}
-                            </div>
+                {/* Messages */}
+                {searchResults.messages.length > 0 && (
+                  <div className="p-2 border-t border-gray-200">
+                    <div className="text-xs font-semibold text-gray-500 px-2 py-1">
+                      Messages
+                    </div>
+                    {searchResults.messages.map((msg: any) => (
+                      <button
+                        key={msg.id}
+                        className="w-full flex items-start space-x-3 px-2 py-2 hover:bg-gray-100 rounded text-left"
+                        onClick={() => {
+                          const channel = channels.find(
+                            (c) => c.id === msg.channelId,
+                          );
+                          if (channel) {
+                            setCurrentChannel(channel);
+                            setShowSearchResults(false);
+                            setSearchQuery("");
+                          }
+                        }}
+                      >
+                        <MessageSquare className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-medium text-gray-500">
+                            {msg.channel?.name}
                           </div>
-                        </button>
-                      ))}
+                          <div className="text-sm truncate">{msg.content}</div>
+                          <div className="text-xs text-gray-400">
+                            {msg.senderName} • {formatTime(msg.createdAt)}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Show all users option when no results */}
+                {searchResults.users.length === 0 &&
+                  searchResults.messages.length === 0 && (
+                    <div className="p-2">
+                      <button
+                        className="w-full flex items-center space-x-3 px-2 py-2 hover:bg-gray-100 rounded text-left"
+                        onClick={loadAllUsers}
+                      >
+                        <Users className="h-4 w-4 text-gray-400" />
+                        <div className="flex-1">
+                          <div className="text-sm font-medium text-gray-700">
+                            Show all users
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Click to see all available users
+                          </div>
+                        </div>
+                      </button>
                     </div>
                   )}
-                </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
 
