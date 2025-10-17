@@ -2,8 +2,15 @@ import { store } from "@/store";
 import { initializeAuthFromStorage } from "@/middleware/authMiddleware";
 import { initializeSettings } from "@/store/slices/settingsSlice";
 
+let isInitialized = false;
+let saveTimeout: NodeJS.Timeout | null = null;
+
 // Initialize Redux state from localStorage
 export const initializeReduxFromStorage = () => {
+  if (isInitialized) {
+    return; // Already initialized, skip
+  }
+
   // Initialize auth state
   initializeAuthFromStorage(store);
 
@@ -42,35 +49,56 @@ export const initializeReduxFromStorage = () => {
       console.error("Failed to parse language from localStorage:", error);
     }
   }
+
+  isInitialized = true;
 };
 
-// Save Redux state to localStorage
+// Save Redux state to localStorage with error handling
 export const saveReduxToStorage = () => {
-  const state = store.getState();
+  try {
+    const state = store.getState();
 
-  // Save settings
-  if (state.settings) {
-    localStorage.setItem("settings", JSON.stringify(state.settings));
-  }
+    // Only save essential data to avoid quota issues
+    // Save language (small data)
+    if (state.settings?.language) {
+      localStorage.setItem("language", state.settings.language.language);
+    }
 
-  // Save theme
-  if (state.settings.theme) {
-    localStorage.setItem("theme", JSON.stringify(state.settings.theme));
-  }
+    // Save theme (small data)
+    if (state.settings?.theme?.theme) {
+      localStorage.setItem("theme", state.settings.theme.theme);
+    }
 
-  // Save language
-  if (state.settings.language) {
-    localStorage.setItem("language", state.settings.language.language);
+    // Don't save the entire settings object - it's too large
+  } catch (error: any) {
+    if (error.name === "QuotaExceededError") {
+      console.warn("LocalStorage quota exceeded. Clearing old data...");
+      // Clear non-essential data
+      localStorage.removeItem("settings");
+      // Keep only essential items
+    } else {
+      console.error("Failed to save to localStorage:", error);
+    }
   }
 };
 
 // Subscribe to store changes for persistence
 export const setupReduxPersistence = () => {
+  if (isInitialized) {
+    return; // Already set up, skip
+  }
+
   // Initialize from storage on app start
   initializeReduxFromStorage();
 
-  // Subscribe to store changes
+  // Subscribe to store changes with debouncing
   store.subscribe(() => {
-    saveReduxToStorage();
+    // Debounce saves to prevent too many writes
+    if (saveTimeout) {
+      clearTimeout(saveTimeout);
+    }
+    saveTimeout = setTimeout(() => {
+      saveReduxToStorage();
+    }, 500); // Save only after 500ms of no changes
   });
 };

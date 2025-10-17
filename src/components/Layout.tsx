@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useInactivityTimer } from "@/hooks/useInactivityTimer";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -70,36 +70,69 @@ export default function AdminLayout({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleItemClick = (item: string) => {
-    // Handle navigation for specific items
-    if (item === "erp-settings") {
-      router.push("/dashboard/settings");
-      return;
-    }
+  const emptyFunction = useCallback(() => {}, []);
 
-    if (item === "users") {
-      router.push("/dashboard/users");
-      return;
-    }
+  const handleSidebarToggle = useCallback(() => {
+    setSidebarOpen((prev) => !prev);
+  }, []);
 
-    if (item === "view-all-notifications") {
-      router.push("/dashboard/view-all-notifications");
-      return;
-    }
+  const handleSearchClick = useCallback(() => {
+    setSearchOpen(true);
+  }, []);
 
-    if (item === "inbox") {
-      router.push("/dashboard/inbox");
-      return;
-    }
+  const handleDrawerToggle = useCallback(() => {
+    setDrawerOpen((prev) => !prev);
+  }, []);
 
-    if (onItemClick) {
-      onItemClick(item);
-    }
-  };
+  const handleNotificationClick = useCallback(() => {
+    setNotificationOpen((prev) => !prev);
+  }, []);
 
-  const handleUnlock = () => {
+  const handleLockScreen = useCallback(() => {
+    setIsLocked(true);
+  }, []);
+
+  const handleSidebarClose = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const handleRightSidebarToggle = useCallback(() => {
+    setRightQuickSidebar((prev) => !prev);
+  }, []);
+
+  const handleItemClick = useCallback(
+    (item: string) => {
+      // Handle navigation for specific items
+      if (item === "erp-settings") {
+        router.push("/dashboard/settings");
+        return;
+      }
+
+      if (item === "users") {
+        router.push("/dashboard/users");
+        return;
+      }
+
+      if (item === "view-all-notifications") {
+        router.push("/dashboard/view-all-notifications");
+        return;
+      }
+
+      if (item === "inbox") {
+        router.push("/dashboard/inbox");
+        return;
+      }
+
+      if (onItemClick) {
+        onItemClick(item);
+      }
+    },
+    [router, onItemClick],
+  );
+
+  const handleUnlock = useCallback(() => {
     setIsLocked(false);
-  };
+  }, []);
 
   if (isLocked) {
     return <LockScreen onUnlock={handleUnlock} />;
@@ -110,11 +143,11 @@ export default function AdminLayout({
       {/* Header */}
       <Header
         user={user}
-        onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-        onSearchClick={() => setSearchOpen(true)}
-        onDrawerToggle={() => setDrawerOpen(!drawerOpen)}
-        onNotificationClick={() => setNotificationOpen(!notificationOpen)}
-        onLockScreen={() => setIsLocked(true)}
+        onSidebarToggle={handleSidebarToggle}
+        onSearchClick={handleSearchClick}
+        onDrawerToggle={handleDrawerToggle}
+        onNotificationClick={handleNotificationClick}
+        onLockScreen={handleLockScreen}
         sidebarOpen={sidebarOpen}
       />
 
@@ -123,17 +156,17 @@ export default function AdminLayout({
         {/* Left Quick Sidebar - Always Visible */}
         <LeftQuickSidebar
           isOpen={true}
-          onToggle={() => {}}
+          onToggle={emptyFunction}
           activeItem={activeItem}
           onItemClick={handleItemClick}
           sidebarOpen={sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          onSidebarToggle={handleSidebarToggle}
         />
 
         {/* Left Sidebar */}
         <LeftSidebar
           isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
+          onClose={handleSidebarClose}
           activeItem={activeItem}
           onItemClick={handleItemClick}
         />
@@ -151,7 +184,7 @@ export default function AdminLayout({
         {/* Right Quick Sidebar */}
         <RightQuickSidebar
           isOpen={rightQuickSidebar}
-          onToggle={() => setRightQuickSidebar(!rightQuickSidebar)}
+          onToggle={handleRightSidebarToggle}
           activeItem={activeItem}
           onItemClick={handleItemClick}
         />

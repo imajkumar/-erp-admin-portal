@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import AdminLayout from "@/components/Layout";
 import MainContent from "@/components/MainContent";
 import AuthGuard from "@/components/AuthGuard";
@@ -62,9 +62,9 @@ export default function Dashboard() {
   const [activeMenuItem, setActiveMenuItem] = useState("dashboard");
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleItemClick = (item: string) => {
+  const handleItemClick = useCallback((item: string) => {
     setActiveMenuItem(item);
-  };
+  }, []);
 
   useEffect(() => {
     // Simulate loading time

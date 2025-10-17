@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { setLanguage } from "@/store/slices/settingsSlice";
@@ -12,21 +12,24 @@ export const useReduxWithLanguage = () => {
     (state) => state.settings.language.language,
   );
 
-  // Sync language context with Redux
+  const isInitialized = useRef(false);
+
+  // Only sync on initial mount - load from Redux to context
   useEffect(() => {
-    if (language !== reduxLanguage) {
+    if (!isInitialized.current && reduxLanguage && reduxLanguage !== language) {
+      setLanguageContext(reduxLanguage);
+      isInitialized.current = true;
+    }
+  }, []);
+
+  // When language context changes (user action), update Redux
+  useEffect(() => {
+    if (isInitialized.current && language !== reduxLanguage) {
       dispatch(setLanguage(language));
     }
-  }, [language, reduxLanguage, dispatch]);
+  }, [language, dispatch]);
 
-  // Sync Redux with language context
-  useEffect(() => {
-    if (reduxLanguage !== language) {
-      setLanguageContext(reduxLanguage);
-    }
-  }, [reduxLanguage, language, setLanguageContext]);
-
-  // Initialize Redux persistence
+  // Initialize Redux persistence only once
   useEffect(() => {
     setupReduxPersistence();
   }, []);

@@ -119,15 +119,14 @@ export default function RightQuickSidebar({
   // Load theme from localStorage on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as Theme;
-    if (savedTheme && themes.some((theme) => theme.id === savedTheme)) {
+    if (savedTheme) {
       dispatch(setTheme(savedTheme));
     }
   }, [dispatch]);
 
   // Apply theme to document
   useEffect(() => {
-    const theme = themes.find((t) => t.id === currentTheme);
-    if (theme) {
+    if (currentTheme) {
       document.documentElement.setAttribute("data-theme", currentTheme);
       localStorage.setItem("theme", currentTheme);
     }

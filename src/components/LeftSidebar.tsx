@@ -18,7 +18,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -92,29 +92,40 @@ export default function LeftSidebar({
   ]);
   const [menuDrawerOpen, setMenuDrawerOpen] = useState(false);
 
-  const toggleExpanded = (itemId: string) => {
+  const toggleExpanded = useCallback((itemId: string) => {
     setExpandedItems((prev) =>
       prev.includes(itemId)
         ? prev.filter((id) => id !== itemId)
         : [...prev, itemId],
     );
-  };
+  }, []);
 
-  const toggleMenuDrawer = () => {
-    setMenuDrawerOpen(!menuDrawerOpen);
-  };
+  const toggleMenuDrawer = useCallback(() => {
+    setMenuDrawerOpen((prev) => !prev);
+  }, []);
 
-  const handleInboxClick = () => {
+  const handleInboxClick = useCallback(() => {
     router.push("/dashboard/inbox");
-  };
+  }, [router]);
 
-  const handleChatClick = () => {
+  const handleChatClick = useCallback(() => {
     window.open("/dashboard/messenger", "_blank");
-  };
+  }, []);
 
-  const handleAiChatClick = () => {
+  const handleAiChatClick = useCallback(() => {
     router.push("/dashboard/ai-messenger");
-  };
+  }, [router]);
+
+  const handleMenuItemClick = useCallback(
+    (itemId: string, hasChildren: boolean) => {
+      if (hasChildren) {
+        toggleExpanded(itemId);
+      } else {
+        onItemClick(itemId);
+      }
+    },
+    [toggleExpanded, onItemClick],
+  );
 
   const renderMenuItem = (item: MenuItem, level: number = 0) => {
     const isExpanded = expandedItems.includes(item.id);
@@ -134,13 +145,7 @@ export default function LeftSidebar({
               : "text-gray-700 hover:bg-gray-50 hover:text-gray-900 font-normal"
           }`}
           style={{ marginLeft: level > 0 ? `${level * 16}px` : "0" }}
-          onClick={() => {
-            if (hasChildren) {
-              toggleExpanded(item.id);
-            } else {
-              onItemClick(item.id);
-            }
-          }}
+          onClick={() => handleMenuItemClick(item.id, hasChildren)}
         >
           <item.icon
             className={`mr-3 h-4 w-4 ${

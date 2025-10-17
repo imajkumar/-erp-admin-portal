@@ -2,6 +2,7 @@
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ReduxProvider } from "@/components/ReduxProvider";
+import { SocketProvider } from "@/contexts/SocketContext";
 
 interface ClientProvidersProps {
   children: React.ReactNode;
@@ -10,7 +11,9 @@ interface ClientProvidersProps {
 export function ClientProviders({ children }: ClientProvidersProps) {
   return (
     <ReduxProvider>
-      <LanguageProvider>{children}</LanguageProvider>
+      <LanguageProvider>
+        <SocketProvider>{children}</SocketProvider>
+      </LanguageProvider>
     </ReduxProvider>
   );
 }

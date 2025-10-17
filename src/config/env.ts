@@ -8,6 +8,7 @@ export interface MicroserviceConfig {
   inventory: string;
   orders: string;
   payments: string;
+  chat: string;
 }
 
 export interface EnvironmentConfig {
@@ -58,6 +59,8 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
         payments:
           process.env.NEXT_PUBLIC_PAYMENTS_SERVICE_URL ||
           "http://localhost:8088",
+        chat:
+          process.env.NEXT_PUBLIC_CHAT_SERVICE_URL || "http://localhost:8089",
       },
       environment: "local",
       debug: true,
@@ -94,6 +97,9 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
         payments:
           process.env.NEXT_PUBLIC_PAYMENTS_SERVICE_URL ||
           "https://payments-staging.erp-admin.com",
+        chat:
+          process.env.NEXT_PUBLIC_CHAT_SERVICE_URL ||
+          "https://chat-staging.erp-admin.com",
       },
       environment: "staging",
       debug: true,
@@ -129,6 +135,9 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
         payments:
           process.env.NEXT_PUBLIC_PAYMENTS_SERVICE_URL ||
           "https://payments.erp-admin.com",
+        chat:
+          process.env.NEXT_PUBLIC_CHAT_SERVICE_URL ||
+          "https://chat.erp-admin.com",
       },
       environment: "production",
       debug: false,
@@ -157,6 +166,7 @@ export const {
   inventory: inventoryServiceUrl,
   orders: ordersServiceUrl,
   payments: paymentsServiceUrl,
+  chat: chatServiceUrl,
 } = microservices;
 
 // Microservice-specific API endpoints
