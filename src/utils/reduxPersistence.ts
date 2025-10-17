@@ -29,10 +29,19 @@ export const initializeReduxFromStorage = () => {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme) {
     try {
-      const theme = JSON.parse(savedTheme);
-      store.dispatch(initializeSettings({ theme }));
+      // Handle both JSON objects and plain string values
+      let theme;
+      if (savedTheme.startsWith("{") || savedTheme.startsWith("[")) {
+        theme = JSON.parse(savedTheme);
+      } else {
+        // Plain string value (e.g., "light", "dark", "default")
+        theme = { theme: savedTheme };
+      }
+      store.dispatch(initializeSettings(theme));
     } catch (error) {
       console.error("Failed to parse theme from localStorage:", error);
+      // Clear invalid data
+      localStorage.removeItem("theme");
     }
   }
 
