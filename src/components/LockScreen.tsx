@@ -35,6 +35,7 @@ const LockScreen: React.FC<LockScreenProps> = ({
   const [mode, setMode] = useState<"unlock" | "change">("unlock");
   const [newPin, setNewPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
+  const [showChangePinOption, setShowChangePinOption] = useState(false);
 
   // Update time every second
   useEffect(() => {
@@ -48,6 +49,31 @@ const LockScreen: React.FC<LockScreenProps> = ({
   // Load PIN status on mount
   useEffect(() => {
     loadPinStatus();
+  }, []);
+
+  // Keyboard shortcut for showing Change PIN option (Ctrl+O or Cmd+O)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "o") {
+        e.preventDefault();
+        setShowChangePinOption((prev) => {
+          const newValue = !prev;
+          // If hiding the change PIN option, reset to unlock mode
+          if (!newValue) {
+            setMode("unlock");
+            setError(null);
+            setSuccess(null);
+            setPin("");
+            setNewPin("");
+            setConfirmPin("");
+          }
+          return newValue;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const loadPinStatus = async () => {
@@ -236,43 +262,45 @@ const LockScreen: React.FC<LockScreenProps> = ({
         {/* Center Panel - PIN Entry */}
         <div className="flex flex-col items-center justify-center">
           <div className="w-full max-w-md bg-gray-800/50 backdrop-blur-sm rounded-3xl p-8">
-            {/* Mode Toggle */}
-            <div className="flex gap-2 mb-6">
-              <button
-                onClick={() => {
-                  setMode("unlock");
-                  setError(null);
-                  setSuccess(null);
-                  setPin("");
-                  setNewPin("");
-                  setConfirmPin("");
-                }}
-                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-                  mode === "unlock"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
-                }`}
-              >
-                Unlock
-              </button>
-              <button
-                onClick={() => {
-                  setMode("change");
-                  setError(null);
-                  setSuccess(null);
-                  setPin("");
-                  setNewPin("");
-                  setConfirmPin("");
-                }}
-                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-                  mode === "change"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
-                }`}
-              >
-                Change PIN
-              </button>
-            </div>
+            {/* Mode Toggle - Only show if Ctrl+O is pressed */}
+            {showChangePinOption && (
+              <div className="flex gap-2 mb-6">
+                <button
+                  onClick={() => {
+                    setMode("unlock");
+                    setError(null);
+                    setSuccess(null);
+                    setPin("");
+                    setNewPin("");
+                    setConfirmPin("");
+                  }}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                    mode === "unlock"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
+                  }`}
+                >
+                  Unlock
+                </button>
+                <button
+                  onClick={() => {
+                    setMode("change");
+                    setError(null);
+                    setSuccess(null);
+                    setPin("");
+                    setNewPin("");
+                    setConfirmPin("");
+                  }}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                    mode === "change"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
+                  }`}
+                >
+                  Change PIN
+                </button>
+              </div>
+            )}
 
             {mode === "unlock" ? (
               <>
