@@ -66,7 +66,7 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
       debug: true,
       version: process.env.NEXT_PUBLIC_VERSION || "1.0.0-local",
       gateway:
-        process.env.NEXT_PUBLIC_GATEWAY_URL || "http://localhost:3000/api",
+        process.env.NEXT_PUBLIC_GATEWAY_URL || "http://localhost:3001/api",
     },
     staging: {
       microservices: {

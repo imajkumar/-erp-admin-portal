@@ -39,14 +39,24 @@ export default function AdminLayout({
 
   // Inactivity timer for lock screen
   useInactivityTimer({
-    onTimeout: () => setIsLocked(true),
+    onTimeout: () => {
+      setIsLocked(true);
+      localStorage.setItem("isScreenLocked", "true");
+    },
     timeout: 60000, // 1 minute
   });
 
+  // Restore lock state and user data on mount
   useEffect(() => {
     const userData = localStorage.getItem("userData");
     if (userData) {
       setUser(JSON.parse(userData));
+    }
+
+    // Check if screen was locked before reload
+    const wasLocked = localStorage.getItem("isScreenLocked");
+    if (wasLocked === "true") {
+      setIsLocked(true);
     }
   }, []);
 
@@ -70,6 +80,33 @@ export default function AdminLayout({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Track page visibility for security - lock screen when user returns after being away
+  useEffect(() => {
+    let hiddenTime: number | null = null;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, record the time
+        hiddenTime = Date.now();
+      } else {
+        // Page is visible again
+        if (hiddenTime) {
+          const timeAway = Date.now() - hiddenTime;
+          // If user was away for more than 30 seconds, lock the screen
+          if (timeAway > 30000) {
+            setIsLocked(true);
+            localStorage.setItem("isScreenLocked", "true");
+          }
+          hiddenTime = null;
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
   const emptyFunction = useCallback(() => {}, []);
 
   const handleSidebarToggle = useCallback(() => {
@@ -90,6 +127,7 @@ export default function AdminLayout({
 
   const handleLockScreen = useCallback(() => {
     setIsLocked(true);
+    localStorage.setItem("isScreenLocked", "true");
   }, []);
 
   const handleSidebarClose = useCallback(() => {
@@ -132,6 +170,7 @@ export default function AdminLayout({
 
   const handleUnlock = useCallback(() => {
     setIsLocked(false);
+    localStorage.removeItem("isScreenLocked");
   }, []);
 
   if (isLocked) {
