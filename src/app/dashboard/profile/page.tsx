@@ -117,7 +117,7 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
-      const authToken = localStorage.getItem("authToken");
+      const authToken = localStorage.getItem("accessToken");
       if (!authToken) {
         console.error("No auth token found");
         return;
@@ -221,7 +221,7 @@ export default function ProfilePage() {
     setIsUpdatingPin(true);
 
     try {
-      const authToken = localStorage.getItem("authToken");
+      const authToken = localStorage.getItem("accessToken");
       if (!authToken) {
         setPinError("Authentication required");
         return;
@@ -324,7 +324,7 @@ export default function ProfilePage() {
     setIsUpdatingPin(true);
 
     try {
-      const authToken = localStorage.getItem("authToken");
+      const authToken = localStorage.getItem("accessToken");
       if (!authToken) {
         setPinError("Authentication required");
         return;

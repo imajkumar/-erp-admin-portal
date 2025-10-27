@@ -19,7 +19,7 @@ function AuthGuardContent({ children, fallback }: AuthGuardProps) {
     const checkAuth = async () => {
       try {
         // Check for authentication tokens
-        const authToken = localStorage.getItem("authToken");
+        const authToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
         const userData = localStorage.getItem("userData");
 
@@ -76,7 +76,7 @@ function AuthGuardContent({ children, fallback }: AuthGuardProps) {
                 if (refreshResponse.ok) {
                   const refreshData = await refreshResponse.json();
                   localStorage.setItem(
-                    "authToken",
+                    "accessToken",
                     refreshData.data.accessToken,
                   );
                   localStorage.setItem(
@@ -86,14 +86,14 @@ function AuthGuardContent({ children, fallback }: AuthGuardProps) {
                   setIsAuthenticated(true);
                 } else {
                   // Refresh failed, clear tokens and redirect to login
-                  localStorage.removeItem("authToken");
+                  localStorage.removeItem("accessToken");
                   localStorage.removeItem("refreshToken");
                   localStorage.removeItem("userData");
                   setIsAuthenticated(false);
                 }
               } else {
                 // No refresh token, clear and redirect
-                localStorage.removeItem("authToken");
+                localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
                 localStorage.removeItem("userData");
                 setIsAuthenticated(false);

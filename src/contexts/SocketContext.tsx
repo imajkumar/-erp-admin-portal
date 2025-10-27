@@ -31,7 +31,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
   const connect = useCallback(() => {
     if (typeof window === "undefined") return;
 
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("accessToken");
     if (!token) {
       console.warn("No auth token found, cannot connect to chat service");
       return;
@@ -60,7 +60,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
   // Auto-connect on mount if user is authenticated
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("accessToken");
       if (token && token.length > 10) {
         console.log("Auto-connecting to chat service with token...");
         connect();

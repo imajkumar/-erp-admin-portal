@@ -70,7 +70,7 @@ export default function Header({
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
     window.location.href = "/";
   };

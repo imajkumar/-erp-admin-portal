@@ -165,10 +165,6 @@ export class ApiClient {
 
           // Log error in development
           if (process.env.NODE_ENV === "development") {
-            console.error(
-              `❌ API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`,
-              apiError,
-            );
           }
 
           // Handle specific error codes
@@ -261,7 +257,6 @@ export class ApiClient {
       console.log("Request response:", response);
       return response.data;
     } catch (error) {
-      console.error("Request error:", error);
       throw error;
     }
   }
@@ -285,7 +280,7 @@ export class ApiClient {
     console.log(`getPaginated - base URL: ${microservices[service]}`);
     const instance = this.getInstance(service);
     console.log(`getPaginated - full URL: ${instance.defaults.baseURL}${url}`);
-    
+
     try {
       const response = await instance.request<PaginatedResponse<T>>({
         ...config,

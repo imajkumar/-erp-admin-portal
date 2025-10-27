@@ -60,4 +60,17 @@ export const pinService = {
     const response = await apiClient.delete("users", "/api/v1/pin/delete");
     return response.data;
   },
+
+  // Reset PIN (forgot PIN recovery)
+  async resetPin(data: CreatePinRequest): Promise<PinResponse> {
+    console.log("PIN Service: Resetting PIN with data:", data);
+    try {
+      const response = await apiClient.post("users", "/api/v1/pin/reset", data);
+      console.log("PIN Service: Reset response received:", response);
+      return response.data;
+    } catch (error) {
+      console.error("PIN Service: Error during PIN reset:", error);
+      throw error;
+    }
+  },
 };

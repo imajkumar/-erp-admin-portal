@@ -46,7 +46,7 @@ export default function AuthPage() {
 
   // Check if user is already logged in
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("accessToken");
     const userData = localStorage.getItem("userData");
 
     console.log("Login page - checking existing auth:", {
@@ -104,14 +104,14 @@ export default function AuthPage() {
         if (response.status === "success" && response.data) {
           // Store tokens if provided
           if (response.data.accessToken) {
-            localStorage.setItem("authToken", response.data.accessToken);
+            localStorage.setItem("accessToken", response.data.accessToken);
             localStorage.setItem(
               "refreshToken",
               response.data.refreshToken || response.data.accessToken,
             );
 
             // Set cookies with proper attributes for middleware
-            document.cookie = `authToken=${response.data.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
+            document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
             document.cookie = `refreshToken=${response.data.refreshToken || response.data.accessToken}; path=/; max-age=604800; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
           }
 
@@ -175,17 +175,17 @@ export default function AuthPage() {
           console.log("Demo login successful:", mockResponse);
 
           // Store token and user data
-          localStorage.setItem("authToken", mockResponse.accessToken);
+          localStorage.setItem("accessToken", mockResponse.accessToken);
           localStorage.setItem("refreshToken", mockResponse.refreshToken);
           localStorage.setItem("userData", JSON.stringify(mockResponse.user));
           localStorage.setItem("loginTime", new Date().toISOString());
 
           // Set cookies with proper attributes
-          document.cookie = `authToken=${mockResponse.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
+          document.cookie = `accessToken=${mockResponse.accessToken}; path=/; max-age=86400; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
           document.cookie = `refreshToken=${mockResponse.refreshToken}; path=/; max-age=604800; SameSite=Lax; Secure=${window.location.protocol === "https:"}`;
 
           console.log("Demo login successful, cookies set:", {
-            authToken: mockResponse.accessToken,
+            accessToken: mockResponse.accessToken,
             cookies: document.cookie,
           });
 
@@ -224,12 +224,12 @@ export default function AuthPage() {
             },
           };
 
-          localStorage.setItem("authToken", mockResponse.token);
+          localStorage.setItem("accessToken", mockResponse.token);
           localStorage.setItem("userData", JSON.stringify(mockResponse.user));
           localStorage.setItem("loginTime", new Date().toISOString());
 
           // Also set cookies for middleware to detect
-          document.cookie = `authToken=${mockResponse.token}; path=/; max-age=86400`; // 24 hours
+          document.cookie = `accessToken=${mockResponse.token}; path=/; max-age=86400`; // 24 hours
           document.cookie = `refreshToken=${mockResponse.token}; path=/; max-age=604800`; // 7 days
 
           setTimeout(() => {

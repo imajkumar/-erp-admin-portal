@@ -32,10 +32,11 @@ const LockScreen: React.FC<LockScreenProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
   const [pinStatus, setPinStatus] = useState<PinResponse | null>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [mode, setMode] = useState<"unlock" | "change">("unlock");
+  const [mode, setMode] = useState<"unlock" | "change" | "reset">("unlock");
   const [newPin, setNewPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [showChangePinOption, setShowChangePinOption] = useState(false);
+  const [showForgotPinOption, setShowForgotPinOption] = useState(false);
 
   // Update time every second
   useEffect(() => {
@@ -51,14 +52,33 @@ const LockScreen: React.FC<LockScreenProps> = ({
     loadPinStatus();
   }, []);
 
-  // Keyboard shortcut for showing Change PIN option (Ctrl+O or Cmd+O)
+  // Keyboard shortcuts for PIN options
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+O or Cmd+O - Toggle Change PIN option
       if ((e.ctrlKey || e.metaKey) && e.key === "o") {
         e.preventDefault();
         setShowChangePinOption((prev) => {
           const newValue = !prev;
           // If hiding the change PIN option, reset to unlock mode
+          if (!newValue) {
+            setMode("unlock");
+            setError(null);
+            setSuccess(null);
+            setPin("");
+            setNewPin("");
+            setConfirmPin("");
+          }
+          return newValue;
+        });
+      }
+
+      // Ctrl+R or Cmd+R - Toggle Forgot PIN option
+      if ((e.ctrlKey || e.metaKey) && e.key === "r") {
+        e.preventDefault();
+        setShowForgotPinOption((prev) => {
+          const newValue = !prev;
+          // If hiding the forgot PIN option, reset to unlock mode
           if (!newValue) {
             setMode("unlock");
             setError(null);
@@ -80,8 +100,22 @@ const LockScreen: React.FC<LockScreenProps> = ({
     try {
       const status = await pinService.getPinStatus();
       setPinStatus(status);
-    } catch (err) {
-      console.error("Failed to load PIN status:", err);
+    } catch (err: any) {
+      // Check if it's an authentication error
+      if (err?.status === 401 || err?.statusCode === 401) {
+        console.warn("Authentication required - token may be expired");
+        // Redirect to login if token is invalid
+        window.location.href = "/";
+      } else {
+        // Silently handle other errors - user may need to log in
+        console.warn("Could not load PIN status");
+        // Set default status to allow PIN entry
+        setPinStatus({
+          hasPin: true,
+          isLocked: false,
+          message: "Please enter your PIN",
+        });
+      }
     }
   };
 
@@ -196,6 +230,64 @@ const LockScreen: React.FC<LockScreenProps> = ({
     }
   };
 
+  const handleResetPin = async () => {
+    // Validate new PIN
+    if (newPin.length !== 4) {
+      setError("New PIN must be 4 digits");
+      return;
+    }
+
+    // Validate confirm PIN
+    if (confirmPin.length !== 4) {
+      setError("Please confirm your new PIN");
+      return;
+    }
+
+    // Check if new PINs match
+    if (newPin !== confirmPin) {
+      setError("New PIN and confirmation do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      setSuccess(null);
+
+      const response = await pinService.resetPin({
+        pin: newPin,
+        confirmPin: confirmPin,
+      });
+
+      if (response.message.includes("successfully")) {
+        setSuccess(
+          "PIN reset successfully! You can now unlock with your new PIN.",
+        );
+        setNewPin("");
+        setConfirmPin("");
+        setMode("unlock");
+        await loadPinStatus();
+
+        // Auto-switch back to unlock mode after 2 seconds
+        setTimeout(() => {
+          setMode("unlock");
+          setSuccess(null);
+        }, 2000);
+      } else {
+        setError(response.message);
+      }
+    } catch (err: any) {
+      console.error("PIN reset error:", err);
+      setError(
+        err.response?.data?.message || err.message || "Failed to reset PIN",
+      );
+      setNewPin("");
+      setConfirmPin("");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -256,14 +348,30 @@ const LockScreen: React.FC<LockScreenProps> = ({
               ERP Admin Portal
             </h3>
             <p className="text-blue-200 text-sm">Enter your PIN to continue</p>
+
+            {/* Keyboard Shortcuts Help */}
+            <div className="mt-4 space-y-2 text-xs text-gray-400">
+              <div className="flex items-center gap-2">
+                <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">
+                  Ctrl+O
+                </kbd>
+                <span>Change PIN</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-2 py-1 bg-gray-700 rounded text-xs">
+                  Ctrl+R
+                </kbd>
+                <span>Reset PIN (Forgot)</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Center Panel - PIN Entry */}
         <div className="flex flex-col items-center justify-center">
           <div className="w-full max-w-md bg-gray-800/50 backdrop-blur-sm rounded-3xl p-8">
-            {/* Mode Toggle - Only show if Ctrl+O is pressed */}
-            {showChangePinOption && (
+            {/* Mode Toggle - Only show if Ctrl+O or Ctrl+R is pressed */}
+            {(showChangePinOption || showForgotPinOption) && (
               <div className="flex gap-2 mb-6">
                 <button
                   onClick={() => {
@@ -282,23 +390,44 @@ const LockScreen: React.FC<LockScreenProps> = ({
                 >
                   Unlock
                 </button>
-                <button
-                  onClick={() => {
-                    setMode("change");
-                    setError(null);
-                    setSuccess(null);
-                    setPin("");
-                    setNewPin("");
-                    setConfirmPin("");
-                  }}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-                    mode === "change"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
-                  }`}
-                >
-                  Change PIN
-                </button>
+                {showChangePinOption && (
+                  <button
+                    onClick={() => {
+                      setMode("change");
+                      setError(null);
+                      setSuccess(null);
+                      setPin("");
+                      setNewPin("");
+                      setConfirmPin("");
+                    }}
+                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                      mode === "change"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
+                    }`}
+                  >
+                    Change PIN
+                  </button>
+                )}
+                {showForgotPinOption && (
+                  <button
+                    onClick={() => {
+                      setMode("reset");
+                      setError(null);
+                      setSuccess(null);
+                      setPin("");
+                      setNewPin("");
+                      setConfirmPin("");
+                    }}
+                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
+                      mode === "reset"
+                        ? "bg-orange-600 text-white"
+                        : "bg-gray-700/50 text-gray-300 hover:bg-gray-600/50"
+                    }`}
+                  >
+                    Reset PIN
+                  </button>
+                )}
               </div>
             )}
 
@@ -361,6 +490,21 @@ const LockScreen: React.FC<LockScreenProps> = ({
                 >
                   {loading ? "Unlocking..." : "Unlock System"}
                 </Button>
+
+                {/* Forgot PIN Link */}
+                <button
+                  onClick={() => {
+                    setMode("reset");
+                    setError(null);
+                    setSuccess(null);
+                    setPin("");
+                    setNewPin("");
+                    setConfirmPin("");
+                  }}
+                  className="w-full mt-4 text-center text-sm text-gray-400 hover:text-orange-400 transition-colors"
+                >
+                  Forgot PIN? Reset it here
+                </button>
               </>
             ) : (
               <>
@@ -413,6 +557,61 @@ const LockScreen: React.FC<LockScreenProps> = ({
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors disabled:opacity-50"
                 >
                   {loading ? "Updating PIN..." : "Update PIN"}
+                </Button>
+              </>
+            )}
+
+            {mode === "reset" && (
+              <>
+                {/* Reset PIN Mode - New PIN Input */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-white mb-4 text-center">
+                    Reset Your PIN
+                  </h3>
+                  <p className="text-gray-300 text-sm text-center mb-6">
+                    Enter a new 4-digit PIN to replace your forgotten PIN
+                  </p>
+
+                  <div className="space-y-4">
+                    {/* New PIN Input */}
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        New PIN
+                      </label>
+                      <PinInput
+                        value={newPin}
+                        onChange={setNewPin}
+                        length={4}
+                        disabled={loading}
+                        className="justify-center"
+                      />
+                    </div>
+
+                    {/* Confirm PIN Input */}
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Confirm New PIN
+                      </label>
+                      <PinInput
+                        value={confirmPin}
+                        onChange={setConfirmPin}
+                        length={4}
+                        disabled={loading}
+                        className="justify-center"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reset PIN Button */}
+                <Button
+                  onClick={handleResetPin}
+                  disabled={
+                    loading || newPin.length !== 4 || confirmPin.length !== 4
+                  }
+                  className="w-full h-12 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-xl transition-colors disabled:opacity-50"
+                >
+                  {loading ? "Resetting PIN..." : "Reset PIN"}
                 </Button>
               </>
             )}

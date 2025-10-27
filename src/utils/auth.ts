@@ -3,7 +3,7 @@ import axios from "axios";
 export const logout = async () => {
   try {
     // Get the auth token
-    const authToken = localStorage.getItem("authToken");
+    const authToken = localStorage.getItem("accessToken");
 
     if (authToken) {
       // Call the logout API
@@ -23,16 +23,15 @@ export const logout = async () => {
     // Continue with local logout even if API call fails
   } finally {
     // Clear all auth-related data from localStorage
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userData");
-    localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     localStorage.removeItem("loginTime");
 
     // Clear cookies for middleware
     document.cookie =
-      "authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     document.cookie =
       "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
@@ -42,7 +41,7 @@ export const logout = async () => {
 };
 
 export const isAuthenticated = (): boolean => {
-  const authToken = localStorage.getItem("authToken");
+  const authToken = localStorage.getItem("accessToken");
   const refreshToken = localStorage.getItem("refreshToken");
   const userData = localStorage.getItem("userData");
 
@@ -50,7 +49,7 @@ export const isAuthenticated = (): boolean => {
 };
 
 export const getAuthToken = (): string | null => {
-  return localStorage.getItem("authToken");
+  return localStorage.getItem("accessToken");
 };
 
 export const getRefreshToken = (): string | null => {
