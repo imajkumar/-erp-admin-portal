@@ -1,0 +1,257 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useInactivityTimer } from "@/hooks/useInactivityTimer";
+import Footer from "./Footer";
+import Header from "./Header";
+import LeftQuickSidebar from "./LeftQuickSidebar";
+import LeftSidebar from "./LeftSidebar";
+import LockScreen from "./LockScreen";
+import NotificationDrawer from "./NotificationDrawer";
+import QuickLeftSidebarDrawer from "./QuickLeftSidebarDrawer";
+import RightQuickSidebar from "./RightQuickSidebar";
+import ScrollToTop from "./ScrollToTop";
+import SearchSuggestions from "./SearchSuggestions";
+
+interface LayoutProps {
+  children: React.ReactNode;
+  activeItem?: string;
+  onItemClick?: (item: string) => void;
+  forceSidebarClosed?: boolean;
+}
+
+export default function AdminLayout({
+  children,
+  activeItem = "dashboard",
+  onItemClick,
+  forceSidebarClosed = false,
+}: LayoutProps) {
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(!forceSidebarClosed);
+  const [_leftQuickSidebar, _setLeftQuickSidebar] = useState(true);
+  const [rightQuickSidebar, setRightQuickSidebar] = useState(true);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  // Inactivity timer for lock screen
+  useInactivityTimer({
+    onTimeout: () => {
+      setIsLocked(true);
+      localStorage.setItem("isScreenLocked", "true");
+    },
+    timeout: 60000, // 1 minute
+  });
+
+  // Restore lock state and user data on mount
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+
+    // Check if screen was locked before reload
+    const wasLocked = localStorage.getItem("isScreenLocked");
+    if (wasLocked === "true") {
+      setIsLocked(true);
+    }
+  }, []);
+
+  // Handle forceSidebarClosed prop changes
+  useEffect(() => {
+    if (forceSidebarClosed) {
+      setSidebarOpen(false);
+    }
+  }, [forceSidebarClosed]);
+
+  // Keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Track page visibility for security - lock screen when user returns after being away
+  useEffect(() => {
+    let hiddenTime: number | null = null;
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Page is hidden, record the time
+        hiddenTime = Date.now();
+      } else {
+        // Page is visible again
+        if (hiddenTime) {
+          const timeAway = Date.now() - hiddenTime;
+          // If user was away for more than 30 seconds, lock the screen
+          if (timeAway > 30000) {
+            setIsLocked(true);
+            localStorage.setItem("isScreenLocked", "true");
+          }
+          hiddenTime = null;
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  const emptyFunction = useCallback(() => {}, []);
+
+  const handleSidebarToggle = useCallback(() => {
+    setSidebarOpen((prev) => !prev);
+  }, []);
+
+  const handleSearchClick = useCallback(() => {
+    setSearchOpen(true);
+  }, []);
+
+  const handleDrawerToggle = useCallback(() => {
+    setDrawerOpen((prev) => !prev);
+  }, []);
+
+  const handleNotificationClick = useCallback(() => {
+    setNotificationOpen((prev) => !prev);
+  }, []);
+
+  const handleLockScreen = useCallback(() => {
+    setIsLocked(true);
+    localStorage.setItem("isScreenLocked", "true");
+  }, []);
+
+  const handleSidebarClose = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const handleRightSidebarToggle = useCallback(() => {
+    setRightQuickSidebar((prev) => !prev);
+  }, []);
+
+  const handleItemClick = useCallback(
+    (item: string) => {
+      // Handle navigation for specific items
+      if (item === "erp-settings") {
+        router.push("/dashboard/settings");
+        return;
+      }
+
+      if (item === "users") {
+        router.push("/dashboard/users");
+        return;
+      }
+
+      if (item === "view-all-notifications") {
+        router.push("/dashboard/view-all-notifications");
+        return;
+      }
+
+      if (item === "inbox") {
+        router.push("/dashboard/inbox");
+        return;
+      }
+
+      if (onItemClick) {
+        onItemClick(item);
+      }
+    },
+    [router, onItemClick],
+  );
+
+  const handleUnlock = useCallback(() => {
+    setIsLocked(false);
+    localStorage.removeItem("isScreenLocked");
+  }, []);
+
+  if (isLocked) {
+    return <LockScreen onUnlock={handleUnlock} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <Header
+        user={user}
+        onSidebarToggle={handleSidebarToggle}
+        onSearchClick={handleSearchClick}
+        onDrawerToggle={handleDrawerToggle}
+        onNotificationClick={handleNotificationClick}
+        onLockScreen={handleLockScreen}
+        sidebarOpen={sidebarOpen}
+      />
+
+      {/* Main Content Area */}
+      <div className="flex">
+        {/* Left Quick Sidebar - Always Visible */}
+        <LeftQuickSidebar
+          isOpen={true}
+          onToggle={emptyFunction}
+          activeItem={activeItem}
+          onItemClick={handleItemClick}
+          sidebarOpen={sidebarOpen}
+          onSidebarToggle={handleSidebarToggle}
+        />
+
+        {/* Left Sidebar */}
+        <LeftSidebar
+          isOpen={sidebarOpen}
+          onClose={handleSidebarClose}
+          activeItem={activeItem}
+          onItemClick={handleItemClick}
+        />
+
+        {/* Main Content */}
+        <div
+          className={`flex-1 transition-all duration-200 ease-in-out ${
+            sidebarOpen ? "ml-77" : "ml-12"
+          } ${rightQuickSidebar ? "mr-12" : "mr-0"}`}
+          style={{ paddingTop: "45px" }}
+        >
+          {children}
+        </div>
+
+        {/* Right Quick Sidebar */}
+        <RightQuickSidebar
+          isOpen={rightQuickSidebar}
+          onToggle={handleRightSidebarToggle}
+          activeItem={activeItem}
+          onItemClick={handleItemClick}
+        />
+      </div>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Search Suggestions */}
+      <SearchSuggestions
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
+
+      {/* Notification Drawer */}
+      <NotificationDrawer
+        isOpen={notificationOpen}
+        onClose={() => setNotificationOpen(false)}
+      />
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
+
+      {/* Quick Left Sidebar Drawer */}
+      <QuickLeftSidebarDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
+    </div>
+  );
+}

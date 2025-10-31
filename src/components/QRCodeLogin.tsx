@@ -1,10 +1,26 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { QrCode, RefreshCw, CheckCircle, AlertCircle, Clock, ArrowLeft, Smartphone, Shield, User } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  QrCode,
+  RefreshCw,
+  Shield,
+  Smartphone,
+  User,
+} from "lucide-react";
 import QRCodeLib from "qrcode";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface QRCodeLoginProps {
   onBack: () => void;
@@ -12,66 +28,73 @@ interface QRCodeLoginProps {
 
 export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
   const [qrCode, setQrCode] = useState<string>("");
-  const [status, setStatus] = useState<'generating' | 'waiting' | 'success' | 'expired'>('generating');
+  const [status, setStatus] = useState<
+    "generating" | "waiting" | "success" | "expired"
+  >("generating");
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Generate a real QR code
   const generateQRCode = async () => {
     try {
-      setStatus('generating');
+      setStatus("generating");
       const sessionId = Math.random().toString(36).substring(2, 15);
       const timestamp = Date.now();
       const qrData = `erp-login:${sessionId}:${timestamp}:user:Ayra`;
-      
+
       // Add a small delay to show the loading state
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       if (canvasRef.current) {
         // Clear the canvas first
-        const ctx = canvasRef.current.getContext('2d');
+        const ctx = canvasRef.current.getContext("2d");
         if (ctx) {
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+          ctx.clearRect(
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height,
+          );
         }
-        
+
         await QRCodeLib.toCanvas(canvasRef.current, qrData, {
           width: 200,
           margin: 1,
           color: {
-            dark: '#000000',
-            light: '#FFFFFF'
+            dark: "#000000",
+            light: "#FFFFFF",
           },
-          errorCorrectionLevel: 'M'
+          errorCorrectionLevel: "M",
         });
-        
+
         setQrCode(qrData);
-        setStatus('waiting');
+        setStatus("waiting");
         setTimeLeft(300);
       }
     } catch (error) {
-      console.error('Error generating QR code:', error);
-      setStatus('expired');
+      console.error("Error generating QR code:", error);
+      setStatus("expired");
     }
   };
 
   // Simulate QR code scanning
   const simulateScan = () => {
-    setStatus('success');
+    setStatus("success");
     setTimeout(() => {
       // Redirect to dashboard or handle successful login
-      console.log('Login successful via QR code for user: Ayra');
+      console.log("Login successful via QR code for user: Ayra");
     }, 2000);
   };
 
   // Timer countdown
   useEffect(() => {
-    if (status === 'waiting' && timeLeft > 0) {
+    if (status === "waiting" && timeLeft > 0) {
       const timer = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && status === 'waiting') {
-      setStatus('expired');
+    } else if (timeLeft === 0 && status === "waiting") {
+      setStatus("expired");
     }
   }, [timeLeft, status]);
 
@@ -81,23 +104,23 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
       generateQRCode();
     }, 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [generateQRCode]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'generating':
+      case "generating":
         return <RefreshCw className="h-6 w-6 animate-spin text-blue-600" />;
-      case 'waiting':
+      case "waiting":
         return <Clock className="h-6 w-6 text-orange-500" />;
-      case 'success':
+      case "success":
         return <CheckCircle className="h-6 w-6 text-green-600" />;
-      case 'expired':
+      case "expired":
         return <AlertCircle className="h-6 w-6 text-red-500" />;
       default:
         return <QrCode className="h-6 w-6 text-gray-400" />;
@@ -106,13 +129,13 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
 
   const getStatusMessage = () => {
     switch (status) {
-      case 'generating':
+      case "generating":
         return "Generating secure QR code...";
-      case 'waiting':
+      case "waiting":
         return "Scan the QR code with your mobile app";
-      case 'success':
+      case "success":
         return "Authentication successful! Redirecting...";
-      case 'expired':
+      case "expired":
         return "QR code has expired. Please generate a new one.";
       default:
         return "";
@@ -144,7 +167,7 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
               <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl blur-sm opacity-20"></div>
               {/* Inner container */}
               <div className="relative bg-white p-6 rounded-2xl shadow-xl border-2 border-gray-100">
-                {status === 'generating' ? (
+                {status === "generating" ? (
                   <div className="w-64 h-64 flex items-center justify-center">
                     <RefreshCw className="h-12 w-12 animate-spin text-blue-600" />
                   </div>
@@ -152,25 +175,29 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
                   <div className="w-64 h-64 bg-gray-50 rounded-xl flex flex-col items-center justify-center shadow-inner border">
                     {/* Real QR Code Canvas */}
                     <div className="w-48 h-48 bg-white rounded-lg flex items-center justify-center">
-                      <canvas 
+                      <canvas
                         ref={canvasRef}
                         className="w-full h-full"
-                        style={{ display: status === 'waiting' ? 'block' : 'none' }}
+                        style={{
+                          display: status === "waiting" ? "block" : "none",
+                        }}
                       />
-                      {status === 'waiting' && !qrCode && (
+                      {status === "waiting" && !qrCode && (
                         <div className="text-center text-gray-500">
                           <QrCode className="h-16 w-16 mx-auto mb-2" />
                           <p className="text-xs">QR Code Loading...</p>
                         </div>
                       )}
                     </div>
-                    
+
                     {/* User name display */}
-                    {status === 'waiting' && (
+                    {status === "waiting" && (
                       <div className="bg-blue-50 px-4 py-2 rounded-lg border border-blue-200 mt-4">
                         <div className="flex items-center space-x-2">
                           <User className="h-4 w-4 text-blue-600" />
-                          <span className="text-sm font-semibold text-blue-800">Ayra</span>
+                          <span className="text-sm font-semibold text-blue-800">
+                            Ayra
+                          </span>
                         </div>
                       </div>
                     )}
@@ -182,14 +209,12 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
 
           {/* Status Display */}
           <div className="text-center space-y-4">
-            <div className="flex justify-center">
-              {getStatusIcon()}
-            </div>
+            <div className="flex justify-center">{getStatusIcon()}</div>
             <div>
               <p className="text-lg font-semibold text-gray-900 mb-2">
                 {getStatusMessage()}
               </p>
-              {status === 'waiting' && (
+              {status === "waiting" && (
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                   <p className="text-orange-800 font-bold text-lg">
                     ⏱️ Time remaining: {formatTime(timeLeft)}
@@ -201,8 +226,8 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
 
           {/* Action Buttons */}
           <div className="space-y-3">
-            {status === 'expired' && (
-              <Button 
+            {status === "expired" && (
+              <Button
                 onClick={generateQRCode}
                 className="w-full h-10 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
@@ -210,9 +235,9 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
                 Generate New QR Code
               </Button>
             )}
-            
-            {status === 'waiting' && (
-              <Button 
+
+            {status === "waiting" && (
+              <Button
                 onClick={simulateScan}
                 variant="outline"
                 className="w-full h-10 border-gray-300 hover:bg-gray-50 font-medium"
@@ -222,7 +247,7 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
               </Button>
             )}
 
-            <Button 
+            <Button
               onClick={onBack}
               variant="outline"
               className="w-full h-10 border-gray-300 hover:bg-gray-50 font-medium"
@@ -243,47 +268,59 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
                 <Shield className="h-6 w-6 text-green-600" />
               </div>
             </div>
-            <h3 className="font-bold text-gray-900 text-lg mb-2">Enhanced Security Features</h3>
-            <p className="text-gray-600 text-sm">Your authentication is protected by enterprise-grade security</p>
+            <h3 className="font-bold text-gray-900 text-lg mb-2">
+              Enhanced Security Features
+            </h3>
+            <p className="text-gray-600 text-sm">
+              Your authentication is protected by enterprise-grade security
+            </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
               <div className="bg-blue-100 p-2 rounded-full">
                 <QrCode className="h-4 w-4 text-blue-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 text-sm">Encrypted QR Code</h4>
+                <h4 className="font-semibold text-gray-900 text-sm">
+                  Encrypted QR Code
+                </h4>
                 <p className="text-gray-600 text-xs">AES-256 encryption</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
               <div className="bg-green-100 p-2 rounded-full">
                 <Clock className="h-4 w-4 text-green-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 text-sm">Time Limited</h4>
+                <h4 className="font-semibold text-gray-900 text-sm">
+                  Time Limited
+                </h4>
                 <p className="text-gray-600 text-xs">5-minute expiration</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
               <div className="bg-purple-100 p-2 rounded-full">
                 <User className="h-4 w-4 text-purple-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 text-sm">User Identity</h4>
+                <h4 className="font-semibold text-gray-900 text-sm">
+                  User Identity
+                </h4>
                 <p className="text-gray-600 text-xs">Verified as Ayra</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
               <div className="bg-orange-100 p-2 rounded-full">
                 <Shield className="h-4 w-4 text-orange-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 text-sm">Secure Session</h4>
+                <h4 className="font-semibold text-gray-900 text-sm">
+                  Secure Session
+                </h4>
                 <p className="text-gray-600 text-xs">One-time use only</p>
               </div>
             </div>
@@ -294,7 +331,9 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
       {/* Instructions Card */}
       <Card className="shadow-xl border-0 bg-white">
         <CardContent className="pt-6">
-          <h3 className="font-bold text-gray-900 text-lg mb-6 text-center">How to Authenticate</h3>
+          <h3 className="font-bold text-gray-900 text-lg mb-6 text-center">
+            How to Authenticate
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-start space-x-4">
@@ -302,40 +341,56 @@ export default function QRCodeLogin({ onBack }: QRCodeLoginProps) {
                   1
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Open Mobile App</h4>
-                  <p className="text-gray-600 text-sm">Launch the ERP Admin Portal mobile app on your device</p>
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Open Mobile App
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    Launch the ERP Admin Portal mobile app on your device
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold text-sm shadow-lg">
                   2
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Navigate to QR Login</h4>
-                  <p className="text-gray-600 text-sm">Select "QR Code Login" from the authentication menu</p>
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Navigate to QR Login
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    Select "QR Code Login" from the authentication menu
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="flex items-start space-x-4">
                 <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold text-sm shadow-lg">
                   3
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Scan QR Code</h4>
-                  <p className="text-gray-600 text-sm">Point your camera at the QR code displayed above</p>
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Scan QR Code
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    Point your camera at the QR code displayed above
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-white font-bold text-sm shadow-lg">
                   4
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Confirm Authentication</h4>
-                  <p className="text-gray-600 text-sm">Tap "Confirm" on your mobile device to complete login</p>
+                  <h4 className="font-semibold text-gray-900 mb-1">
+                    Confirm Authentication
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    Tap "Confirm" on your mobile device to complete login
+                  </p>
                 </div>
               </div>
             </div>
